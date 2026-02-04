@@ -50,10 +50,15 @@ const BookDetails = () => {
                 <div className="bg-paper-dark rounded-sm shadow-[8px_8px_0_0_#e5e0d8] border border-border-linen overflow-hidden max-w-5xl mx-auto flex flex-col md:flex-row">
                     {/* Image Section */}
                     <div className="md:w-1/2 bg-[#e3ddd3] p-12 flex items-center justify-center relative border-r border-border-linen">
-                        <div className="aspect-[3/4] w-64 bg-paper rounded-sm shadow-2xl flex items-center justify-center border border-border-linen relative group">
+                        <div className="aspect-[3/4] w-64 bg-paper rounded-sm shadow-2xl flex items-center justify-center border border-border-linen relative group overflow-hidden">
                             {/* Book Spine Effect */}
-                            <div className="absolute left-0 top-0 bottom-0 w-2 bg-black/10"></div>
-                            <span className="text-8xl text-ink/80 font-serif">❦</span>
+                            <div className="absolute left-0 top-0 bottom-0 w-2 bg-black/10 z-10"></div>
+
+                            {book.imageUrl ? (
+                                <img src={book.imageUrl} alt={book.title} className="w-full h-full object-cover shadow-inner" />
+                            ) : (
+                                <span className="text-8xl text-ink/80 font-serif">❦</span>
+                            )}
                         </div>
                     </div>
 

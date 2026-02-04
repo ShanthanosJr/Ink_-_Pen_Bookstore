@@ -10,7 +10,7 @@ const Shop = () => {
 
     // Filter States
     const [selectedCategory, setSelectedCategory] = useState('All');
-    const [priceRange, setPriceRange] = useState([0, 100]); // Assuming max placeholder
+    const [priceRange, setPriceRange] = useState([0, 100]);
     const [inStockOnly, setInStockOnly] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [sortOption, setSortOption] = useState('newest');
@@ -24,15 +24,13 @@ const Shop = () => {
         const fetchBooks = async () => {
             try {
                 const response = await api.get('/books');
-                // Simulating categories since generic API doesn't have them
                 const booksWithMetadata = response.data.map((book, index) => ({
                     ...book,
-                    category: categories[index % categories.length], // Deterministic pseudo-random category
-                    dateAdded: new Date(Date.now() - (index * 86400000)) // Deterministic pseudo-date
+                    category: categories[index % categories.length],
+                    dateAdded: new Date(Date.now() - (index * 86400000))
                 }));
                 setBooks(booksWithMetadata);
 
-                // Set max price for slider dynamically
                 if (booksWithMetadata.length > 0) {
                     const maxPrice = Math.max(...booksWithMetadata.map(b => b.price));
                     setPriceRange([0, Math.ceil(maxPrice)]);
@@ -72,76 +70,87 @@ const Shop = () => {
     };
 
     if (loading) return (
-        <div className="min-h-screen flex items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+        <div className="min-h-screen flex items-center justify-center bg-paper">
+            <div className="font-serif italic text-ink text-xl animate-pulse">Cataloging archives...</div>
         </div>
     );
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-4xl font-black text-gray-900 mb-8 tracking-tight">Explore Our Collection</h1>
+        <div className="bg-paper-dark min-h-screen">
+            {/* Shop Header Section */}
+            <div className="bg-paper border-b border-border-linen mb-12 relative overflow-hidden">
+                <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }}></div>
+                <div className="container mx-auto px-4 py-16 text-center relative z-10">
+                    <span className="inline-block py-1 px-3 border border-accent-olive text-accent-olive font-serif italic text-xs mb-4 tracking-widest uppercase">The library archives</span>
+                    <h1 className="text-4xl md:text-5xl font-serif font-bold text-ink mb-4 tracking-tight">Explore Our Collection</h1>
+                    <div className="w-16 h-px bg-accent-olive mx-auto opacity-30"></div>
+                </div>
+            </div>
 
-            <div className="flex flex-col lg:flex-row gap-12">
-                {/* Sidebar */}
-                <aside className="lg:w-1/4 flex-shrink-0">
-                    <div className="sticky top-24">
-                        <ShopSidebar
-                            categories={categories}
-                            selectedCategory={selectedCategory}
-                            setSelectedCategory={setSelectedCategory}
-                            priceRange={priceRange}
-                            setPriceRange={setPriceRange}
-                            inStockOnly={inStockOnly}
-                            setInStockOnly={setInStockOnly}
-                        />
-                    </div>
-                </aside>
-
-                {/* Main Content */}
-                <div className="flex-1">
-                    <ShopHeader
-                        totalBooks={filteredBooks.length}
-                        searchQuery={searchQuery}
-                        setSearchQuery={setSearchQuery}
-                        sortOption={sortOption}
-                        setSortOption={setSortOption}
-                    />
-
-                    {filteredBooks.length > 0 ? (
-                        <>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
-                                {filteredBooks.slice(0, visibleCount).map(book => (
-                                    <ProductCard key={book.id} book={book} />
-                                ))}
-                            </div>
-
-                            {visibleCount < filteredBooks.length && (
-                                <div className="mt-12 text-center">
-                                    <button
-                                        onClick={handleLoadMore}
-                                        className="px-8 py-3 bg-white border border-gray-300 text-gray-700 font-bold rounded-full hover:bg-gray-50 hover:border-indigo-300 transition shadow-sm"
-                                    >
-                                        Load More Books
-                                    </button>
-                                </div>
-                            )}
-                        </>
-                    ) : (
-                        <div className="text-center py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">No books found</h3>
-                            <p className="text-gray-500">Try adjusting your filters or search query.</p>
-                            <button
-                                onClick={() => {
-                                    setSelectedCategory('All');
-                                    setSearchQuery('');
-                                    setPriceRange([0, 200]);
-                                }}
-                                className="mt-4 text-indigo-600 font-bold hover:underline"
-                            >
-                                Clear all filters
-                            </button>
+            <div className="container mx-auto px-4 pb-20">
+                <div className="flex flex-col lg:flex-row gap-12">
+                    {/* Sidebar */}
+                    <aside className="lg:w-1/4 flex-shrink-0">
+                        <div className="sticky top-24">
+                            <ShopSidebar
+                                categories={categories}
+                                selectedCategory={selectedCategory}
+                                setSelectedCategory={setSelectedCategory}
+                                priceRange={priceRange}
+                                setPriceRange={setPriceRange}
+                                inStockOnly={inStockOnly}
+                                setInStockOnly={setInStockOnly}
+                            />
                         </div>
-                    )}
+                    </aside>
+
+                    {/* Main Content */}
+                    <div className="flex-1">
+                        <ShopHeader
+                            totalBooks={filteredBooks.length}
+                            searchQuery={searchQuery}
+                            setSearchQuery={setSearchQuery}
+                            sortOption={sortOption}
+                            setSortOption={setSortOption}
+                        />
+
+                        {filteredBooks.length > 0 ? (
+                            <>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+                                    {filteredBooks.slice(0, visibleCount).map(book => (
+                                        <ProductCard key={book.id} book={book} />
+                                    ))}
+                                </div>
+
+                                {visibleCount < filteredBooks.length && (
+                                    <div className="mt-16 text-center">
+                                        <button
+                                            onClick={handleLoadMore}
+                                            className="px-10 py-4 bg-paper border border-ink text-ink font-serif font-bold uppercase tracking-widest text-xs hover:bg-ink hover:text-paper transition-all shadow-[4px_4px_0_0_rgba(44,44,44,0.1)]"
+                                        >
+                                            View More Volumes
+                                        </button>
+                                    </div>
+                                )}
+                            </>
+                        ) : (
+                            <div className="text-center py-24 bg-paper border-2 border-dashed border-border-linen">
+                                <span className="text-4xl block mb-4 grayscale opacity-30">🕭</span>
+                                <h3 className="text-xl font-serif font-bold text-ink mb-2">No volumes identified</h3>
+                                <p className="text-ink-light font-body italic mb-6">Our librarians could not find a match for your inquiry.</p>
+                                <button
+                                    onClick={() => {
+                                        setSelectedCategory('All');
+                                        setSearchQuery('');
+                                        setPriceRange([0, 200]);
+                                    }}
+                                    className="text-accent-olive font-serif italic border-b border-accent-olive hover:text-ink hover:border-ink transition-all"
+                                >
+                                    Clear all search parameters
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

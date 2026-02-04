@@ -18,7 +18,7 @@ const Home = () => {
             </div>
 
             <div className="container mx-auto px-4 mt-8">
-                <BookList limit={3} showAdminControls={false} title="Editor's Choice" />
+                <BookList limit={4} showAdminControls={false} title="Editor's Choice" />
             </div>
 
             <div className="container mx-auto px-4">

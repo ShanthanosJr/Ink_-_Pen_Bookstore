@@ -34,12 +34,16 @@ const ProductCard = ({ book }) => {
             {/* Image Area */}
             <div className="relative aspect-[2/3] bg-[#e3ddd3] mb-5 border border-border-linen/50 flex items-center justify-center overflow-hidden group-hover:shadow-[4px_4px_0_0_rgba(85,107,47,0.1)] transition-all duration-500">
                 {/* Rustic Paper Texture Overlay */}
-                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }}></div>
+                <div className="absolute inset-0 opacity-10 z-10 pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }}></div>
 
-                <span className="text-6xl text-ink/20 group-hover:text-ink/60 transition duration-700 transform group-hover:scale-110 font-serif">❦</span>
+                {book.imageUrl ? (
+                    <img src={book.imageUrl} alt={book.title} className="w-full h-full object-cover transition duration-700 transform group-hover:scale-110" />
+                ) : (
+                    <span className="text-6xl text-ink/20 group-hover:text-ink/60 transition duration-700 transform group-hover:scale-110 font-serif">❦</span>
+                )}
 
                 {/* Quick Action - Styled as a bookmark/label */}
-                <div className="absolute inset-x-4 bottom-4 translate-y-[120%] group-hover:translate-y-0 transition duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]">
+                <div className="absolute inset-x-4 bottom-4 translate-y-[120%] group-hover:translate-y-0 transition duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] z-20">
                     <Link to={`/product/${book.id}`} className="block w-full bg-paper text-ink font-serif uppercase tracking-widest text-xs font-bold text-center py-3 border border-ink hover:bg-ink hover:text-paper transition-colors shadow-lg">
                         Examine
                     </Link>

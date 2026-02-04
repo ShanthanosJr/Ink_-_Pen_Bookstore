@@ -16,8 +16,8 @@ const ContactInfo = () => {
                         <div>
                             <h4 className="font-serif font-bold text-ink mb-1">The Shoppe</h4>
                             <p className="text-ink-light font-body leading-relaxed italic">
-                                123 Book Lane, Storyville<br />
-                                Literature City, CA 90210
+                                123 Book Lane, Sri Lanka<br />
+                                Book City, IP 10101
                             </p>
                         </div>
                     </div>
@@ -28,7 +28,7 @@ const ContactInfo = () => {
                         </div>
                         <div>
                             <h4 className="font-serif font-bold text-ink mb-1">Telephone</h4>
-                            <p className="text-ink-light font-body">+1 (555) 123-4567</p>
+                            <p className="text-ink-light font-body">+741 257 9316</p>
                             <p className="text-[10px] uppercase tracking-widest text-accent-olive mt-1">Weekdays, 9am - 6pm</p>
                         </div>
                     </div>

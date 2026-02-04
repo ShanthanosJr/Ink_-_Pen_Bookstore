@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import Shop from './pages/Shop'
 import Support from './pages/Support'
 import Contact from './pages/Contact'
+import About from './pages/About'
 import Admin from './pages/Admin'
 import BookDetails from './pages/BookDetails'
 import BookList from './components/BookList'
@@ -22,6 +23,7 @@ function App() {
             <Route path="/shop" element={<Shop />} />
             <Route path="/support" element={<Support />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/about" element={<About />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/product/:id" element={<BookDetails />} />
             <Route path="/add" element={

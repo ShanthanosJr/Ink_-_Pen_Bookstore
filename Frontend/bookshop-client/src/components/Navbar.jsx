@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 const Navbar = () => {
     return (
@@ -18,16 +18,20 @@ const Navbar = () => {
 
                 {/* Navigation Links */}
                 <div className="hidden md:flex items-center gap-8">
-                    {['Home', 'Shop', 'Support', 'Contact'].map((item) => (
-                        <Link
+                    {['Home', 'Shop', 'About', 'Support', 'Contact'].map((item) => (
+                        <NavLink
                             key={item}
                             to={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
-                            className="font-serif text-ink-light hover:text-accent-olive text-lg transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-px after:bg-accent-olive after:transition-all hover:after:w-full"
+                            className={({ isActive }) =>
+                                `font-serif text-lg transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:h-px after:bg-accent-olive after:transition-all ${isActive
+                                    ? 'text-accent-olive after:w-full font-bold'
+                                    : 'text-ink-light hover:text-accent-olive after:w-0 hover:after:w-full'
+                                }`
+                            }
                         >
                             {item}
-                        </Link>
+                        </NavLink>
                     ))}
-                    <a href="#about" className="font-serif text-ink-light hover:text-accent-olive text-lg transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-px after:bg-accent-olive after:transition-all hover:after:w-full">About</a>
                 </div>
 
                 {/* User Actions */}
@@ -35,7 +39,7 @@ const Navbar = () => {
                     {/* Library Card Style Profile */}
                     <div className="flex items-center gap-3 border-l border-border-linen pl-6">
                         <div className="text-right hidden sm:block">
-                            <p className="font-serif font-bold text-ink text-sm leading-none">MK. Kavishka</p>
+                            <p className="font-serif font-bold text-ink text-sm leading-none">MR. Kavishka</p>
                             <p className="font-body text-[10px] text-accent-olive uppercase tracking-wider mt-0.5">Mem. No. 4921</p>
                         </div>
                         <div className="w-9 h-9 border border-border-linen bg-white rounded-full flex items-center justify-center text-ink-light font-serif text-sm italic group cursor-pointer hover:border-accent-olive transition-colors">
