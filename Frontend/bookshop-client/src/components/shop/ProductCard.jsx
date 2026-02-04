@@ -1,13 +1,28 @@
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
-const ProductCard = ({ book }) => {
+const ProductCard = ({ book, isAnimated = false }) => {
     // Deterministic "Staff Pick", "Reading Time", and "First Edition" for variety
     const isStaffPick = book.id % 5 === 0;
     const isFirstEdition = book.id % 7 === 0;
     const readingTime = (book.id % 8) + 3;
 
+    const cardVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.5, ease: 'easeOut' }
+        }
+    };
+
+    const Wrapper = isAnimated ? motion.div : 'div';
+
     return (
-        <div className="group bg-paper-dark border border-border-linen rounded-sm p-5 flex flex-col h-full relative hover:border-accent-olive/30 transition-all duration-500">
+        <Wrapper
+            variants={cardVariants}
+            className="group bg-paper-dark border border-border-linen rounded-sm p-5 flex flex-col h-full relative hover:border-accent-olive/30 transition-all duration-500"
+        >
 
             {/* Decorative Corner Flaps */}
             <div className="absolute top-0 right-0 w-8 h-8 bg-paper border-b border-l border-border-linen group-hover:border-accent-olive/30 transition-colors z-10"></div>
@@ -82,7 +97,7 @@ const ProductCard = ({ book }) => {
                     )}
                 </div>
             </div>
-        </div>
+        </Wrapper>
     );
 };
 

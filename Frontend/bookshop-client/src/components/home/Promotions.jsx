@@ -1,6 +1,14 @@
+import { motion } from 'framer-motion';
+
 const Promotions = () => {
     return (
-        <section className="py-16 bg-ink text-paper my-16 px-8 relative overflow-hidden border-4 border-double border-accent-olive/40 mx-4 md:mx-0">
+        <motion.section
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            className="py-16 bg-ink text-paper my-16 px-8 relative overflow-hidden border-4 border-double border-accent-olive/40 mx-4 md:mx-0"
+        >
             {/* Background Texture */}
             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/black-paper.png")' }}></div>
 
@@ -10,19 +18,51 @@ const Promotions = () => {
 
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
                 <div className="md:w-1/2">
-                    <span className="inline-block py-1 px-4 border border-accent-olive text-accent-olive font-serif italic text-xs mb-6 tracking-widest uppercase bg-ink/50">Limited Time Proclamation</span>
-                    <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6 leading-tight">Get 50% Off Your <br /><span className="italic font-normal text-accent-olive">First Purchase</span></h2>
-                    <p className="text-paper/80 text-lg mb-8 font-body leading-relaxed">
+                    <motion.span
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.3 }}
+                        className="inline-block py-1 px-4 border border-accent-olive text-accent-olive font-serif italic text-xs mb-6 tracking-widest uppercase bg-ink/50"
+                    >
+                        Limited Time Proclamation
+                    </motion.span>
+                    <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.5 }}
+                        className="text-4xl md:text-5xl font-serif font-bold mb-6 leading-tight"
+                    >
+                        Get 50% Off Your <br /><span className="italic font-normal text-accent-olive">First Purchase</span>
+                    </motion.h2>
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.7 }}
+                        className="text-paper/80 text-lg mb-8 font-body leading-relaxed"
+                    >
                         Join the <span className="text-paper font-bold">Ink & Pens</span> community today and discover a world of stories awaiting you.
                         Use code <span className="bg-paper text-ink px-3 py-1 font-serif font-bold mx-1 border border-ink shadow-[2px_2px_0_0_rgba(85,107,47,0.5)]">WELCOME50</span> at checkout.
-                    </p>
-                    <button className="bg-paper text-ink px-10 py-4 font-serif font-bold uppercase tracking-widest text-sm hover:bg-accent-olive hover:text-paper transition-all border border-ink shadow-[4px_4px_0_0_rgba(85,107,47,0.3)]">
+                    </motion.p>
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="bg-paper text-ink px-10 py-4 font-serif font-bold uppercase tracking-widest text-sm hover:bg-accent-olive hover:text-paper transition-all border border-ink shadow-[4px_4px_0_0_rgba(85,107,47,0.3)]"
+                    >
                         Claim Offer
-                    </button>
+                    </motion.button>
                 </div>
 
                 <div className="md:w-1/2 flex justify-center">
-                    <div className="relative group">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+                        whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.6, type: 'spring', stiffness: 100 }}
+                        className="relative group"
+                    >
                         {/* Stacked Paper Effect */}
                         <div className="absolute inset-0 bg-paper/5 border border-paper/10 transform rotate-3 translate-x-2 translate-y-2 transition-transform group-hover:rotate-6"></div>
                         <div className="absolute inset-0 bg-paper/5 border border-paper/10 transform -rotate-2 -translate-x-1 -translate-y-1 transition-transform group-hover:-rotate-4"></div>
@@ -46,10 +86,10 @@ const Promotions = () => {
                                 Limited Availability Entry No. 492
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
-        </section>
+        </motion.section>
     );
 };
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 const StarRating = ({ rating, size = "text-accent-olive" }) => {
     return (
@@ -13,7 +14,13 @@ const StarRating = ({ rating, size = "text-accent-olive" }) => {
 };
 
 const ReviewCard = ({ name, date, rating, title, content, verified }) => (
-    <div className="bg-paper p-8 border border-border-linen shadow-[4px_4px_0_0_#e5e0d8] relative hover:-translate-y-1 transition duration-300">
+    <motion.div
+        variants={{
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0 }
+        }}
+        className="bg-paper p-8 border border-border-linen shadow-[4px_4px_0_0_#e5e0d8] relative hover:-translate-y-1 transition duration-300"
+    >
         <div className="flex justify-between items-start mb-6 border-b border-border-linen pb-4">
             <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full border border-accent-olive text-accent-olive flex items-center justify-center font-serif italic text-lg bg-paper-dark">
@@ -37,7 +44,7 @@ const ReviewCard = ({ name, date, rating, title, content, verified }) => (
         <p className="text-ink-light text-sm leading-relaxed font-body">
             {content}
         </p>
-    </div>
+    </motion.div>
 );
 
 const ReviewsSection = () => {
@@ -73,8 +80,12 @@ const ReviewsSection = () => {
 
     return (
         <div className="mt-16">
-            <div className="bg-ink text-paper rounded-sm p-10 md:p-12 mb-12 relative overflow-hidden border-4 border-double border-accent-olive/40">
-                {/* Vintage decorative elements */}
+            <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="bg-ink text-paper rounded-sm p-10 md:p-12 mb-12 relative overflow-hidden border-4 border-double border-accent-olive/40"
+            >
                 <div className="absolute top-0 right-0 p-4 opacity-10 font-serif text-9xl leading-none select-none">❞</div>
 
                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
@@ -94,19 +105,28 @@ const ReviewsSection = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </motion.div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                transition={{ staggerChildren: 0.2 }}
+                className="grid md:grid-cols-3 gap-8"
+            >
                 {reviews.map(review => (
                     <ReviewCard key={review.id} {...review} />
                 ))}
-            </div>
+            </motion.div>
 
             <div className="text-center mt-12">
-                <button className="text-ink font-serif font-bold hover:text-accent-olive transition flex items-center justify-center gap-2 mx-auto border-b border-ink/30 hover:border-accent-olive pb-1">
+                <motion.button
+                    whileHover={{ x: 5 }}
+                    className="text-ink font-serif font-bold hover:text-accent-olive transition flex items-center justify-center gap-2 mx-auto border-b border-ink/30 hover:border-accent-olive pb-1"
+                >
                     Read all 1,240 testimonials
                     <span>→</span>
-                </button>
+                </motion.button>
             </div>
         </div>
     );

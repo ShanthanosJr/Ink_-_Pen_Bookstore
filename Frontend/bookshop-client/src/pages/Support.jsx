@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import FAQSection from '../components/support/FAQSection';
 import ReviewsSection from '../components/support/ReviewsSection';
 
@@ -6,33 +7,70 @@ const Support = () => {
     return (
         <div className="bg-paper-dark min-h-screen pb-20">
             {/* Header / Hero for Support Page */}
-            <div className="bg-paper border-b border-border-linen relative overflow-hidden">
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="bg-paper border-b border-border-linen relative overflow-hidden"
+            >
                 <div className="absolute inset-0 opacity-40 mix-blend-multiply" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }}></div>
 
                 <div className="container mx-auto px-4 py-20 text-center relative z-10">
-                    <span className="inline-block py-1 px-3 border border-accent-olive text-accent-olive font-serif italic text-xs mb-6 tracking-wide uppercase bg-paper-dark">Assistance Desk</span>
-                    <h1 className="text-4xl md:text-6xl font-serif font-bold text-ink mb-6 tracking-tight">How may we assist you?</h1>
-                    <p className="text-xl text-ink-light max-w-2xl mx-auto font-body italic">
+                    <motion.span
+                        initial={{ y: -20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="inline-block py-1 px-3 border border-accent-olive text-accent-olive font-serif italic text-xs mb-6 tracking-wide uppercase bg-paper-dark"
+                    >
+                        Assistance Desk
+                    </motion.span>
+                    <motion.h1
+                        initial={{ scale: 0.95, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 0.4 }}
+                        className="text-4xl md:text-6xl font-serif font-bold text-ink mb-6 tracking-tight"
+                    >
+                        How may we assist you?
+                    </motion.h1>
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.6 }}
+                        className="text-xl text-ink-light max-w-2xl mx-auto font-body italic"
+                    >
                         Guidance on acquisitions, shipping, and our community.
-                    </p>
+                    </motion.p>
                 </div>
-            </div>
+            </motion.div>
 
-            <div className="container mx-auto px-4 -mt-8 relative z-20">
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+                className="container mx-auto px-4 -mt-8 relative z-20"
+            >
                 <FAQSection />
                 <ReviewsSection />
-            </div>
+            </motion.div>
 
             {/* Still need help banner */}
             <div className="container mx-auto px-4 mt-20">
-                <div className="bg-paper rounded-sm p-12 text-center shadow-lg border border-border-linen relative">
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    className="bg-paper rounded-sm p-12 text-center shadow-lg border border-border-linen relative"
+                >
                     <div className="absolute inset-0 border-4 border-double border-border-linen m-2 pointer-events-none"></div>
                     <h3 className="text-2xl font-serif font-bold text-ink mb-4">Further Inquiries?</h3>
                     <p className="text-ink-light mb-8 font-body italic">Our librarians are at your disposal for specific requests.</p>
-                    <button className="bg-ink text-paper px-10 py-4 font-serif font-bold uppercase tracking-widest hover:bg-accent-olive transition-colors border border-ink shadow-[4px_4px_0_0_rgba(44,44,44,0.2)]">
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="bg-ink text-paper px-10 py-4 font-serif font-bold uppercase tracking-widest hover:bg-accent-olive transition-colors border border-ink shadow-[4px_4px_0_0_rgba(44,44,44,0.2)]"
+                    >
                         Correspond With Us
-                    </button>
-                </div>
+                    </motion.button>
+                </motion.div>
             </div>
         </div>
     );

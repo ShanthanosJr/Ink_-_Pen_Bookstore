@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const FAQItem = ({ question, answer }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -12,19 +13,31 @@ const FAQItem = ({ question, answer }) => {
                 <span className={`font-serif italic text-lg transition-colors ${isOpen ? 'text-accent-olive font-bold' : 'text-ink group-hover:text-accent-olive'}`}>
                     Q: {question}
                 </span>
-                <span className={`ml-6 flex-shrink-0 text-accent-olive transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
+                <motion.span
+                    animate={{ rotate: isOpen ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="ml-6 flex-shrink-0 text-accent-olive"
+                >
                     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
                     </svg>
-                </span>
+                </motion.span>
             </button>
-            <div
-                className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100 mb-6' : 'max-h-0 opacity-0'}`}
-            >
-                <p className="text-ink-light pl-6 border-l-2 border-accent-olive/30 font-body leading-relaxed">
-                    {answer}
-                </p>
-            </div>
+            <AnimatePresence initial={false}>
+                {isOpen && (
+                    <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                        className="overflow-hidden"
+                    >
+                        <p className="text-ink-light pl-6 border-l-2 border-accent-olive/30 font-body leading-relaxed mb-6">
+                            {answer}
+                        </p>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };
@@ -57,7 +70,6 @@ const FAQSection = () => {
 
     return (
         <div className="bg-paper shadow-sm border border-border-linen p-8 md:p-12 relative overflow-hidden">
-            {/* Background Texture */}
             <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }}></div>
 
             <div className="text-center mb-12 relative z-10">
@@ -68,7 +80,13 @@ const FAQSection = () => {
 
             <div className="grid md:grid-cols-2 gap-12 relative z-10">
                 {faqs.map((section, idx) => (
-                    <div key={idx}>
+                    <motion.div
+                        key={idx}
+                        initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: idx * 0.2 }}
+                    >
                         <h3 className="text-xl font-serif font-bold text-ink mb-6 flex items-center gap-3 border-b-2 border-ink pb-2">
                             <span className="w-6 h-6 rounded-full border border-ink text-ink flex items-center justify-center text-xs font-body">
                                 {['I', 'II', 'III'][idx] || idx + 1}
@@ -80,7 +98,7 @@ const FAQSection = () => {
                                 <FAQItem key={i} question={item.q} answer={item.a} />
                             ))}
                         </div>
-                    </div>
+                    </motion.div>
                 ))}
             </div>
         </div>

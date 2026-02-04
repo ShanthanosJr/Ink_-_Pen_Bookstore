@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+
 const Testimonials = () => {
     const reviews = [
         {
@@ -26,21 +28,53 @@ const Testimonials = () => {
         }
     ];
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: { staggerChildren: 0.2 }
+        }
+    };
+
+    const cardVariants = {
+        hidden: { opacity: 0, y: 30 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.7, ease: 'easeOut' }
+        }
+    };
+
     return (
         <section className="py-20 bg-paper-dark my-16 px-6 border-y border-border-linen relative overflow-hidden">
             {/* Background Texture Overlay */}
             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }}></div>
 
             <div className="relative z-10">
-                <div className="text-center mb-16">
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    className="text-center mb-16"
+                >
                     <span className="font-serif italic text-accent-olive text-sm mb-2 block tracking-widest uppercase">Reader Reflections</span>
                     <h2 className="text-4xl font-serif font-bold text-ink">What Our Patrons Say</h2>
                     <div className="w-16 h-px bg-accent-olive mx-auto mt-4 opacity-40"></div>
-                </div>
+                </motion.div>
 
-                <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+                <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-50px" }}
+                    className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto"
+                >
                     {reviews.map((review) => (
-                        <div key={review.id} className="bg-paper p-8 border border-border-linen shadow-[6px_6px_0_0_#e5e0d8] flex flex-col relative group hover:-translate-y-2 transition-transform duration-500">
+                        <motion.div
+                            key={review.id}
+                            variants={cardVariants}
+                            className="bg-paper p-8 border border-border-linen shadow-[6px_6px_0_0_#e5e0d8] flex flex-col relative group hover:-translate-y-2 transition-transform duration-500"
+                        >
                             {/* Decorative Corner */}
                             <div className="absolute top-0 right-0 w-8 h-8 bg-paper-dark border-b border-l border-border-linen z-10 transition-colors group-hover:bg-accent-olive/10"></div>
 
@@ -63,9 +97,9 @@ const Testimonials = () => {
                                     <div className="text-[10px] text-accent-olive uppercase tracking-widest mt-1 font-bold">{review.role}</div>
                                 </div>
                             </div>
-                        </div>
+                        </motion.div>
                     ))}
-                </div>
+                </motion.div>
             </div>
         </section>
     );

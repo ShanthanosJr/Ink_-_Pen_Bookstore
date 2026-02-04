@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 const ShopSidebar = ({
     categories,
@@ -9,11 +10,25 @@ const ShopSidebar = ({
     inStockOnly,
     setInStockOnly
 }) => {
+    const sidebarVariants = {
+        hidden: { opacity: 0, x: -30 },
+        visible: {
+            opacity: 1,
+            x: 0,
+            transition: { duration: 0.6, ease: 'easeOut' }
+        }
+    };
+
     return (
-        <div className="space-y-8">
+        <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={sidebarVariants}
+            className="space-y-8"
+        >
             {/* Categories - Styled as Index Card */}
-            <div className="bg-paper border border-border-linen p-6 relative">
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-paper px-2 border-l border-r border-border-linen z-10">
+            <div className="bg-paper border border-border-linen p-6 relative shadow-sm hover:shadow-md transition-shadow">
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-paper px-2 border-l border-r border-border-linen z-10 font-bold">
                     <h3 className="text-sm font-serif font-bold text-ink uppercase tracking-widest">Index</h3>
                 </div>
 
@@ -45,8 +60,8 @@ const ShopSidebar = ({
                 </ul>
             </div>
 
-            {/* Price Range */}
-            <div className="bg-paper border border-border-linen p-6">
+            {/* Price Filter */}
+            <div className="bg-paper border border-border-linen p-6 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex justify-between items-center mb-4 border-b border-border-linen pb-2">
                     <h3 className="text-sm font-serif font-bold text-ink uppercase tracking-widest">Price Filter</h3>
                     <button
@@ -74,7 +89,7 @@ const ShopSidebar = ({
             </div>
 
             {/* Availability */}
-            <div>
+            <div className="px-2">
                 <label className="flex items-center space-x-3 cursor-pointer group">
                     <div className={`w-4 h-4 border border-ink flex items-center justify-center transition-colors ${inStockOnly ? 'bg-accent-olive border-accent-olive' : 'bg-paper'}`}>
                         {inStockOnly && <span className="text-white text-xs">✓</span>}
@@ -90,7 +105,11 @@ const ShopSidebar = ({
             </div>
 
             {/* Promo Card - Vintage Style */}
-            <div className="bg-ink text-paper p-6 text-center relative overflow-hidden border-4 border-double border-accent-olive/30">
+            <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="bg-ink text-paper p-6 text-center relative overflow-hidden border-4 border-double border-accent-olive/30 shadow-lg"
+            >
+                <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/black-paper.png")' }}></div>
                 <div className="relative z-10">
                     <p className="font-serif italic text-accent-olive opacity-80 mb-2 text-xs">Limited Offer</p>
                     <h4 className="text-xl font-serif font-bold mb-4 leading-tight">Classics Collection <br /> 20% Off</h4>
@@ -98,8 +117,8 @@ const ShopSidebar = ({
                         Code: CLASSIC20
                     </div>
                 </div>
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     );
 };
 

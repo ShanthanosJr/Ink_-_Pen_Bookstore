@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../api';
-import { Link } from 'react-router-dom';
 import ProductCard from './shop/ProductCard';
+import { motion } from 'framer-motion';
 
 const BookList = ({ limit, showAdminControls = false, title }) => {
     const [books, setBooks] = useState([]);
@@ -22,11 +22,6 @@ const BookList = ({ limit, showAdminControls = false, title }) => {
         fetchBooks();
     }, []);
 
-    // For the home page BookList, we reuse the premium ProductCard if admin controls are OFF.
-    // If admin controls are ON (rare now, as we have a dedicated admin page), we keep a simpler view or redirect logic.
-    // However, the user request is to fix "Project Code" techy-ness. 
-    // Since we separated Admin, `showAdminControls` is likely false for the home page.
-
     if (loading) return (
         <div className="text-center py-20 font-serif italic text-ink-light animate-pulse">
             Retrieving volumes from archive...
@@ -35,20 +30,53 @@ const BookList = ({ limit, showAdminControls = false, title }) => {
 
     const displayedBooks = limit ? books.slice(0, limit) : books;
 
+    // Animation Variants
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.3
+            }
+        }
+    };
+
+    const titleVariants = {
+        hidden: { opacity: 0, x: -30 },
+        visible: {
+            opacity: 1,
+            x: 0,
+            transition: { duration: 0.8, ease: 'easeOut' }
+        }
+    };
+
     return (
         <section className={limit ? "py-10" : "py-6"}>
             {title && (
-                <div className="flex items-center justify-between mb-8 border-b border-border-linen pb-2">
+                <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-100px" }}
+                    variants={titleVariants}
+                    className="flex items-center justify-between mb-8 border-b border-border-linen pb-2"
+                >
                     <h2 className="text-3xl font-serif font-bold text-ink">{title}</h2>
                     <div className="h-px flex-grow bg-accent-olive/20 ml-6 hidden sm:block"></div>
-                </div>
+                </motion.div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-50px" }}
+                variants={containerVariants}
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+            >
                 {displayedBooks.map(book => (
-                    <ProductCard key={book.id} book={book} />
+                    <ProductCard key={book.id} book={book} isAnimated={true} />
                 ))}
-            </div>
+            </motion.div>
 
             {books.length === 0 && (
                 <div className="text-center py-20 bg-paper-dark rounded-sm border border-border-linen">

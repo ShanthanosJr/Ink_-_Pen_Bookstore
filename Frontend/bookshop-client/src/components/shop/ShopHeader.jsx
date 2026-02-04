@@ -1,8 +1,14 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 const ShopHeader = ({ totalBooks, searchQuery, setSearchQuery, sortOption, setSortOption }) => {
     return (
-        <div className="flex flex-col md:flex-row justify-between items-end mb-8 gap-6 border-b border-double border-border-linen pb-6">
+        <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="flex flex-col md:flex-row justify-between items-end mb-8 gap-6 border-b border-double border-border-linen pb-6"
+        >
             <div className="font-serif text-ink italic">
                 Catalog: <span className="font-bold not-italic text-lg">{totalBooks}</span> Volumes Found
             </div>
@@ -35,7 +41,7 @@ const ShopHeader = ({ totalBooks, searchQuery, setSearchQuery, sortOption, setSo
                     </select>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
 
