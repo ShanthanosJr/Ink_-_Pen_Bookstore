@@ -4,30 +4,33 @@ import ReviewsSection from '../components/support/ReviewsSection';
 
 const Support = () => {
     return (
-        <div className="bg-gray-50 min-h-screen pb-20">
+        <div className="bg-paper-dark min-h-screen pb-20">
             {/* Header / Hero for Support Page */}
-            <div className="bg-white border-b border-gray-100">
-                <div className="container mx-auto px-4 py-16 text-center">
-                    <span className="inline-block py-1 px-3 rounded-full bg-indigo-50 text-indigo-600 font-bold text-xs mb-4 tracking-wide uppercase">Help Center</span>
-                    <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight">How can we help you?</h1>
-                    <p className="text-xl text-gray-500 max-w-2xl mx-auto">
-                        Everything you need to know about our books, shipping, and community.
+            <div className="bg-paper border-b border-border-linen relative overflow-hidden">
+                <div className="absolute inset-0 opacity-40 mix-blend-multiply" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }}></div>
+
+                <div className="container mx-auto px-4 py-20 text-center relative z-10">
+                    <span className="inline-block py-1 px-3 border border-accent-olive text-accent-olive font-serif italic text-xs mb-6 tracking-wide uppercase bg-paper-dark">Assistance Desk</span>
+                    <h1 className="text-4xl md:text-6xl font-serif font-bold text-ink mb-6 tracking-tight">How may we assist you?</h1>
+                    <p className="text-xl text-ink-light max-w-2xl mx-auto font-body italic">
+                        Guidance on acquisitions, shipping, and our community.
                     </p>
                 </div>
             </div>
 
-            <div className="container mx-auto px-4 -mt-8">
+            <div className="container mx-auto px-4 -mt-8 relative z-20">
                 <FAQSection />
                 <ReviewsSection />
             </div>
 
             {/* Still need help banner */}
             <div className="container mx-auto px-4 mt-20">
-                <div className="bg-white rounded-3xl p-12 text-center shadow-sm border border-gray-100">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">Still have questions?</h3>
-                    <p className="text-gray-500 mb-8">Can’t find the answer you’re looking for? Please chat to our friendly team.</p>
-                    <button className="bg-indigo-600 text-white px-8 py-3 rounded-full font-bold hover:bg-indigo-700 transition shadow-lg shadow-indigo-200">
-                        Get in Touch
+                <div className="bg-paper rounded-sm p-12 text-center shadow-lg border border-border-linen relative">
+                    <div className="absolute inset-0 border-4 border-double border-border-linen m-2 pointer-events-none"></div>
+                    <h3 className="text-2xl font-serif font-bold text-ink mb-4">Further Inquiries?</h3>
+                    <p className="text-ink-light mb-8 font-body italic">Our librarians are at your disposal for specific requests.</p>
+                    <button className="bg-ink text-paper px-10 py-4 font-serif font-bold uppercase tracking-widest hover:bg-accent-olive transition-colors border border-ink shadow-[4px_4px_0_0_rgba(44,44,44,0.2)]">
+                        Correspond With Us
                     </button>
                 </div>
             </div>

@@ -1,5 +1,45 @@
 @import "tailwindcss";
 
+@theme {
+    --color-paper: #fdfbf7;
+    --color-paper-dark: #f4f1ea;
+    --color-ink: #2c2c2c;
+    --color-ink-light: #4a4a4a;
+    --color-accent-olive: #556b2f;
+    --color-accent-leather: #8b4513;
+    --color-border-linen: #e5e0d8;
+
+    --font-serif: "Playfair Display", serif;
+    --font-body: "Lora", serif;
+}
+
 body {
-    @apply bg-gray-50 text-gray-900;
+    @apply bg-paper text-ink font-body;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    @apply font-serif;
+}
+
+/* Custom Scrollbar for a cleaner look */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #fdfbf7;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d1cbc1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #b0a89b;
 }

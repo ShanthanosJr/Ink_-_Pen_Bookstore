@@ -1,20 +1,32 @@
 const Newsletter = () => {
     return (
-        <section className="py-20 text-center">
-            <div className="max-w-3xl mx-auto px-4">
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">Stay in the Loop</h2>
-                <p className="text-gray-600 mb-8 text-lg">Subscribe to our newsletter for the latest book releases, author interviews, and exclusive discounts delivered straight to your inbox.</p>
-                <div className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
-                    <input
-                        type="email"
-                        placeholder="Enter your email address"
-                        className="flex-1 px-6 py-4 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm"
-                    />
-                    <button className="px-8 py-4 bg-indigo-900 text-white rounded-full font-bold hover:bg-indigo-800 transition shadow-lg">
-                        Subscribe
-                    </button>
+        <section className="py-20 my-10 bg-paper relative mx-4 md:mx-0">
+            {/* Decorative Top Border as Envelope Flap */}
+            <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-accent-olive via-ink to-accent-leather opacity-20"></div>
+
+            <div className="max-w-3xl mx-auto px-8 py-12 border border-border-linen bg-paper-dark shadow-[8px_8px_0_0_#e5e0d8] transform rotate-1">
+                <div className="text-center">
+                    <span className="font-serif italic text-accent-olive text-sm mb-4 block">Correspondence</span>
+                    <h2 className="text-4xl font-serif font-bold text-ink mb-4">Letters from the Editor</h2>
+                    <p className="text-ink-light mb-10 text-lg font-body leading-relaxed max-w-xl mx-auto">
+                        Join our circle of readers. Receive news on rare acquisitions,
+                        author discourses, and literary gatherings.
+                    </p>
+
+                    <div className="flex flex-col sm:flex-row gap-0 max-w-lg mx-auto border-b-2 border-ink">
+                        <input
+                            type="email"
+                            placeholder="Your correspondence address..."
+                            className="flex-1 px-4 py-3 bg-transparent font-serif text-ink placeholder-ink-light/50 focus:outline-none focus:bg-paper/50 transition-colors"
+                        />
+                        <button className="px-8 py-3 bg-transparent text-ink font-serif font-bold uppercase tracking-widest hover:bg-ink hover:text-paper transition-colors text-sm border-l border-ink/20">
+                            Subscribe
+                        </button>
+                    </div>
+                    <p className="text-[10px] uppercase tracking-widest text-ink-light mt-6">
+                        We honor the privacy of your study.
+                    </p>
                 </div>
-                <p className="text-xs text-gray-400 mt-4">We respect your privacy. Unsubscribe at any time.</p>
             </div>
         </section>
     );

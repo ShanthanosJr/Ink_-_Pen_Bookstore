@@ -3,73 +3,73 @@ import React from 'react';
 const ContactInfo = () => {
     return (
         <div className="space-y-8">
-            {/* Contact Details Card */}
-            <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
-                <h3 className="text-xl font-bold text-gray-900 mb-6">Contact Information</h3>
+            {/* Contact Details Card - Visiting Card Style */}
+            <div className="bg-paper p-10 rounded-sm shadow-sm border border-border-linen relative">
+                <div className="absolute top-0 left-0 w-full h-1 bg-accent-olive/30"></div>
+                <h3 className="text-xl font-serif font-bold text-ink mb-8 border-b border-border-linen pb-4">Visiting Card</h3>
 
-                <div className="space-y-6">
-                    <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0">
-                            <span className="text-xl">📍</span>
+                <div className="space-y-8">
+                    <div className="flex items-start gap-6">
+                        <div className="w-8 h-8 rounded-full border border-ink/30 flex items-center justify-center flex-shrink-0 font-serif text-lg bg-paper-dark">
+                            📍
                         </div>
                         <div>
-                            <h4 className="font-bold text-gray-900 mb-1">Our Store</h4>
-                            <p className="text-gray-600 leading-relaxed">
+                            <h4 className="font-serif font-bold text-ink mb-1">The Shoppe</h4>
+                            <p className="text-ink-light font-body leading-relaxed italic">
                                 123 Book Lane, Storyville<br />
                                 Literature City, CA 90210
                             </p>
                         </div>
                     </div>
 
-                    <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0">
-                            <span className="text-xl">📞</span>
+                    <div className="flex items-start gap-6">
+                        <div className="w-8 h-8 rounded-full border border-ink/30 flex items-center justify-center flex-shrink-0 font-serif text-lg bg-paper-dark">
+                            📞
                         </div>
                         <div>
-                            <h4 className="font-bold text-gray-900 mb-1">Phone Support</h4>
-                            <p className="text-gray-600">+1 (555) 123-4567</p>
-                            <p className="text-xs text-gray-400 mt-1">Mon-Fri, 9am - 6pm EST</p>
+                            <h4 className="font-serif font-bold text-ink mb-1">Telephone</h4>
+                            <p className="text-ink-light font-body">+1 (555) 123-4567</p>
+                            <p className="text-[10px] uppercase tracking-widest text-accent-olive mt-1">Weekdays, 9am - 6pm</p>
                         </div>
                     </div>
 
-                    <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0">
-                            <span className="text-xl">✉️</span>
+                    <div className="flex items-start gap-6">
+                        <div className="w-8 h-8 rounded-full border border-ink/30 flex items-center justify-center flex-shrink-0 font-serif text-lg bg-paper-dark">
+                            ✉️
                         </div>
                         <div>
-                            <h4 className="font-bold text-gray-900 mb-1">Email Us</h4>
-                            <p className="text-gray-600">hello@inkandpens.com</p>
-                            <p className="text-gray-600">support@inkandpens.com</p>
+                            <h4 className="font-serif font-bold text-ink mb-1">Post</h4>
+                            <p className="text-ink-light font-body">hello@inkandpens.com</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Map Placeholder */}
-            <div className="bg-gray-200 rounded-3xl h-64 w-full relative overflow-hidden group">
-                <div className="absolute inset-0 bg-cover bg-center opacity-70 group-hover:opacity-60 transition duration-500 transform group-hover:scale-105" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1524813686514-a57563d77965?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80")' }}></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-white/90 backdrop-blur-md px-6 py-3 rounded-full shadow-lg flex items-center gap-2">
-                        <span className="text-red-500 animate-bounce">📍</span>
-                        <span className="font-bold text-gray-900 text-sm">Find us on Map</span>
+            {/* Map Placeholder - Engraving Style */}
+            <div className="bg-paper-dark rounded-sm h-64 w-full relative overflow-hidden group border border-border-linen p-2">
+                <div className="w-full h-full border border-ink/10 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-cover bg-center grayscale contrast-75 sepia group-hover:grayscale-0 transition duration-1000 transform group-hover:scale-105" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1524813686514-a57563d77965?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80")' }}></div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="bg-paper/90 backdrop-blur-sm px-6 py-3 border border-ink/50 flex items-center gap-2 shadow-lg">
+                            <span className="text-accent-leather animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-leather opacity-10"></span>
+                            <span className="text-accent-leather relative">📍</span>
+                            <span className="font-serif font-bold text-ink text-sm uppercase tracking-widest">Locate Us</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {/* Mission / Why Us */}
-            <div className="bg-indigo-900 text-white p-8 rounded-3xl relative overflow-hidden">
+            {/* Mission / Why Us - Manifesto Style */}
+            <div className="bg-ink text-paper p-10 rounded-sm relative overflow-hidden border-4 border-double border-border-linen/20">
                 <div className="relative z-10">
-                    <h3 className="text-xl font-bold mb-4">Why Ink & Pens?</h3>
-                    <p className="text-indigo-200 text-sm leading-relaxed mb-4">
-                        We believe that every book holds a new world waiting to be explored. Our mission is to connect readers with stories that inspire, educate, and transform.
+                    <h3 className="text-xl font-serif font-bold mb-4 border-b border-paper/20 pb-4 inline-block">Our Manifesto</h3>
+                    <p className="text-paper/80 text-sm leading-relaxed mb-4 font-body">
+                        "We believe that every volume holds a universe waiting to be unfolded. Our mission is to bridge the gap between mind and page."
                     </p>
-                    <p className="text-indigo-200 text-sm leading-relaxed">
-                        Whether you visit us in-store or online, we promise curated excellence and a community that cares about the written word.
+                    <p className="text-paper/80 text-sm leading-relaxed font-body italic">
+                        — The Ink & Pens Collective
                     </p>
                 </div>
-                {/* Decorative background */}
-                <div className="absolute -top-10 -right-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
-                <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-500 opacity-20 rounded-full blur-2xl"></div>
             </div>
         </div>
     );

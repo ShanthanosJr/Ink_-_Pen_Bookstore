@@ -4,14 +4,16 @@ import ContactInfo from '../components/contact/ContactInfo';
 
 const Contact = () => {
     return (
-        <div className="bg-gray-50 min-h-screen pb-20">
+        <div className="bg-paper-dark min-h-screen pb-20">
             {/* Header */}
-            <div className="bg-white border-b border-gray-100 mb-12">
-                <div className="container mx-auto px-4 py-16 text-center">
-                    <span className="inline-block py-1 px-3 rounded-full bg-indigo-50 text-indigo-600 font-bold text-xs mb-4 tracking-wide uppercase">Get in Touch</span>
-                    <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight">We'd Love to Hear from You</h1>
-                    <p className="text-xl text-gray-500 max-w-2xl mx-auto">
-                        Whether you have a question about an order, a book recommendation, or just want to say hello, our team is ready to answer all your questions.
+            <div className="bg-paper border-b-2 border-border-linen mb-12 relative">
+                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-accent-olive to-ink opacity-20"></div>
+
+                <div className="container mx-auto px-4 py-20 text-center">
+                    <span className="inline-block py-1 px-3 border border-ink/30 text-ink font-serif italic text-xs mb-6 tracking-wide uppercase">The Post</span>
+                    <h1 className="text-4xl md:text-5xl font-serif font-bold text-ink mb-6 tracking-tight">Correspondence</h1>
+                    <p className="text-xl text-ink-light max-w-2xl mx-auto font-body italic">
+                        We eagerly await your letters, queries, and literary musings.
                     </p>
                 </div>
             </div>

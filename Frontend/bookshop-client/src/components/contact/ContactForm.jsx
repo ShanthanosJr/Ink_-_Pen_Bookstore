@@ -14,7 +14,6 @@ const ContactForm = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-        // Clear error when user starts typing
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
         }
@@ -24,9 +23,9 @@ const ContactForm = () => {
         let tempErrors = {};
         if (!formData.name.trim()) tempErrors.name = "Full name is required";
         if (!formData.email.trim()) {
-            tempErrors.email = "Email is required";
+            tempErrors.email = "Address is required";
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            tempErrors.email = "Email is invalid";
+            tempErrors.email = "Address is invalid";
         }
         if (!formData.subject.trim()) tempErrors.subject = "Subject is required";
         if (!formData.message.trim()) tempErrors.message = "Message is required";
@@ -38,7 +37,6 @@ const ContactForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (validate()) {
-            // Simulate API call
             setTimeout(() => {
                 setIsSubmitted(true);
                 setFormData({ name: '', email: '', subject: '', message: '' });
@@ -48,89 +46,92 @@ const ContactForm = () => {
 
     if (isSubmitted) {
         return (
-            <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 flex flex-col items-center justify-center text-center h-full">
-                <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6">
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
+            <div className="bg-paper p-12 rounded-sm shadow-[4px_4px_0_0_#e5e0d8] border border-border-linen flex flex-col items-center justify-center text-center h-full">
+                <div className="w-16 h-16 border-2 border-accent-olive text-accent-olive rounded-full flex items-center justify-center mb-6">
+                    <span className="text-3xl font-serif">✓</span>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Message Sent!</h3>
-                <p className="text-gray-600">Thank you for reaching out. We'll get back to you within 24 hours.</p>
+                <h3 className="text-2xl font-serif font-bold text-ink mb-2">Correspondence Received</h3>
+                <p className="text-ink-light font-body italic">We shall review your letter with haste.</p>
                 <button
                     onClick={() => setIsSubmitted(false)}
-                    className="mt-6 text-indigo-600 font-bold hover:underline"
+                    className="mt-8 text-accent-olive font-serif font-bold hover:underline border-b border-accent-olive pb-1"
                 >
-                    Send another message
+                    Write Another Letter
                 </button>
             </div>
         );
     }
 
     return (
-        <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h3>
-            <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="bg-paper p-12 rounded-sm shadow-[8px_8px_0_0_#e5e0d8] border border-border-linen relative">
+            <div className="absolute top-4 right-4 w-12 h-16 border border-ink/20 flex items-center justify-center opacity-30 rotate-3">
+                <span className="text-[8px] uppercase tracking-widest text-center leading-tight">Postage<br />Paid</span>
+            </div>
+
+            <h3 className="text-2xl font-serif font-bold text-ink mb-8">Draft a Message</h3>
+            <form onSubmit={handleSubmit} className="space-y-8">
                 <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                    <label className="block text-xs font-serif font-bold text-ink uppercase tracking-widest mb-2">Your Name</label>
                     <input
                         type="text"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        className={`w-full px-4 py-3 rounded-lg border ${errors.name ? 'border-red-300 focus:ring-red-200' : 'border-gray-200 focus:ring-indigo-100'} focus:outline-none focus:ring-2 transition bg-gray-50 focus:bg-white`}
-                        placeholder="John Doe"
+                        className={`w-full px-4 py-3 bg-transparent border-b-2 ${errors.name ? 'border-red-800' : 'border-ink/20 focus:border-accent-olive'} focus:outline-none transition-colors font-serif text-ink placeholder-ink-light/30`}
+                        placeholder="e.g. Ernest H."
                     />
-                    {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                    {errors.name && <p className="text-red-800 text-xs mt-1 font-serif italic">{errors.name}</p>}
                 </div>
 
                 <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                    <label className="block text-xs font-serif font-bold text-ink uppercase tracking-widest mb-2">Return Address (Email)</label>
                     <input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className={`w-full px-4 py-3 rounded-lg border ${errors.email ? 'border-red-300 focus:ring-red-200' : 'border-gray-200 focus:ring-indigo-100'} focus:outline-none focus:ring-2 transition bg-gray-50 focus:bg-white`}
-                        placeholder="john@example.com"
+                        className={`w-full px-4 py-3 bg-transparent border-b-2 ${errors.email ? 'border-red-800' : 'border-ink/20 focus:border-accent-olive'} focus:outline-none transition-colors font-serif text-ink placeholder-ink-light/30`}
+                        placeholder="e.g. ernest@writings.com"
                     />
-                    {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+                    {errors.email && <p className="text-red-800 text-xs mt-1 font-serif italic">{errors.email}</p>}
                 </div>
 
                 <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Subject</label>
+                    <label className="block text-xs font-serif font-bold text-ink uppercase tracking-widest mb-2">Topic</label>
                     <select
                         name="subject"
                         value={formData.subject}
                         onChange={handleChange}
-                        className={`w-full px-4 py-3 rounded-lg border ${errors.subject ? 'border-red-300 focus:ring-red-200' : 'border-gray-200 focus:ring-indigo-100'} focus:outline-none focus:ring-2 transition bg-gray-50 focus:bg-white`}
+                        className={`w-full px-4 py-3 bg-transparent border-b-2 ${errors.subject ? 'border-red-800' : 'border-ink/20 focus:border-accent-olive'} focus:outline-none transition-colors font-serif text-ink cursor-pointer`}
                     >
-                        <option value="">Select a topic</option>
-                        <option value="Order Support">Order Support</option>
-                        <option value="General Inquiry">General Inquiry</option>
-                        <option value="Feedback">Feedback</option>
-                        <option value="Other">Other</option>
+                        <option value="">Select a Inquiry Type</option>
+                        <option value="Order Support">Order Inquiry</option>
+                        <option value="General Inquiry">General Correspondence</option>
+                        <option value="Feedback">Reader Feedback</option>
+                        <option value="Other">Other Matters</option>
                     </select>
-                    {errors.subject && <p className="text-red-500 text-xs mt-1">{errors.subject}</p>}
+                    {errors.subject && <p className="text-red-800 text-xs mt-1 font-serif italic">{errors.subject}</p>}
                 </div>
 
                 <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Message</label>
+                    <label className="block text-xs font-serif font-bold text-ink uppercase tracking-widest mb-2">Your Words</label>
                     <textarea
                         name="message"
                         value={formData.message}
                         onChange={handleChange}
                         rows="4"
-                        className={`w-full px-4 py-3 rounded-lg border ${errors.message ? 'border-red-300 focus:ring-red-200' : 'border-gray-200 focus:ring-indigo-100'} focus:outline-none focus:ring-2 transition bg-gray-50 focus:bg-white resize-none`}
-                        placeholder="How can we help you today?"
+                        className={`w-full px-4 py-3 bg-paper-dark border border-ink/20 ${errors.message ? 'border-red-800' : 'focus:border-accent-olive'} focus:outline-none transition-colors font-serif text-ink resize-none leading-relaxed`}
+                        placeholder="Dear Ink & Pens..."
+                        style={{ backgroundImage: 'linear-gradient(transparent 1.9rem, rgba(0,0,0,0.05) 2rem)', backgroundSize: '100% 2rem', lineHeight: '2rem' }}
                     ></textarea>
-                    {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message}</p>}
+                    {errors.message && <p className="text-red-800 text-xs mt-1 font-serif italic">{errors.message}</p>}
                 </div>
 
                 <button
                     type="submit"
-                    className="w-full bg-indigo-900 text-white font-bold py-4 rounded-xl hover:bg-indigo-800 transition transform hover:-translate-y-1 shadow-md"
+                    className="w-full bg-ink text-paper font-serif font-bold uppercase tracking-widest py-4 border border-ink shadow-[4px_4px_0_0_rgba(85,107,47,0.2)] hover:bg-accent-olive transition-colors"
                 >
-                    Send Message
+                    Post Letter
                 </button>
             </form>
         </div>

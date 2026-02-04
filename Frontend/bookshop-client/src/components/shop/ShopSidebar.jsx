@@ -11,28 +11,31 @@ const ShopSidebar = ({
 }) => {
     return (
         <div className="space-y-8">
-            {/* Categories */}
-            <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Categories</h3>
-                <ul className="space-y-2">
+            {/* Categories - Styled as Index Card */}
+            <div className="bg-paper border border-border-linen p-6 relative">
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-paper px-2 border-l border-r border-border-linen z-10">
+                    <h3 className="text-sm font-serif font-bold text-ink uppercase tracking-widest">Index</h3>
+                </div>
+
+                <ul className="space-y-1 mt-2">
                     <li>
                         <button
                             onClick={() => setSelectedCategory('All')}
-                            className={`w-full text-left px-3 py-2 rounded-lg transition text-sm font-medium ${selectedCategory === 'All'
-                                    ? 'bg-indigo-50 text-indigo-700'
-                                    : 'text-gray-600 hover:bg-gray-50 hover:text-indigo-600'
+                            className={`w-full text-left px-3 py-2 text-sm font-serif transition-colors border-b border-dotted border-border-linen hover:text-accent-olive ${selectedCategory === 'All'
+                                    ? 'text-accent-olive font-bold italic bg-paper-dark'
+                                    : 'text-ink-light'
                                 }`}
                         >
-                            All Categories
+                            All Collections
                         </button>
                     </li>
                     {categories.map((category) => (
                         <li key={category}>
                             <button
                                 onClick={() => setSelectedCategory(category)}
-                                className={`w-full text-left px-3 py-2 rounded-lg transition text-sm font-medium ${selectedCategory === category
-                                        ? 'bg-indigo-50 text-indigo-700'
-                                        : 'text-gray-600 hover:bg-gray-50 hover:text-indigo-600'
+                                className={`w-full text-left px-3 py-2 text-sm font-serif transition-colors border-b border-dotted border-border-linen hover:text-accent-olive ${selectedCategory === category
+                                        ? 'text-accent-olive font-bold italic bg-paper-dark'
+                                        : 'text-ink-light'
                                     }`}
                             >
                                 {category}
@@ -43,8 +46,8 @@ const ShopSidebar = ({
             </div>
 
             {/* Price Range */}
-            <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Price Range</h3>
+            <div className="bg-paper border border-border-linen p-6">
+                <h3 className="text-sm font-serif font-bold text-ink uppercase tracking-widest mb-4 border-b border-border-linen pb-2">Price Filter</h3>
                 <div className="px-2">
                     <input
                         type="range"
@@ -53,41 +56,40 @@ const ShopSidebar = ({
                         step="10"
                         value={priceRange[1]}
                         onChange={(e) => setPriceRange([0, Number(e.target.value)])}
-                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                        className="w-full h-1 bg-border-linen rounded-none appearance-none cursor-pointer accent-accent-olive"
                     />
-                    <div className="flex justify-between text-sm text-gray-600 mt-2">
-                        <span>${priceRange[0]}</span>
-                        <span className="font-semibold text-indigo-700">${priceRange[1]}</span>
+                    <div className="flex justify-between text-xs font-serif text-ink-light mt-2">
+                        <span>$0</span>
+                        <span className="font-bold text-ink">${priceRange[1]}</span>
                     </div>
                 </div>
             </div>
 
             {/* Availability */}
             <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Availability</h3>
                 <label className="flex items-center space-x-3 cursor-pointer group">
+                    <div className={`w-4 h-4 border border-ink flex items-center justify-center transition-colors ${inStockOnly ? 'bg-accent-olive border-accent-olive' : 'bg-paper'}`}>
+                        {inStockOnly && <span className="text-white text-xs">✓</span>}
+                    </div>
                     <input
                         type="checkbox"
                         checked={inStockOnly}
                         onChange={(e) => setInStockOnly(e.target.checked)}
-                        className="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 transition"
+                        className="hidden"
                     />
-                    <span className="text-gray-700 group-hover:text-indigo-700 transition">In Stock Only</span>
+                    <span className="text-sm font-serif text-ink group-hover:text-accent-olive transition-colors underline decoration-dotted decoration-border-linen underline-offset-4">Available Now</span>
                 </label>
             </div>
 
-            {/* Promo Card */}
-            <div className="bg-gradient-to-br from-indigo-900 to-purple-800 rounded-2xl p-6 text-center text-white relative overflow-hidden">
+            {/* Promo Card - Vintage Style */}
+            <div className="bg-ink text-paper p-6 text-center relative overflow-hidden border-4 border-double border-accent-olive/30">
                 <div className="relative z-10">
-                    <p className="text-xs font-bold tracking-wider uppercase opacity-80 mb-2">Weekend Deal</p>
-                    <h4 className="text-2xl font-bold mb-4">Save 20% on Tech Books</h4>
-                    <button className="bg-white text-indigo-900 text-xs font-bold py-2 px-4 rounded-full hover:bg-indigo-50 transition">
-                        Use Code: TECH20
-                    </button>
+                    <p className="font-serif italic text-accent-olive opacity-80 mb-2 text-xs">Limited Offer</p>
+                    <h4 className="text-xl font-serif font-bold mb-4 leading-tight">Classics Collection <br /> 20% Off</h4>
+                    <div className="inline-block border border-paper px-4 py-2 font-serif text-xs uppercase tracking-widest hover:bg-paper hover:text-ink transition-colors cursor-pointer">
+                        Code: CLASSIC20
+                    </div>
                 </div>
-                {/* Decorative circles */}
-                <div className="absolute -top-6 -right-6 w-24 h-24 bg-white opacity-10 rounded-full blur-xl"></div>
-                <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-indigo-400 opacity-20 rounded-full blur-xl"></div>
             </div>
         </div>
     );

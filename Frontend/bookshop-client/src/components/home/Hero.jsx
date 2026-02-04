@@ -2,36 +2,41 @@ import { Link } from 'react-router-dom';
 
 const Hero = () => {
     return (
-        <div className="relative bg-indigo-900 text-white overflow-hidden rounded-3xl my-6 mx-4 md:mx-0 shadow-2xl">
+        <div className="relative bg-paper-dark text-ink overflow-hidden mx-4 md:mx-0 border-y-4 border-double border-border-linen my-8">
             <div className="absolute inset-0">
-                <img
-                    src="https://images.unsplash.com/photo-1507842217121-9e96e47636e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80"
-                    alt="Library Background"
-                    className="w-full h-full object-cover opacity-20"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-900 via-indigo-900/80 to-transparent"></div>
+                {/* Vintage Paper Texture */}
+                <div className="absolute inset-0 opacity-40 mix-blend-multiply" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }}></div>
+                {/* Subtle Ink Stains/Texture */}
+                <div className="absolute top-0 right-0 w-96 h-96 bg-accent-olive opacity-5 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
             </div>
 
-            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 flex flex-col justify-center h-full">
-                <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
-                    Your Next Great Adventure <br />
-                    <span className="text-indigo-400">Starts Here.</span>
+            <div className="relative max-w-7xl mx-auto px-6 py-24 md:py-32 flex flex-col items-center text-center">
+                <span className="font-serif italic text-accent-olive text-xl mb-6 relative px-8 before:content-[''] before:absolute before:left-0 before:top-1/2 before:w-6 before:h-px before:bg-accent-olive after:content-[''] after:absolute after:right-0 after:top-1/2 after:w-6 after:h-px after:bg-accent-olive">
+                    Curators of Fine Stories
+                </span>
+
+                <h1 className="text-5xl md:text-7xl font-serif font-bold tracking-tight mb-8 leading-tight text-ink">
+                    Where Every Page <br />
+                    <span className="italic font-normal text-ink-light">Turns Into a Memory.</span>
                 </h1>
-                <p className="max-w-xl text-lg md:text-xl text-indigo-100 mb-10 leading-relaxed">
-                    Discover a curated collection of fiction, non-fiction, and educational resources designed to inspire and empower.
+
+                <p className="max-w-xl text-lg md:text-xl text-ink-light mb-12 leading-relaxed font-body">
+                    Step into a world of timeless classics and modern masterpieces.
+                    Hand-picked for the thoughtful reader.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4">
+
+                <div className="flex flex-col sm:flex-row gap-6">
                     <Link
                         to="/shop"
-                        className="px-8 py-4 bg-white text-indigo-900 rounded-full font-bold text-lg hover:bg-indigo-50 transition transform hover:-translate-y-1 shadow-lg text-center"
+                        className="px-10 py-4 bg-ink text-paper font-serif uppercase tracking-widest text-sm font-bold hover:bg-accent-olive transition-colors border border-ink shadow-[4px_4px_0_0_rgba(85,107,47,0.2)]"
                     >
-                        Shop Now
+                        Browse Collection
                     </Link>
                     <a
                         href="#featured"
-                        className="px-8 py-4 border-2 border-indigo-400/50 text-white rounded-full font-bold text-lg hover:bg-indigo-800/50 transition text-center backdrop-blur-sm"
+                        className="px-10 py-4 border border-ink text-ink font-serif uppercase tracking-widest text-sm font-bold hover:bg-paper-dark transition-colors"
                     >
-                        Explore Featured
+                        Our Selections
                     </a>
                 </div>
             </div>

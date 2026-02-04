@@ -23,75 +23,76 @@ const BookDetails = () => {
     }, [id]);
 
     if (loading) return (
-        <div className="min-h-screen flex items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+        <div className="min-h-screen flex items-center justify-center bg-paper">
+            <div className="font-serif italic text-ink text-xl animate-pulse">Retrieving from archives...</div>
         </div>
     );
 
     if (!book) return (
-        <div className="container mx-auto px-4 py-20 text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Book not found</h2>
-            <Link to="/shop" className="text-indigo-600 hover:underline">Return to Shop</Link>
+        <div className="container mx-auto px-4 py-20 text-center bg-paper min-h-screen">
+            <h2 className="text-2xl font-serif font-bold text-ink mb-4">Volume not found</h2>
+            <Link to="/shop" className="text-accent-olive hover:underline font-serif italic">Return to Catalog</Link>
         </div>
     );
 
-    const readingTime = (book.id % 8) + 3; // Consistent simulated data
+    const readingTime = (book.id % 8) + 3;
 
     return (
-        <div className="bg-gray-50 min-h-screen py-12">
-            <div className="container mx-auto px-4">
-                <Link to="/shop" className="inline-flex items-center text-gray-500 hover:text-indigo-600 mb-8 transition">
-                    ← Back to Shop
+        <div className="bg-paper min-h-screen py-12 relative">
+            {/* Background Texture */}
+            <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }}></div>
+
+            <div className="container mx-auto px-4 relative z-10">
+                <Link to="/shop" className="inline-flex items-center text-ink-light hover:text-accent-olive mb-8 transition font-serif italic">
+                    ← Back to Catalog
                 </Link>
 
-                <div className="bg-white rounded-3xl shadow-xl overflow-hidden max-w-5xl mx-auto flex flex-col md:flex-row">
+                <div className="bg-paper-dark rounded-sm shadow-[8px_8px_0_0_#e5e0d8] border border-border-linen overflow-hidden max-w-5xl mx-auto flex flex-col md:flex-row">
                     {/* Image Section */}
-                    <div className="md:w-1/2 bg-gray-100 p-12 flex items-center justify-center relative">
-                        <div className="aspect-[3/4] w-64 bg-white rounded-lg shadow-2xl flex items-center justify-center transform rotate-y-12">
-                            <span className="text-8xl">📚</span>
+                    <div className="md:w-1/2 bg-[#e3ddd3] p-12 flex items-center justify-center relative border-r border-border-linen">
+                        <div className="aspect-[3/4] w-64 bg-paper rounded-sm shadow-2xl flex items-center justify-center border border-border-linen relative group">
+                            {/* Book Spine Effect */}
+                            <div className="absolute left-0 top-0 bottom-0 w-2 bg-black/10"></div>
+                            <span className="text-8xl text-ink/80 font-serif">❦</span>
                         </div>
-                        {/* Decorative pattern */}
-                        <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
                     </div>
 
                     {/* Details Section */}
                     <div className="md:w-1/2 p-12 flex flex-col">
                         <div className="mb-auto">
-                            <div className="flex items-center gap-4 mb-4">
-                                <span className="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-                                    {book.stockQuantity > 0 ? 'In Stock' : 'Out of Stock'}
+                            <div className="flex items-center gap-4 mb-6">
+                                <span className="border border-ink text-ink px-3 py-1 text-[10px] font-bold uppercase tracking-widest">
+                                    {book.stockQuantity > 0 ? 'Available' : 'Out of Print'}
                                 </span>
-                                <span className="text-gray-400 text-sm flex items-center gap-1">
-                                    ☕ {readingTime}h read
+                                <span className="text-ink-light text-xs font-serif italic flex items-center gap-1">
+                                    Est. Reading Time: {readingTime} hours
                                 </span>
                             </div>
 
-                            <h1 className="text-4xl font-black text-gray-900 leading-tight mb-2">{book.title}</h1>
-                            <p className="text-xl text-gray-500 font-medium mb-8">by {book.author}</p>
+                            <h1 className="text-4xl font-serif font-bold text-ink leading-tight mb-2">{book.title}</h1>
+                            <p className="text-xl text-accent-olive font-serif italic mb-8">by {book.author}</p>
 
-                            <div className="flex items-baseline gap-4 mb-8">
-                                <span className="text-4xl font-bold text-gray-900">${book.price.toFixed(2)}</span>
-                                <span className="text-lg text-gray-400 line-through">${(book.price * 1.2).toFixed(2)}</span>
+                            <div className="flex items-baseline gap-4 mb-8 pb-8 border-b border-dotted border-border-linen">
+                                <span className="text-4xl font-serif font-bold text-ink">${book.price.toFixed(2)}</span>
                             </div>
 
-                            <p className="text-gray-600 leading-relaxed mb-8">
-                                Immerse yourself in this captivating journey by {book.author}.
-                                Perfect for readers looking to expand their horizons and dive into a world of knowledge and imagination.
-                                This edition features high-quality paper and a durable binding, making it a perfect addition to any collection.
+                            <p className="text-ink-light leading-relaxed mb-8 font-body text-lg">
+                                "A compelling addition to any library. This volume explores the depths of {book.title},
+                                offering readers a journey through the mind of {book.author}. Finely printed on archival paper."
                             </p>
                         </div>
 
-                        <div className="pt-8 border-t border-gray-100">
+                        <div className="pt-8">
                             <div className="flex gap-4">
-                                <button className="flex-1 bg-indigo-900 text-white font-bold py-4 rounded-xl hover:bg-indigo-800 transition shadow-lg shadow-indigo-200">
-                                    Add to Cart
+                                <button className="flex-1 bg-ink text-paper font-serif font-bold uppercase tracking-widest py-4 hover:bg-accent-olive transition-colors border border-ink shadow-[4px_4px_0_0_rgba(44,44,44,0.2)]">
+                                    Acquire Volume
                                 </button>
-                                <button className="w-14 h-14 flex items-center justify-center border border-gray-200 rounded-xl hover:bg-gray-50 transition text-gray-400 hover:text-red-500">
-                                    ♥
+                                <button className="w-16 flex items-center justify-center border border-ink text-ink hover:bg-paper-dark transition text-2xl">
+                                    ♡
                                 </button>
                             </div>
-                            <p className="text-center text-xs text-gray-400 mt-4">
-                                Free shipping on orders over $50 • 30-day returns
+                            <p className="text-center text-[10px] text-ink-light mt-4 uppercase tracking-widest">
+                                Secure Packaging • 30-Day Return Policy
                             </p>
                         </div>
                     </div>

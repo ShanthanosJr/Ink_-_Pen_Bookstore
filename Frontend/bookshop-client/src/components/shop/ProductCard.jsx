@@ -1,66 +1,79 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 const ProductCard = ({ book }) => {
-    // Deterministic "Staff Pick" and "Reading Time" based on ID
+    // Deterministic "Staff Pick", "Reading Time", and "First Edition" for variety
     const isStaffPick = book.id % 5 === 0;
-    const readingTime = (book.id % 8) + 3; // Random 3-10 hours
+    const isFirstEdition = book.id % 7 === 0;
+    const readingTime = (book.id % 8) + 3;
 
     return (
-        <div className="group bg-white rounded-2xl p-4 transition-all duration-300 hover:shadow-xl border border-gray-100 flex flex-col h-full relative overflow-hidden">
-            {/* Badges */}
-            <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
+        <div className="group bg-paper-dark border border-border-linen rounded-sm p-5 flex flex-col h-full relative hover:border-accent-olive/30 transition-all duration-500">
+
+            {/* Decorative Corner Flaps */}
+            <div className="absolute top-0 right-0 w-8 h-8 bg-paper border-b border-l border-border-linen group-hover:border-accent-olive/30 transition-colors z-10"></div>
+
+            {/* Badges - Styled like Stamps/Seals */}
+            <div className="absolute top-3 left-3 z-20 flex flex-col gap-2 pointer-events-none">
                 {book.id % 3 === 0 && (
-                    <div className="bg-indigo-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm">
-                        BESTSELLER
+                    <div className="bg-ink text-paper text-[9px] tracking-widest uppercase font-bold px-2 py-1 shadow-sm border border-ink transform -rotate-2">
+                        Bestseller
                     </div>
                 )}
                 {book.id % 4 === 0 && (
-                    <div className="bg-rose-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm">
-                        NEW
+                    <div className="bg-accent-leather text-white text-[9px] tracking-widest uppercase font-bold px-2 py-1 shadow-sm border border-accent-leather transform rotate-1">
+                        New Arrival
                     </div>
                 )}
                 {isStaffPick && (
-                    <div className="bg-amber-400 text-amber-900 text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1">
-                        <span>⭐</span> STAFF PICK
+                    <div className="bg-transparent text-accent-olive border border-accent-olive text-[9px] tracking-widest uppercase font-bold px-2 py-1 flex items-center gap-1 transform -rotate-1">
+                        <span>★</span> Curator Pick
                     </div>
                 )}
             </div>
 
             {/* Image Area */}
-            <div className="aspect-[3/4] bg-gray-100 rounded-xl mb-4 relative overflow-hidden flex items-center justify-center group-hover:bg-indigo-50 transition duration-500">
-                <span className="text-6xl filter grayscale group-hover:grayscale-0 transition duration-500 transform group-hover:scale-110">📚</span>
+            <div className="relative aspect-[2/3] bg-[#e3ddd3] mb-5 border border-border-linen/50 flex items-center justify-center overflow-hidden group-hover:shadow-[4px_4px_0_0_rgba(85,107,47,0.1)] transition-all duration-500">
+                {/* Rustic Paper Texture Overlay */}
+                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }}></div>
 
-                {/* Quick Action Overlay */}
-                <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition duration-300 ease-out">
-                    <Link to={`/product/${book.id}`} className="block w-full bg-white/90 backdrop-blur text-indigo-900 font-bold text-center py-3 rounded-lg shadow-lg hover:bg-white transition">
-                        View Details
+                <span className="text-6xl text-ink/20 group-hover:text-ink/60 transition duration-700 transform group-hover:scale-110 font-serif">❦</span>
+
+                {/* Quick Action - Styled as a bookmark/label */}
+                <div className="absolute inset-x-4 bottom-4 translate-y-[120%] group-hover:translate-y-0 transition duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]">
+                    <Link to={`/product/${book.id}`} className="block w-full bg-paper text-ink font-serif uppercase tracking-widest text-xs font-bold text-center py-3 border border-ink hover:bg-ink hover:text-paper transition-colors shadow-lg">
+                        Examine
                     </Link>
                 </div>
             </div>
 
-            <div className="flex flex-col flex-grow">
-                <div className="mb-2">
-                    <div className="flex justify-between items-start">
-                        <span className="text-xs font-semibold text-gray-400 tracking-wider uppercase">{book.author}</span>
-                        <span className="text-[10px] text-gray-400 bg-gray-50 px-2 py-1 rounded-full flex items-center gap-1">
-                            ☕ {readingTime}h read
-                        </span>
-                    </div>
-                    <h3 className="text-lg font-bold text-gray-900 leading-tight mt-1 group-hover:text-indigo-600 transition">{book.title}</h3>
+            <div className="flex flex-col flex-grow text-center px-2">
+                <div className="mb-3">
+                    <h3 className="text-lg font-serif font-bold text-ink leading-tight group-hover:text-accent-olive transition-colors mb-1">{book.title}</h3>
+                    <div className="h-px w-8 bg-accent-olive/30 mx-auto my-2 group-hover:w-16 transition-all duration-500"></div>
+                    <span className="text-xs font-body italic text-ink-light">by {book.author}</span>
                 </div>
 
-                <div className="mt-auto pt-4 flex items-center justify-between border-t border-gray-50">
-                    <div>
-                        <span className="text-xl font-bold text-gray-900">${book.price.toFixed(2)}</span>
+                {/* Metadata Grid */}
+                <div className="mt-auto grid grid-cols-2 gap-2 text-[10px] text-ink-light uppercase tracking-wider border-t border-border-linen pt-3">
+                    <div className="text-left border-r border-border-linen">
+                        Est. Time
+                        <span className="block font-bold text-ink normal-case mt-0.5">{readingTime} hrs</span>
                     </div>
+                    <div className="text-right">
+                        Edition
+                        <span className="block font-bold text-ink normal-case mt-0.5">{isFirstEdition ? 'First' : 'Standard'}</span>
+                    </div>
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-dotted border-border-linen flex items-center justify-between">
+                    <span className="text-xl font-serif font-bold text-ink">${book.price.toFixed(2)}</span>
                     {book.stockQuantity > 0 ? (
-                        <span className="flex items-center gap-1 text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span> In Stock
+                        <span className="text-[10px] text-accent-olive font-bold uppercase tracking-widest flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-accent-olive"></span> In Library
                         </span>
                     ) : (
-                        <span className="flex items-center gap-1 text-xs font-bold text-red-500 bg-red-50 px-2 py-1 rounded-full">
-                            <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span> Sold Out
+                        <span className="text-[10px] text-accent-leather font-bold uppercase tracking-widest line-through decoration-1">
+                            Checked Out
                         </span>
                     )}
                 </div>
