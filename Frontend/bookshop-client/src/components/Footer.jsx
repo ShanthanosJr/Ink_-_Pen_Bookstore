@@ -42,9 +42,9 @@ const Footer = () => {
                     <div>
                         <h4 className="text-white font-semibold mb-4">Contact</h4>
                         <ul className="space-y-2 text-sm">
-                            <li>123 Book Lane, Storyville</li>
+                            <li>123 Book Lane, Sri Lanka</li>
                             <li>support@inkandpens.com</li>
-                            <li>+1 (555) 123-4567</li>
+                            <li>+74 123-4567</li>
                         </ul>
                     </div>
                 </div>

@@ -71,3 +71,7 @@ BookShop/
 - **CORS Errors**: If the frontend says "Network Error", ensure the Backend is running. The backend is configured to allow requests from `http://localhost:5173`.
 - **Database Errors**: If the app crashes on start regarding the database, make sure you ran `dotnet ef database update`.
 - **Tailwind Styles Missing**: Ensure you are running the frontend via `npm run dev` which builds the CSS styles.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
