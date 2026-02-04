@@ -1,4 +1,5 @@
 import { Link, NavLink } from 'react-router-dom';
+import logo from '../assets/inkandpens.png';
 
 const Navbar = () => {
     return (
@@ -7,8 +8,11 @@ const Navbar = () => {
 
                 {/* Logo Section */}
                 <Link to="/" className="group flex items-center gap-3">
-                    <div className="w-10 h-10 bg-ink text-paper rounded-sm flex items-center justify-center font-serif text-xl border border-ink shadow-[2px_2px_0_0_rgba(44,44,44,0.3)] transition-transform group-hover:-translate-y-0.5 group-hover:shadow-[3px_3px_0_0_rgba(44,44,44,0.3)]">
-                        IP
+                    <div className="flex items-center gap-2">
+                        {/*<div className="w-10 h-10 bg-ink text-paper rounded-sm flex items-center justify-center font-serif text-xl border border-ink shadow-[2px_2px_0_0_rgba(44,44,44,0.3)] transition-transform group-hover:-translate-y-0.5 group-hover:shadow-[3px_3px_0_0_rgba(44,44,44,0.3)]">
+                            IP
+                        </div>*/}
+                        <img src={logo} alt="" className="w-10 h-10 bg-ink text-paper rounded-sm flex items-center justify-center font-serif text-xl border border-ink shadow-[2px_2px_0_0_rgba(44,44,44,0.3)] transition-transform group-hover:-translate-y-0.5 group-hover:shadow-[3px_3px_0_0_rgba(44,44,44,0.3)]" />
                     </div>
                     <div className="flex flex-col">
                         <span className="font-serif text-xl font-bold text-ink tracking-tight leading-none group-hover:text-accent-olive transition-colors">Ink & Pens</span>

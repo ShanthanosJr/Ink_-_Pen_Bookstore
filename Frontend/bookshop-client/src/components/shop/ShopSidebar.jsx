@@ -22,8 +22,8 @@ const ShopSidebar = ({
                         <button
                             onClick={() => setSelectedCategory('All')}
                             className={`w-full text-left px-3 py-2 text-sm font-serif transition-colors border-b border-dotted border-border-linen hover:text-accent-olive ${selectedCategory === 'All'
-                                    ? 'text-accent-olive font-bold italic bg-paper-dark'
-                                    : 'text-ink-light'
+                                ? 'text-accent-olive font-bold italic bg-paper-dark'
+                                : 'text-ink-light'
                                 }`}
                         >
                             All Collections
@@ -34,8 +34,8 @@ const ShopSidebar = ({
                             <button
                                 onClick={() => setSelectedCategory(category)}
                                 className={`w-full text-left px-3 py-2 text-sm font-serif transition-colors border-b border-dotted border-border-linen hover:text-accent-olive ${selectedCategory === category
-                                        ? 'text-accent-olive font-bold italic bg-paper-dark'
-                                        : 'text-ink-light'
+                                    ? 'text-accent-olive font-bold italic bg-paper-dark'
+                                    : 'text-ink-light'
                                     }`}
                             >
                                 {category}
@@ -47,7 +47,15 @@ const ShopSidebar = ({
 
             {/* Price Range */}
             <div className="bg-paper border border-border-linen p-6">
-                <h3 className="text-sm font-serif font-bold text-ink uppercase tracking-widest mb-4 border-b border-border-linen pb-2">Price Filter</h3>
+                <div className="flex justify-between items-center mb-4 border-b border-border-linen pb-2">
+                    <h3 className="text-sm font-serif font-bold text-ink uppercase tracking-widest">Price Filter</h3>
+                    <button
+                        onClick={() => setPriceRange([0, 200])}
+                        className="text-[10px] font-serif italic text-accent-leather hover:text-ink transition-colors uppercase tracking-widest"
+                    >
+                        Reset
+                    </button>
+                </div>
                 <div className="px-2">
                     <input
                         type="range"
