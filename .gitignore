@@ -1,0 +1,16 @@
+# General
+.DS_Store
+.vscode/
+*.log
+
+# Backend (.NET)
+**/bin/
+**/obj/
+**/appsettings.Development.json
+**/*.user
+
+# Frontend (Node.js)
+**/node_modules/
+**/dist/
+**/.env
+**/.env.local
