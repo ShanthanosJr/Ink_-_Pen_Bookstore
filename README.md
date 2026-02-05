@@ -1,4 +1,4 @@
-# BookShop - Advanced Full-Stack E-commerce Platform
+# BookShop -  Full-Stack E-commerce Platform
 
 This is a comprehensive, production-ready full-stack e-commerce application built with ASP.NET Core Web API and React (Vite), featuring user authentication, shopping cart, order management, and secure payment processing.
 
