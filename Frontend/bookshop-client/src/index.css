@@ -11,6 +11,18 @@
 
     --font-serif: "Playfair Display", serif;
     --font-body: "Lora", serif;
+
+    --color-primary-50: #fbf7f3;
+    --color-primary-100: #f5ebe0;
+    --color-primary-200: #eddcc5;
+    --color-primary-300: #e3c6a0;
+    --color-primary-400: #d5a873;
+    --color-primary-500: #c58b4a;
+    --color-primary-600: #a66a33;
+    --color-primary-700: #8b4513;
+    --color-primary-800: #723a13;
+    --color-primary-900: #5e3113;
+    --color-primary-950: #341908;
 }
 
 body {

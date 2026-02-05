@@ -1,8 +1,17 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import logo from '../assets/inkandpens.png';
 import { motion } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
+
     return (
         <motion.nav
             initial={{ y: -50 }}
@@ -56,37 +65,53 @@ const Navbar = () => {
 
                 {/* User Actions */}
                 <div className="flex items-center gap-6">
-                    {/* Library Card Style Profile */}
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.8 }}
-                        className="flex items-center gap-3 border-l border-border-linen pl-6"
-                    >
-                        <div className="text-right hidden sm:block">
-                            <p className="font-serif font-bold text-ink text-sm leading-none">MR. Kavishka</p>
-                            <p className="font-body text-[10px] text-accent-olive uppercase tracking-wider mt-0.5">Mem. No. 4921</p>
-                        </div>
-                        <motion.div
-                            whileHover={{ scale: 1.1 }}
-                            className="w-9 h-9 border border-border-linen bg-white rounded-full flex items-center justify-center text-ink-light font-serif text-sm italic group cursor-pointer hover:border-accent-olive transition-colors"
-                        >
-                            K.R
-                        </motion.div>
-                    </motion.div>
+                    {user ? (
+                        <>
+                            {/* Library Card Style Profile */}
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="flex items-center gap-3 border-l border-border-linen pl-6"
+                            >
+                                <Link to="/profile" className="flex items-center gap-3 group">
+                                    <div className="text-right hidden sm:block">
+                                        <p className="font-serif font-bold text-ink text-sm leading-none group-hover:text-primary-700 transition-colors">{user.fullName}</p>
+                                        <p className="font-body text-[10px] text-accent-olive uppercase tracking-wider mt-0.5">Bookworm Mode</p>
+                                    </div>
+                                    <motion.div
+                                        whileHover={{ scale: 1.1 }}
+                                        className="w-9 h-9 border border-border-linen bg-white rounded-full flex items-center justify-center text-ink-light font-serif text-sm italic hover:border-accent-olive transition-colors"
+                                    >
+                                        {user.fullName.charAt(0)}
+                                    </motion.div>
+                                </Link>
+                            </motion.div>
 
-                    <motion.button
-                        initial={{ opacity: 0, rotate: -30 }}
-                        animate={{ opacity: 1, rotate: 0 }}
-                        transition={{ delay: 1 }}
-                        onClick={() => alert('Signed out successfully (Mock)')}
-                        className="text-ink-light hover:text-red-800 transition transform hover:rotate-12"
-                        title="Sign Out"
-                    >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                        </svg>
-                    </motion.button>
+                            <motion.button
+                                initial={{ opacity: 0, rotate: -30 }}
+                                animate={{ opacity: 1, rotate: 0 }}
+                                onClick={handleLogout}
+                                className="text-ink-light hover:text-red-800 transition transform hover:rotate-12"
+                                title="Sign Out"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                </svg>
+                            </motion.button>
+                        </>
+                    ) : (
+                        <div className="flex items-center gap-4 border-l border-border-linen pl-6">
+                            <Link to="/login" className="font-serif text-ink-light hover:text-accent-olive transition-colors">
+                                Login
+                            </Link>
+                            <Link
+                                to="/register"
+                                className="bg-primary-800 text-white px-4 py-2 rounded shadow-sm hover:bg-primary-900 transition-all font-serif text-sm"
+                            >
+                                Join
+                            </Link>
+                        </div>
+                    )}
                 </div>
             </div>
         </motion.nav>
