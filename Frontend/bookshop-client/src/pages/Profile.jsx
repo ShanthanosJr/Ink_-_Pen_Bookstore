@@ -100,7 +100,7 @@ const Profile = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className={`w-full bg-[#723a13] text-white font-bold uppercase tracking-widest py-3 px-6 rounded-sm hover:bg-[#5e3113] transition-all shadow-md hover:shadow-lg ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                className={`block w-full text-center bg-ink text-white font-serif font-bold uppercase tracking-widest py-4 hover:bg-accent-olive transition-colors border border-ink shadow-[4px_4px_0_0_rgba(85,107,47,0.2)] ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                             >
                                 {loading ? 'Saving...' : 'Update Profile'}
                             </button>
