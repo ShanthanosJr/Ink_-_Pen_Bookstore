@@ -2,9 +2,11 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import logo from '../assets/inkandpens.png';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
     const { user, logout } = useAuth();
+    const { cartCount } = useCart();
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -65,6 +67,22 @@ const Navbar = () => {
 
                 {/* User Actions */}
                 <div className="flex items-center gap-6">
+                    {/* Cart Icon */}
+                    <Link to="/cart" className="relative group text-ink hover:text-accent-olive transition-colors">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                        {cartCount > 0 && (
+                            <motion.span
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                className="absolute -top-2 -right-2 bg-accent-leather text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center border border-paper"
+                            >
+                                {cartCount}
+                            </motion.span>
+                        )}
+                    </Link>
+
                     {user ? (
                         <>
                             {/* Library Card Style Profile */}

@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useCart } from '../../context/CartContext';
 
 const ProductCard = ({ book, isAnimated = false }) => {
     // Deterministic "Staff Pick", "Reading Time", and "First Edition" for variety
     const isStaffPick = book.id % 5 === 0;
     const isFirstEdition = book.id % 7 === 0;
     const readingTime = (book.id % 8) + 3;
+    const { addToCart } = useCart();
+    // No local loading state to keep cards snappy/lightweight, global spinner or toast handled in Context usually (or we skip for now)
 
     const cardVariants = {
         hidden: { opacity: 0, y: 20 },
@@ -21,6 +24,8 @@ const ProductCard = ({ book, isAnimated = false }) => {
     return (
         <Wrapper
             variants={cardVariants}
+            initial={isAnimated ? "hidden" : undefined}
+            animate={isAnimated ? "visible" : undefined}
             className="group bg-paper-dark border border-border-linen rounded-sm p-5 flex flex-col h-full relative hover:border-accent-olive/30 transition-all duration-500"
         >
 
@@ -59,9 +64,20 @@ const ProductCard = ({ book, isAnimated = false }) => {
 
                 {/* Quick Action - Styled as a bookmark/label */}
                 <div className="absolute inset-x-4 bottom-4 translate-y-[120%] group-hover:translate-y-0 transition duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] z-20">
-                    <Link to={`/product/${book.id}`} className="block w-full bg-paper text-ink font-serif uppercase tracking-widest text-xs font-bold text-center py-3 border border-ink hover:bg-ink hover:text-paper transition-colors shadow-lg">
-                        Examine
-                    </Link>
+                    <div className="flex w-full">
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault(); // Prevent Link navigation if wrapped
+                                addToCart(book.id, 1);
+                            }}
+                            className="flex-1 bg-paper text-ink font-serif uppercase tracking-widest text-xs font-bold text-center py-3 border-y border-l border-ink hover:bg-ink hover:text-paper transition-colors"
+                        >
+                            Add
+                        </button>
+                        <Link to={`/product/${book.id}`} className="flex-[2] bg-paper text-ink font-serif uppercase tracking-widest text-xs font-bold text-center py-3 border border-ink hover:bg-ink hover:text-paper transition-colors shadow-lg">
+                            Examine
+                        </Link>
+                    </div>
                 </div>
             </div>
 

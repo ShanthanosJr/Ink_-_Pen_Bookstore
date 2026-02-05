@@ -9,17 +9,12 @@ public static class SeedData
     {
         using var context = serviceProvider.GetRequiredService<BookShopContext>();
 
-        // ✅ Safe migration instead of EnsureCreated
+        // ✅ Safe migration
         context.Database.Migrate();
 
-        // ✅ Check if data already exists to prevent duplication or reset
-        // Ensure we have at least 15 books. If less, we might add more.
-        if (context.Books.Count() >= 15)
+        // Check each book individually to prevent duplicates while preserving existing data
+        var seedBooks = new List<Book>
         {
-            return; // Enough data exists
-        }
-
-        context.Books.AddRange(
             // Fiction
             new Book
             {
@@ -147,7 +142,16 @@ public static class SeedData
                 StockQuantity = 18,
                 ImageUrl = "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=800"
             }
-        );
+        };
+
+        foreach (var book in seedBooks)
+        {
+            // Check if a book with this title already exists
+            if (!context.Books.Any(b => b.Title == book.Title))
+            {
+                context.Books.Add(book);
+            }
+        }
 
         context.SaveChanges();
     }

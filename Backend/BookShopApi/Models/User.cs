@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace BookShopApi.Models;
 
@@ -19,4 +20,8 @@ public class User
     public string PasswordHash { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    // Navigation property
+    [JsonIgnore]
+    public Cart? Cart { get; set; }
 }

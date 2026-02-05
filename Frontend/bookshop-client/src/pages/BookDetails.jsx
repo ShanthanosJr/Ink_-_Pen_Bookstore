@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../api';
+import { useCart } from '../context/CartContext';
 import { motion } from 'framer-motion';
 
 const BookDetails = () => {
     const { id } = useParams();
     const [book, setBook] = useState(null);
     const [loading, setLoading] = useState(true);
+    const { addToCart } = useCart();
+    const [adding, setAdding] = useState(false);
 
     useEffect(() => {
         const fetchBook = async () => {
@@ -137,9 +140,18 @@ const BookDetails = () => {
                                 <motion.button
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className="flex-1 bg-ink text-paper font-serif font-bold uppercase tracking-widest py-4 hover:bg-accent-olive transition-colors border border-ink shadow-[4px_4px_0_0_rgba(44,44,44,0.2)]"
+                                    onClick={async () => {
+                                        setAdding(true);
+                                        await addToCart(book.id, 1);
+                                        setAdding(false);
+                                    }}
+                                    disabled={adding || book.stockQuantity === 0}
+                                    className={`flex-1 font-serif font-bold uppercase tracking-widest py-4 transition-colors border border-ink shadow-[4px_4px_0_0_rgba(44,44,44,0.2)] ${book.stockQuantity === 0
+                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                            : 'bg-ink text-paper hover:bg-accent-olive'
+                                        }`}
                                 >
-                                    Acquire Volume
+                                    {adding ? 'Adding...' : (book.stockQuantity > 0 ? 'Acquire Volume' : 'Out of Stock')}
                                 </motion.button>
                                 <motion.button
                                     whileHover={{ scale: 1.1 }}
