@@ -53,7 +53,7 @@ const Footer = () => {
                         <ul className="space-y-3 text-sm font-body opacity-80">
                             <li>123 Book Lane, Sri Lanka</li>
                             <li>support@inkandpens.com</li>
-                            <li>+74 123-4567</li>
+                            <li>+94 74 123-4567</li>
                         </ul>
                     </div>
                 </div>
