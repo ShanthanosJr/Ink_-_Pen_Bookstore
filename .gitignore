@@ -14,3 +14,10 @@
 **/dist/
 **/.env
 **/.env.local
+
+# Backend Assets
+**/wwwroot/uploads/
+**/wwwroot/images/
+**/wwwroot/assets/
+**/wwwroot/**/*
+!**/wwwroot/ # Include wwwroot directory but not its contents

@@ -131,6 +131,9 @@ namespace BookShopApi.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("CardLast4Digits")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -144,6 +147,9 @@ namespace BookShopApi.Migrations
 
                     b.Property<string>("PaymentMethod")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PaymentSlipPath")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumber")

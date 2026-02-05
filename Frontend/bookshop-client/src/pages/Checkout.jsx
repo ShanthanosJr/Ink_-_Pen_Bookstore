@@ -10,6 +10,13 @@ const Checkout = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    const [bankSlip, setBankSlip] = useState(null);
+    const [cardDetails, setCardDetails] = useState({
+        cardNumber: '',
+        expiry: '',
+        cvc: ''
+    });
+
     const [formData, setFormData] = useState({
         fullName: '',
         phoneNumber: '',
@@ -23,13 +30,46 @@ const Checkout = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleFileChange = (e) => {
+        if (e.target.files[0]) {
+            setBankSlip(e.target.files[0]);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
 
         try {
-            await api.post('/orders/checkout', formData);
+            let finalFormData = { ...formData };
+
+            // Handle Bank Transfer Upload
+            if (formData.paymentMethod === 'Bank') {
+                if (!bankSlip) {
+                    throw new Error("Please upload the payment slip.");
+                }
+                const uploadData = new FormData();
+                uploadData.append('file', bankSlip);
+
+                const uploadRes = await api.post('/orders/upload-slip', uploadData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+
+                finalFormData.paymentSlipPath = uploadRes.data.path;
+            }
+
+            // Handle Card Logic (Mock)
+            if (formData.paymentMethod === 'Card') {
+                if (!cardDetails.cardNumber || !cardDetails.expiry || !cardDetails.cvc) {
+                    throw new Error("Please complete card details.");
+                }
+                // In a real app, you'd tokenize here. We just save last 4 digits.
+                finalFormData.cardLast4Digits = cardDetails.cardNumber.slice(-4);
+            }
+
+            await api.post('/orders/checkout', finalFormData);
+
             // Refresh cart (should be empty now)
             await fetchCart();
             // Redirect to profile or success page
@@ -37,7 +77,8 @@ const Checkout = () => {
             navigate('/profile');
         } catch (err) {
             console.error(err);
-            setError(err.response?.data || "Failed to place order. Please check stock levels.");
+            const msg = err.response?.data || err.message || "Failed to place order. Please check details.";
+            setError(typeof msg === 'object' ? JSON.stringify(msg) : msg);
         } finally {
             setLoading(false);
         }
@@ -141,6 +182,81 @@ const Checkout = () => {
                                     <option value="Bank">Bank Transfer</option>
                                 </select>
                             </div>
+
+                            {/* Bank Transfer Details */}
+                            {formData.paymentMethod === 'Bank' && (
+                                <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    className="bg-stone-100 p-4 border border-border-linen space-y-4"
+                                >
+                                    <div className="text-sm font-serif text-ink space-y-1">
+                                        <p className="font-bold">Bank Details:</p>
+                                        <p>Bank: City Bank</p>
+                                        <p>Account Name: Ink & Pen Bookstore</p>
+                                        <p>Account Number: 1234-5678-9012</p>
+                                        <p>Branch: Main Street</p>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">Upload Payment Slip</label>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleFileChange}
+                                            required
+                                            className="w-full bg-white border border-border-linen p-2 text-sm font-serif text-ink file:mr-4 file:py-2 file:px-4 file:border-0 file:text-xs file:font-semibold file:bg-ink file:text-white hover:file:bg-accent-olive transition-colors"
+                                        />
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {/* Credit Card Details */}
+                            {formData.paymentMethod === 'Card' && (
+                                <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    className="bg-stone-100 p-4 border border-border-linen space-y-4"
+                                >
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">Card Number</label>
+                                        <input
+                                            type="text"
+                                            maxLength="19"
+                                            placeholder="XXXX XXXX XXXX XXXX"
+                                            value={cardDetails.cardNumber}
+                                            onChange={(e) => setCardDetails({ ...cardDetails, cardNumber: e.target.value })}
+                                            required
+                                            className="w-full bg-white border border-border-linen p-3 text-ink font-serif focus:outline-none focus:border-accent-olive transition-colors"
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">Expiry Date</label>
+                                            <input
+                                                type="text"
+                                                placeholder="MM/YY"
+                                                maxLength="5"
+                                                value={cardDetails.expiry}
+                                                onChange={(e) => setCardDetails({ ...cardDetails, expiry: e.target.value })}
+                                                required
+                                                className="w-full bg-white border border-border-linen p-3 text-ink font-serif focus:outline-none focus:border-accent-olive transition-colors"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">CVC</label>
+                                            <input
+                                                type="text"
+                                                maxLength="3"
+                                                placeholder="123"
+                                                value={cardDetails.cvc}
+                                                onChange={(e) => setCardDetails({ ...cardDetails, cvc: e.target.value })}
+                                                required
+                                                className="w-full bg-white border border-border-linen p-3 text-ink font-serif focus:outline-none focus:border-accent-olive transition-colors"
+                                            />
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            )}
 
                             <motion.button
                                 whileHover={{ scale: 1.02 }}

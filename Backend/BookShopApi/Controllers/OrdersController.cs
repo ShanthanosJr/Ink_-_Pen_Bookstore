@@ -123,7 +123,9 @@ public class OrdersController : ControllerBase
                 AddressLine = request.AddressLine,
                 City = request.City,
                 PostalCode = request.PostalCode,
-                PaymentMethod = request.PaymentMethod
+                PaymentMethod = request.PaymentMethod,
+                PaymentSlipPath = request.PaymentSlipPath,
+                CardLast4Digits = request.CardLast4Digits
             };
             _context.DeliveryDetails.Add(delivery);
 
@@ -141,6 +143,38 @@ public class OrdersController : ControllerBase
             return StatusCode(500, "An error occurred while processing your order: " + ex.Message);
         }
     }
+    // POST: api/orders/upload-slip
+    [HttpPost("upload-slip")]
+    public async Task<IActionResult> UploadSlip(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest("No file uploaded.");
+
+        try
+        {
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "slips");
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            // Return relative path
+            var relativePath = $"/uploads/slips/{uniqueFileName}";
+            return Ok(new { path = relativePath });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
 }
 
 public class CheckoutRequest
@@ -151,4 +185,6 @@ public class CheckoutRequest
     public string City { get; set; } = string.Empty;
     public string PostalCode { get; set; } = string.Empty;
     public string PaymentMethod { get; set; } = "COD";
+    public string? PaymentSlipPath { get; set; }
+    public string? CardLast4Digits { get; set; }
 }

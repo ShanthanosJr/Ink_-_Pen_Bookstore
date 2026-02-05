@@ -17,4 +17,7 @@ public class DeliveryDetails
     public string City { get; set; } = string.Empty;
     public string PostalCode { get; set; } = string.Empty;
     public string PaymentMethod { get; set; } = "COD"; // COD, Card, Bank Transfer
+    
+    public string? PaymentSlipPath { get; set; }
+    public string? CardLast4Digits { get; set; }
 }
