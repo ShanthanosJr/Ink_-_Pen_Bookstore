@@ -127,35 +127,73 @@ const Profile = () => {
                     ) : (
                         <div className="space-y-6">
                             {orders.map((order) => (
-                                <div key={order.id} className="border border-gray-100 rounded-sm p-4 hover:border-[#723a13]/30 transition-colors">
-                                    <div className="flex justify-between items-start mb-3">
+                                <motion.div
+                                    key={order.id}
+                                    whileHover={{ scale: 1.01 }}
+                                    className={`relative border rounded-sm p-6 transition-all shadow-sm ${order.orderStatus === 'Rejected' ? 'border-red-200 bg-red-50/30' :
+                                        order.orderStatus === 'Approved' ? 'border-green-200 bg-green-50/30' :
+                                            'border-gray-100 bg-white'
+                                        }`}
+                                >
+                                    <div className="flex justify-between items-start mb-4">
                                         <div>
-                                            <span className="text-xs font-bold uppercase tracking-widest text-[#723a13] block">Order #{order.id}</span>
-                                            <span className="text-xs text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</span>
+                                            <span className="text-sm font-bold uppercase tracking-widest text-ink block mb-1">Order #{order.id}</span>
+                                            <span className="text-xs text-ink-light font-serif">Placed on {new Date(order.createdAt).toLocaleDateString()}</span>
+                                            {order.lastUpdated && order.orderStatus !== 'PendingApproval' && (
+                                                <span className="text-xs text-ink-light font-serif block mt-1">Updated {new Date(order.lastUpdated).toLocaleDateString()}</span>
+                                            )}
                                         </div>
-                                        <span className={`px-2 py-1 text-[10px] uppercase font-bold tracking-widest rounded-sm ${order.orderStatus === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                                                order.orderStatus === 'Processing' ? 'bg-blue-100 text-blue-800' :
-                                                    order.orderStatus === 'Shipped' ? 'bg-purple-100 text-purple-800' :
-                                                        'bg-green-100 text-green-800'
-                                            }`}>
-                                            {order.orderStatus}
-                                        </span>
+                                        <div className="text-right">
+                                            <span className={`inline-block px-3 py-1 text-[11px] uppercase font-bold tracking-widest rounded-full border ${order.orderStatus === 'Approved' ? 'bg-green-100 text-green-800 border-green-200' :
+                                                order.orderStatus === 'Rejected' ? 'bg-red-100 text-red-800 border-red-200' :
+                                                    order.orderStatus === 'PendingApproval' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' :
+                                                        order.orderStatus === 'Processing' ? 'bg-blue-100 text-blue-800 border-blue-200' :
+                                                            order.orderStatus === 'Shipped' ? 'bg-purple-100 text-purple-800 border-purple-200' :
+                                                                order.orderStatus === 'OutForDelivery' ? 'bg-indigo-100 text-indigo-800 border-indigo-200' :
+                                                                    'bg-gray-100 text-gray-800 border-gray-200'
+                                                }`}>
+                                                {order.orderStatus === 'PendingApproval' ? 'Pending Review' :
+                                                    order.orderStatus === 'OutForDelivery' ? 'Out For Delivery' :
+                                                        order.orderStatus}
+                                            </span>
+                                        </div>
                                     </div>
+
+                                    {/* Rejection Reason */}
+                                    {order.orderStatus === 'Rejected' && order.rejectionReason && (
+                                        <div className="mb-4 bg-red-100 border-l-4 border-red-500 p-3">
+                                            <p className="text-xs font-bold text-red-800 uppercase tracking-widest mb-1">Reason for Rejection</p>
+                                            <p className="text-sm font-serif text-red-900 italic">"{order.rejectionReason}"</p>
+                                        </div>
+                                    )}
+
+                                    {/* Timeline Visualization (Simple) */}
+                                    {!['Rejected', 'Cancelled', 'PendingApproval'].includes(order.orderStatus) && (
+                                        <div className="flex flex-wrap items-center gap-2 mb-4 text-[10px] uppercase font-bold tracking-widest text-gray-400">
+                                            <span className={['Approved', 'Processing', 'Shipped', 'OutForDelivery', 'Delivered'].includes(order.orderStatus) ? 'text-green-600' : ''}>Approved</span>
+                                            <span>&rarr;</span>
+                                            <span className={['Processing', 'Shipped', 'OutForDelivery', 'Delivered'].includes(order.orderStatus) ? 'text-green-600' : ''}>Processing</span>
+                                            <span>&rarr;</span>
+                                            <span className={['Shipped', 'OutForDelivery', 'Delivered'].includes(order.orderStatus) ? 'text-green-600' : ''}>Shipped</span>
+                                            <span>&rarr;</span>
+                                            <span className={order.orderStatus === 'Delivered' ? 'text-green-600' : ''}>Delivered</span>
+                                        </div>
+                                    )}
 
                                     <div className="space-y-2 mb-4 border-t border-dashed border-gray-200 pt-3">
                                         {order.items.map(item => (
                                             <div key={item.id} className="flex justify-between text-sm font-serif">
-                                                <span className="text-gray-800">{item.book ? item.book.title : 'Unknown Volume'} (x{item.quantity})</span>
-                                                <span className="text-gray-600">${(item.unitPrice * item.quantity).toFixed(2)}</span>
+                                                <span className="text-ink">{item.book ? item.book.title : 'Unknown Volume'} (x{item.quantity})</span>
+                                                <span className="text-ink-light">${(item.unitPrice * item.quantity).toFixed(2)}</span>
                                             </div>
                                         ))}
                                     </div>
 
                                     <div className="flex justify-between items-center pt-3 border-t border-gray-100">
-                                        <span className="text-xs text-gray-500 font-bold uppercase tracking-widest">Total</span>
-                                        <span className="font-serif font-bold text-lg text-[#723a13]">${order.totalAmount.toFixed(2)}</span>
+                                        <span className="text-xs text-ink-light font-bold uppercase tracking-widest">Total</span>
+                                        <span className="font-serif font-bold text-lg text-accent-olive">${order.totalAmount.toFixed(2)}</span>
                                     </div>
-                                </div>
+                                </motion.div>
                             ))}
                         </div>
                     )}

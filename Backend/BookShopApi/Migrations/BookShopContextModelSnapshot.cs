@@ -177,8 +177,14 @@ namespace BookShopApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("OrderStatus")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RejectionReason")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("TotalAmount")
@@ -241,6 +247,10 @@ namespace BookShopApi.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

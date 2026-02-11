@@ -13,10 +13,13 @@ public class Order
     
     public decimal TotalAmount { get; set; }
     
-    // Status: Pending, Processing, Shipped, Delivered
-    public string OrderStatus { get; set; } = "Pending";
+    // Status: PendingApproval, Approved, Processing, Shipped, OutForDelivery, Delivered, Cancelled, Rejected
+    public string OrderStatus { get; set; } = "PendingApproval";
+    
+    public string? RejectionReason { get; set; }
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
     
     public List<OrderItem> Items { get; set; } = new List<OrderItem>();
     

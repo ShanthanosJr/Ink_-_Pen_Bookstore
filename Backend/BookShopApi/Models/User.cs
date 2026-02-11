@@ -24,4 +24,6 @@ public class User
     // Navigation property
     [JsonIgnore]
     public Cart? Cart { get; set; }
+
+    public string Role { get; set; } = "User"; // User, Admin
 }

@@ -33,7 +33,8 @@ public class AuthController : ControllerBase
         {
             FullName = request.FullName,
             Email = request.Email,
-            PasswordHash = _authService.HashPassword(request.Password)
+            PasswordHash = _authService.HashPassword(request.Password),
+            Role = request.Email.Contains("admin") || request.Email.Contains("Admin") ? "Admin" : "User"
         };
 
         _context.Users.Add(user);
@@ -61,6 +62,7 @@ public class AuthController : ControllerBase
             {
                 FullName = user.FullName,
                 Email = user.Email,
+                Role = user.Role,
                 CreatedAt = user.CreatedAt
             }
         });
