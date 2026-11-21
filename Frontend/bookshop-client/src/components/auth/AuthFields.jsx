@@ -23,7 +23,7 @@ export const AuthField = ({ id, label, icon, type = 'text', hint, invalid, trail
                 <label htmlFor={id} className="text-xs font-bold uppercase tracking-[0.15em] text-ink-light">{label}</label>
                 {trailing}
             </div>
-            <div className={`group flex items-center gap-3 bg-white/70 border rounded-lg px-4 transition-colors focus-within:bg-white focus-within:border-ink focus-within:ring-4 focus-within:ring-accent-olive/10 ${invalid ? 'border-red-400' : 'border-border-linen'}`}>
+            <div className={`group flex items-center gap-3 bg-white/70 border rounded-sm px-4 transition-colors focus-within:bg-white focus-within:border-ink focus-within:ring-4 focus-within:ring-accent-olive/10 ${invalid ? 'border-red-400' : 'border-border-linen'}`}>
                 <span className={`shrink-0 transition-colors ${invalid ? 'text-red-500' : 'text-ink-light group-focus-within:text-ink'}`}><Icon name={icon} /></span>
                 <input
                     id={id}
@@ -54,7 +54,7 @@ export const AuthField = ({ id, label, icon, type = 'text', hint, invalid, trail
 export const Banner = ({ tone = 'info', children }) => (
     <div
         role={tone === 'error' ? 'alert' : 'status'}
-        className={`flex gap-3 rounded-lg border px-4 py-3 font-body text-sm ${tone === 'error'
+        className={`flex gap-3 rounded-sm border px-4 py-3 font-body text-sm ${tone === 'error'
             ? 'border-red-200 bg-red-50 text-red-800'
             : 'border-accent-olive/30 bg-[#eef2e6] text-ink'}`}
     >
@@ -67,7 +67,7 @@ export const SubmitButton = ({ loading, children, loadingText }) => (
     <button
         type="submit"
         disabled={loading}
-        className="group w-full flex items-center justify-center gap-3 rounded-lg bg-ink text-paper py-4 font-serif text-lg tracking-wide transition-all hover:bg-accent-olive hover:shadow-[0_10px_30px_-10px_rgba(85,107,47,0.7)] disabled:opacity-60 disabled:hover:bg-ink"
+        className="group w-full flex items-center justify-center gap-3 rounded-sm bg-ink text-paper py-4 font-serif text-lg tracking-wide transition-all hover:bg-accent-olive hover:shadow-[0_10px_30px_-10px_rgba(85,107,47,0.7)] disabled:opacity-60 disabled:hover:bg-ink"
     >
         {loading ? (
             <>

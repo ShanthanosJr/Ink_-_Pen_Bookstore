@@ -159,9 +159,9 @@ const Shop = () => {
                         />
 
                         {loading ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6" aria-busy="true" aria-label="Loading books">
+                            <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6" aria-busy="true" aria-label="Loading books">
                                 {Array.from({ length: 6 }).map((_, i) => (
-                                    <div key={i} className="bg-paper border border-border-linen p-5 animate-pulse">
+                                    <div key={i} className="bg-paper border border-border-linen p-3 sm:p-5 animate-pulse">
                                         <div className="aspect-[2/3] bg-border-linen/60 mb-4" />
                                         <div className="h-4 bg-border-linen/60 w-3/4 mx-auto mb-2" />
                                         <div className="h-3 bg-border-linen/60 w-1/2 mx-auto" />
@@ -176,7 +176,7 @@ const Shop = () => {
                         ) : filteredBooks.length > 0 ? (
                             <>
                                 {/* Plain grid: books must never depend on an animation to become visible */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6">
                                     {filteredBooks.slice(0, visibleCount).map(book => (
                                         <ProductCard key={book.id} book={book} />
                                     ))}

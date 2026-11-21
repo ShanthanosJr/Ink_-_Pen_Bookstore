@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
 import { WishlistButton } from '../components/shop/BookBits';
-import { assetUrl } from '../api';
+import BookCover from '../components/shop/BookCover';
 
 const Wishlist = () => {
     const { items } = useWishlist();
@@ -25,7 +25,7 @@ const Wishlist = () => {
                             return (
                                 <li key={book.id} className="flex gap-4 py-5 items-center">
                                     <Link to={`/product/${book.id}`} className="w-16 h-24 bg-[#e3ddd3] border border-border-linen overflow-hidden flex-shrink-0">
-                                        {book.imageUrl && <img src={assetUrl(book.imageUrl)} alt="" className="w-full h-full object-cover" />}
+                                        <BookCover book={book} compact />
                                     </Link>
                                     <div className="flex-1 min-w-0">
                                         <Link to={`/product/${book.id}`} className="font-serif font-bold text-ink hover:text-accent-olive">{book.title}</Link>

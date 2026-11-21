@@ -97,7 +97,7 @@ function App() {
           <AuthProvider>
             <CartProvider>
               <WishlistProvider>
-                <div className="min-h-screen font-sans bg-gray-50 flex flex-col">
+                <div className="min-h-screen font-body bg-paper flex flex-col">
                   <SiteChrome><Navbar /></SiteChrome>
 
                   <main className="flex-grow">

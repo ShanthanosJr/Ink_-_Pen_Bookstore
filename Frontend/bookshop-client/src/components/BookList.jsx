@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import api from '../api';
 import ProductCard from './shop/ProductCard';
 
 // Different lists for the home page, all from real data
@@ -10,17 +8,9 @@ const SORTS = {
     rated: (a, b) => (b.averageRating || 0) - (a.averageRating || 0) || b.reviewCount - a.reviewCount,
 };
 
-const BookList = ({ limit = 4, title, sort = 'newest', exclude = [], link, subtitle }) => {
-    const [books, setBooks] = useState(null);
-    const [error, setError] = useState(false);
-
-    useEffect(() => {
-        api.get('/books')
-            .then(res => setBooks(res.data))
-            .catch(() => setError(true));
-    }, []);
-
-    if (error) return null;
+// `books` is fetched once by the page and shared by every list: null while loading, false if it failed
+const BookList = ({ books, limit = 4, title, sort = 'newest', exclude = [], link, subtitle }) => {
+    if (books === false) return null;
 
     const list = (books || [])
         .filter(b => b.stockQuantity > 0 && !exclude.includes(b.id))
@@ -40,10 +30,10 @@ const BookList = ({ limit = 4, title, sort = 'newest', exclude = [], link, subti
                 </div>
                 {link && <Link to={link} className="font-serif text-sm underline text-ink-light hover:text-ink">See all</Link>}
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
                 {books === null
                     ? Array.from({ length: limit }).map((_, i) => (
-                        <div key={i} className="bg-paper border border-border-linen p-5 animate-pulse" aria-hidden="true">
+                        <div key={i} className="bg-paper border border-border-linen p-3 sm:p-5 animate-pulse" aria-hidden="true">
                             <div className="aspect-[2/3] bg-border-linen/60 mb-4" />
                             <div className="h-4 bg-border-linen/60 w-3/4 mx-auto" />
                         </div>

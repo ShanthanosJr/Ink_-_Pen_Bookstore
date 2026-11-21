@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import api, { assetUrl } from '../api';
+import api from '../api';
 import { formatMoney } from '../constants/orders';
 import { useCart } from '../context/CartContext';
 import { motion } from 'framer-motion';
+import BookCover from '../components/shop/BookCover';
 
 const Cart = () => {
     const { cartItems, cartTotal, updateQuantity, removeFromCart, loading } = useCart();
@@ -55,11 +56,7 @@ const Cart = () => {
                                 className="flex gap-6 border-b border-border-linen pb-8 last:border-0"
                             >
                                 <div className="w-24 h-32 bg-[#e3ddd3] flex-shrink-0 border border-border-linen shadow-sm relative overflow-hidden">
-                                    {item.book.imageUrl ? (
-                                        <img src={assetUrl(item.book.imageUrl)} alt={item.book.title} className="w-full h-full object-cover" />
-                                    ) : (
-                                        <span className="flex items-center justify-center h-full text-2xl text-ink/20">❦</span>
-                                    )}
+                                    <BookCover book={item.book} alt={item.book.title} />
                                 </div>
 
                                 <div className="flex-grow flex flex-col justify-between py-1">

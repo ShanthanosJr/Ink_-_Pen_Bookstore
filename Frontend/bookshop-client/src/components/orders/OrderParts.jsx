@@ -1,10 +1,11 @@
 // Building blocks shared by the customer and admin order pages
 import { Link } from 'react-router-dom';
-import { API_ORIGIN, assetUrl } from '../../api';
+import { API_ORIGIN } from '../../api';
 import {
     FULFILMENT_STEPS, ORDER_STATUS, PAYMENT_METHOD, PAYMENT_STATUS,
     formatDateTime, formatMoney, paymentLabel, statusLabel
 } from '../../constants/orders';
+import BookCover from '../shop/BookCover';
 
 export const StatusBadge = ({ status }) => (
     <span className={`inline-block px-3 py-1 text-[11px] uppercase font-bold tracking-widest rounded-full border ${ORDER_STATUS[status]?.badge || 'bg-gray-100 text-gray-700 border-gray-300'}`}>
@@ -79,7 +80,7 @@ export const ItemsList = ({ items = [] }) => (
         {items.map(item => (
             <li key={item.id} className="flex gap-4 py-3">
                 <div className="w-12 h-16 bg-[#e3ddd3] border border-border-linen flex-shrink-0 overflow-hidden">
-                    {item.book?.imageUrl && <img src={assetUrl(item.book.imageUrl)} alt="" className="w-full h-full object-cover" />}
+                    {item.book && <BookCover book={item.book} compact />}
                 </div>
                 <div className="flex-1 min-w-0">
                     {item.book

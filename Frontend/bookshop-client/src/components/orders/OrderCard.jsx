@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import { assetUrl } from '../../api';
 import { formatDate, formatMoney } from '../../constants/orders';
 import { PaymentBadge, StatusBadge } from './OrderParts';
+import BookCover from '../shop/BookCover';
 
 // Summary card linking to an order's tracking page
 const OrderCard = ({ order }) => {
@@ -25,7 +25,7 @@ const OrderCard = ({ order }) => {
             <div className="flex gap-2 mb-3" aria-hidden="true">
                 {order.items.slice(0, 4).map(item => (
                     <div key={item.id} className="w-9 h-12 bg-[#e3ddd3] border border-border-linen overflow-hidden">
-                        {item.book?.imageUrl && <img src={assetUrl(item.book.imageUrl)} alt="" className="w-full h-full object-cover" />}
+                        {item.book && <BookCover book={item.book} compact />}
                     </div>
                 ))}
             </div>

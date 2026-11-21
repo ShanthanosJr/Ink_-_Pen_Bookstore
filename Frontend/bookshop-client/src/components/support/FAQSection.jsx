@@ -70,7 +70,7 @@ const FAQSection = () => {
 
     return (
         <div className="bg-paper shadow-sm border border-border-linen p-8 md:p-12 relative overflow-hidden">
-            <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }}></div>
+            <div className="absolute inset-0 opacity-20 pointer-events-none paper-grain"></div>
 
             <div className="text-center mb-12 relative z-10">
                 <span className="font-serif italic text-accent-olive text-sm mb-2 block">Common Inquiries</span>
@@ -80,12 +80,8 @@ const FAQSection = () => {
 
             <div className="grid md:grid-cols-2 gap-12 relative z-10">
                 {faqs.map((section, idx) => (
-                    <motion.div
+                    <div
                         key={idx}
-                        initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: idx * 0.2 }}
                     >
                         <h3 className="text-xl font-serif font-bold text-ink mb-6 flex items-center gap-3 border-b-2 border-ink pb-2">
                             <span className="w-6 h-6 rounded-full border border-ink text-ink flex items-center justify-center text-xs font-body">
@@ -98,7 +94,7 @@ const FAQSection = () => {
                                 <FAQItem key={i} question={item.q} answer={item.a} />
                             ))}
                         </div>
-                    </motion.div>
+                    </div>
                 ))}
             </div>
         </div>
