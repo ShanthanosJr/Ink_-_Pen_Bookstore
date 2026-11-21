@@ -3,6 +3,7 @@ using BookShopApi.Data;
 using BookShopApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,6 +58,15 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseCors("AllowReactApp");
+
+// Serve uploaded payment slips (saved by OrdersController.UploadSlip) at /uploads/...
+var uploadsRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+Directory.CreateDirectory(uploadsRoot);
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(uploadsRoot),
+    RequestPath = "/uploads"
+});
 
 app.UseAuthentication();
 app.UseAuthorization();

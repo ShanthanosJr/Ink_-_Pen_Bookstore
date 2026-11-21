@@ -65,7 +65,15 @@ public class CartController : ControllerBase
         var book = await _context.Books.FindAsync(request.BookId);
         if (book == null) return NotFound("Book not found");
 
+        if (request.Quantity <= 0) return BadRequest("Quantity must be at least 1.");
+
         var existingItem = cart.Items.FirstOrDefault(i => i.BookId == request.BookId);
+        var newQuantity = (existingItem?.Quantity ?? 0) + request.Quantity;
+        if (newQuantity > book.StockQuantity)
+        {
+            return BadRequest($"Only {book.StockQuantity} copies of '{book.Title}' are in stock.");
+        }
+
         if (existingItem != null)
         {
             existingItem.Quantity += request.Quantity;
@@ -93,6 +101,7 @@ public class CartController : ControllerBase
         var userId = GetUserId();
         var cart = await _context.Carts
             .Include(c => c.Items)
+            .ThenInclude(i => i.Book)
             .FirstOrDefaultAsync(c => c.UserId == userId);
 
         if (cart == null) return NotFound("Cart not found");
@@ -106,6 +115,10 @@ public class CartController : ControllerBase
         }
         else
         {
+            if (request.Quantity > item.Book.StockQuantity)
+            {
+                return BadRequest($"Only {item.Book.StockQuantity} copies of '{item.Book.Title}' are in stock.");
+            }
             item.Quantity = request.Quantity;
         }
 

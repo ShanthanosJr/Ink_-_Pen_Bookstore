@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const Categories = () => {
     const categories = [
@@ -52,13 +53,13 @@ const Categories = () => {
                         variants={drawerVariants}
                         className="group cursor-pointer"
                     >
-                        <div className={`bg-paper border border-border-linen ${cat.color} p-6 flex flex-col items-center justify-center gap-4 transition-all duration-300 hover:shadow-md hover:bg-paper-dark relative overflow-hidden`}>
+                        <Link to={`/shop?category=${encodeURIComponent(cat.name)}`} className={`bg-paper border border-border-linen ${cat.color} p-6 flex flex-col items-center justify-center gap-4 transition-all duration-300 hover:shadow-md hover:bg-paper-dark relative overflow-hidden`}>
                             {/* Paper texture overlay */}
                             <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }}></div>
 
                             <span className="text-4xl opacity-80 group-hover:scale-110 transition-transform duration-500">{cat.icon}</span>
                             <span className="font-serif font-bold text-ink text-center text-sm tracking-wide uppercase">{cat.name}</span>
-                        </div>
+                        </Link>
                     </motion.div>
                 ))}
             </motion.div>

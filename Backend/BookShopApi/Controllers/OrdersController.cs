@@ -91,7 +91,7 @@ public class OrdersController : ControllerBase
             {
                 UserId = userId,
                 TotalAmount = totalAmount,
-                OrderStatus = "Processing",
+                OrderStatus = "PendingApproval", // Admin must approve before fulfilment
                 CreatedAt = DateTime.UtcNow
             };
             _context.Orders.Add(order);

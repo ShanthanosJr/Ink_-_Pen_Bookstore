@@ -27,6 +27,10 @@ namespace BookShopApi.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ImageUrl")
                         .HasColumnType("TEXT");
 
@@ -49,6 +53,7 @@ namespace BookShopApi.Migrations
                         {
                             Id = 1,
                             Author = "F. Scott Fitzgerald",
+                            Category = "Fiction",
                             ImageUrl = "https://images.unsplash.com/photo-1543004286-64645f5f6775?auto=format&fit=crop&q=80&w=800",
                             Price = 12.99m,
                             StockQuantity = 100,
@@ -58,6 +63,7 @@ namespace BookShopApi.Migrations
                         {
                             Id = 2,
                             Author = "George Orwell",
+                            Category = "Fiction",
                             ImageUrl = "https://images.unsplash.com/photo-1541963463532-d68292c34b19?auto=format&fit=crop&q=80&w=800",
                             Price = 10.99m,
                             StockQuantity = 50,
@@ -67,6 +73,7 @@ namespace BookShopApi.Migrations
                         {
                             Id = 3,
                             Author = "Robert C. Martin",
+                            Category = "Technology",
                             ImageUrl = "https://images.unsplash.com/photo-1516116216624-53e697fedbea?auto=format&fit=crop&q=80&w=800",
                             Price = 35.50m,
                             StockQuantity = 20,

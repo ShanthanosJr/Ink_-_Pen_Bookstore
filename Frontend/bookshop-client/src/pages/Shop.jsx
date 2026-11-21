@@ -1,4 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { CATEGORIES } from '../constants/categories';
 import api from '../api';
 import ShopSidebar from '../components/shop/ShopSidebar';
 import ShopHeader from '../components/shop/ShopHeader';
@@ -10,7 +12,9 @@ const Shop = () => {
     const [loading, setLoading] = useState(true);
 
     // Filter States
-    const [selectedCategory, setSelectedCategory] = useState('All');
+    const [searchParams] = useSearchParams();
+    const initialCategory = CATEGORIES.includes(searchParams.get('category')) ? searchParams.get('category') : 'All';
+    const [selectedCategory, setSelectedCategory] = useState(initialCategory);
     const [priceRange, setPriceRange] = useState([0, 100]);
     const [inStockOnly, setInStockOnly] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -19,17 +23,13 @@ const Shop = () => {
     // Pagination State
     const [visibleCount, setVisibleCount] = useState(8);
 
-    const categories = ['Fiction', 'Non-Fiction', 'Technology', 'Education', 'Business', 'History'];
+    const categories = CATEGORIES;
 
     useEffect(() => {
         const fetchBooks = async () => {
             try {
                 const response = await api.get('/books');
-                const booksWithMetadata = response.data.map((book, index) => ({
-                    ...book,
-                    category: categories[index % categories.length],
-                    dateAdded: new Date(Date.now() - (index * 86400000))
-                }));
+                const booksWithMetadata = response.data;
                 setBooks(booksWithMetadata);
 
                 if (booksWithMetadata.length > 0) {
@@ -61,7 +61,7 @@ const Shop = () => {
                 case 'price_asc': return a.price - b.price;
                 case 'price_desc': return b.price - a.price;
                 case 'alpha_asc': return a.title.localeCompare(b.title);
-                case 'newest': default: return b.dateAdded - a.dateAdded;
+                case 'newest': default: return b.id - a.id; // higher id = added more recently
             }
         });
     }, [books, selectedCategory, priceRange, inStockOnly, searchQuery, sortOption]);

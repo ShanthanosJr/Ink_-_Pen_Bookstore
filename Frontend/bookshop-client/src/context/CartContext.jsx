@@ -41,6 +41,8 @@ export const CartProvider = ({ children }) => {
             return true;
         } catch (error) {
             console.error("Error adding to cart:", error);
+            const msg = error.response?.data;
+            alert(typeof msg === 'string' ? msg : "Could not add this book to your cart.");
             return false;
         }
     };
@@ -51,6 +53,8 @@ export const CartProvider = ({ children }) => {
             setCart(response.data);
         } catch (error) {
             console.error("Error updating cart:", error);
+            const msg = error.response?.data;
+            if (typeof msg === 'string') alert(msg);
         }
     };
 

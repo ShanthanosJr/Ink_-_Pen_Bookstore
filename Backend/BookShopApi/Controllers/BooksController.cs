@@ -22,6 +22,9 @@ public class BooksController : ControllerBase
         return await _context.Books.ToListAsync();
     }
 
+    [HttpGet("categories")]
+    public ActionResult<IEnumerable<string>> GetCategories() => BookCategories.All;
+
     [HttpGet("{id}")]
     public async Task<ActionResult<Book>> GetBook(int id)
     {
@@ -34,6 +37,9 @@ public class BooksController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Book>> PostBook(Book book)
     {
+        if (!BookCategories.IsValid(book.Category))
+            return BadRequest(InvalidCategoryMessage(book.Category));
+
         _context.Books.Add(book);
         await _context.SaveChangesAsync();
         return CreatedAtAction(nameof(GetBook), new { id = book.Id }, book);
@@ -44,6 +50,8 @@ public class BooksController : ControllerBase
     {
         if (id != book.Id)
             return BadRequest();
+        if (!BookCategories.IsValid(book.Category))
+            return BadRequest(InvalidCategoryMessage(book.Category));
 
         _context.Entry(book).State = EntityState.Modified;
 
@@ -73,4 +81,7 @@ public class BooksController : ControllerBase
 
         return NoContent();
     }
+
+    private static string InvalidCategoryMessage(string? category) =>
+        $"Invalid category '{category}'. Allowed: {string.Join(", ", BookCategories.All)}.";
 }

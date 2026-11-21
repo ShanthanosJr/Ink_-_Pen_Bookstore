@@ -116,6 +116,7 @@ const Admin = () => {
                                     <th className="px-6 py-4 text-left text-xs font-serif font-bold text-ink uppercase tracking-widest border-b border-ink">ID</th>
                                     <th className="px-6 py-4 text-left text-xs font-serif font-bold text-ink uppercase tracking-widest border-b border-ink">Title</th>
                                     <th className="px-6 py-4 text-left text-xs font-serif font-bold text-ink uppercase tracking-widest border-b border-ink">Author</th>
+                                    <th className="px-6 py-4 text-left text-xs font-serif font-bold text-ink uppercase tracking-widest border-b border-ink">Category</th>
                                     <th className="px-6 py-4 text-left text-xs font-serif font-bold text-ink uppercase tracking-widest border-b border-ink">Price</th>
                                     <th className="px-6 py-4 text-left text-xs font-serif font-bold text-ink uppercase tracking-widest border-b border-ink">Stock</th>
                                     <th className="px-6 py-4 text-right text-xs font-serif font-bold text-ink uppercase tracking-widest border-b border-ink">Actions</th>
@@ -127,6 +128,7 @@ const Admin = () => {
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-serif text-ink-light">{book.id}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-serif font-bold text-ink">{book.title}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-serif text-ink italic">{book.author}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-serif text-ink">{book.category || <span className="text-ink-light italic">—</span>}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-serif text-ink">${book.price.toFixed(2)}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-serif text-ink-light">{book.stockQuantity}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -210,6 +212,7 @@ const Admin = () => {
                                                 <option value="Shipped">Shipped</option>
                                                 <option value="OutForDelivery">Out For Delivery</option>
                                                 <option value="Delivered">Delivered</option>
+                                                <option value="Cancelled">Cancel Order</option>
                                             </select>
                                         )}
                                     </td>

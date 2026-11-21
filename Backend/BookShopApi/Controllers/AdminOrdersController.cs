@@ -89,16 +89,53 @@ public class AdminOrdersController : ControllerBase
     [HttpPut("{id}/status")]
     public async Task<IActionResult> UpdateStatus(int id, [FromBody] StatusUpdateRequest request)
     {
-        var order = await _context.Orders.FindAsync(id);
+        if (!SettableStatuses.Contains(request.Status))
+        {
+            return BadRequest($"Invalid status '{request.Status}'. Allowed: {string.Join(", ", SettableStatuses)}.");
+        }
+
+        var order = await _context.Orders
+            .Include(o => o.Items)
+            .ThenInclude(i => i.Book)
+            .FirstOrDefaultAsync(o => o.Id == id);
         if (order == null) return NotFound();
 
-        // Validate allowed transitions if strictly needed, but admin has power.
+        if (order.OrderStatus == "PendingApproval")
+        {
+            return BadRequest("Pending orders must be approved or rejected first.");
+        }
+        if (ClosedStatuses.Contains(order.OrderStatus))
+        {
+            return BadRequest($"Order is already {order.OrderStatus} and can no longer change.");
+        }
+
+        // Cancelling returns the reserved stock, same as rejecting.
+        if (request.Status == "Cancelled")
+        {
+            foreach (var item in order.Items)
+            {
+                item.Book.StockQuantity += item.Quantity;
+            }
+        }
+
         order.OrderStatus = request.Status;
         order.LastUpdated = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
         return NoContent();
     }
+
+    // Statuses an admin can move an approved order into via the status endpoint.
+    private static readonly HashSet<string> SettableStatuses = new()
+    {
+        "Processing", "Shipped", "OutForDelivery", "Delivered", "Cancelled"
+    };
+
+    // Final statuses: no further changes allowed.
+    private static readonly HashSet<string> ClosedStatuses = new()
+    {
+        "Delivered", "Cancelled", "Rejected"
+    };
 }
 
 public class RejectRequest

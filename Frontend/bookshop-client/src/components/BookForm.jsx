@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../api';
+import { CATEGORIES } from '../constants/categories';
 
 const BookForm = () => {
     const { id } = useParams();
@@ -12,7 +13,8 @@ const BookForm = () => {
         author: '',
         price: '',
         stockQuantity: '',
-        imageUrl: ''
+        imageUrl: '',
+        category: ''
     });
     const [loading, setLoading] = useState(false);
 
@@ -90,6 +92,22 @@ const BookForm = () => {
                                 className="w-full px-4 py-3 bg-paper border-b border-ink/20 focus:border-accent-olive outline-none font-serif text-ink transition-colors placeholder-ink-light/30 shadow-sm"
                                 placeholder="e.g. Meditations"
                             />
+                        </div>
+
+                        <div className="md:col-span-2">
+                            <label className="block text-xs font-serif font-bold text-ink uppercase tracking-widest mb-2">Category</label>
+                            <select
+                                name="category"
+                                value={book.category || ''}
+                                onChange={handleChange}
+                                required
+                                className="w-full px-4 py-3 bg-paper border-b border-ink/20 focus:border-accent-olive outline-none font-serif text-ink transition-colors shadow-sm"
+                            >
+                                <option value="" disabled>Select a category</option>
+                                {CATEGORIES.map(cat => (
+                                    <option key={cat} value={cat}>{cat}</option>
+                                ))}
+                            </select>
                         </div>
 
                         <div>
