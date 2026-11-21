@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const Promotions = () => {
     return (
@@ -44,15 +45,13 @@ const Promotions = () => {
                         className="text-paper/80 text-lg mb-8 font-body leading-relaxed"
                     >
                         Join the <span className="text-paper font-bold">Ink & Pens</span> community today and discover a world of stories awaiting you.
-                        Use code <span className="bg-paper text-ink px-3 py-1 font-serif font-bold mx-1 border border-ink shadow-[2px_2px_0_0_rgba(85,107,47,0.5)]">WELCOME50</span> at checkout.
+                        Use code <span className="bg-paper text-ink px-3 py-1 font-serif font-bold mx-1 border border-ink shadow-[2px_2px_0_0_rgba(85,107,47,0.5)]">WELCOME50</span> at checkout on your first order.
                     </motion.p>
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="bg-paper text-ink px-10 py-4 font-serif font-bold uppercase tracking-widest text-sm hover:bg-accent-olive hover:text-paper transition-all border border-ink shadow-[4px_4px_0_0_rgba(85,107,47,0.3)]"
-                    >
-                        Claim Offer
-                    </motion.button>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="inline-block">
+                        <Link to="/shop" className="bg-paper text-ink px-10 py-4 font-serif font-bold uppercase tracking-widest text-sm hover:bg-accent-olive hover:text-paper transition-all border border-ink shadow-[4px_4px_0_0_rgba(85,107,47,0.3)] inline-block">
+                            Claim Offer
+                        </Link>
+                    </motion.div>
                 </div>
 
                 <div className="md:w-1/2 flex justify-center">

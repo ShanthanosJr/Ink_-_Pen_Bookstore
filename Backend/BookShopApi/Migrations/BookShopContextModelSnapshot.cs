@@ -128,6 +128,50 @@ namespace BookShopApi.Migrations
                     b.ToTable("CartItems");
                 });
 
+            modelBuilder.Entity("BookShopApi.Models.Coupon", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ExpiresAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("FirstOrderOnly")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("MinSubtotal")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("PercentOff")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("Coupons");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "WELCOME50",
+                            FirstOrderOnly = true,
+                            IsActive = true,
+                            MinSubtotal = 0m,
+                            PercentOff = 50m
+                        });
+                });
+
             modelBuilder.Entity("BookShopApi.Models.DeliveryDetails", b =>
                 {
                     b.Property<int>("Id")
@@ -181,7 +225,16 @@ namespace BookShopApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("CouponCode")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Courier")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("DiscountAmount")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastUpdated")
@@ -191,10 +244,26 @@ namespace BookShopApi.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("PaymentReference")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PaymentStatus")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("RejectionReason")
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal>("ShippingFee")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Subtotal")
+                        .HasColumnType("TEXT");
+
                     b.Property<decimal>("TotalAmount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TrackingNumber")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")
@@ -232,6 +301,36 @@ namespace BookShopApi.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("OrderItems");
+                });
+
+            modelBuilder.Entity("BookShopApi.Models.OrderStatusHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ChangedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderStatusHistory");
                 });
 
             modelBuilder.Entity("BookShopApi.Models.User", b =>
@@ -326,7 +425,7 @@ namespace BookShopApi.Migrations
                     b.HasOne("BookShopApi.Models.Book", "Book")
                         .WithMany()
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("BookShopApi.Models.Order", "Order")
@@ -336,6 +435,17 @@ namespace BookShopApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Book");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("BookShopApi.Models.OrderStatusHistory", b =>
+                {
+                    b.HasOne("BookShopApi.Models.Order", "Order")
+                        .WithMany("StatusHistory")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Order");
                 });
@@ -351,6 +461,8 @@ namespace BookShopApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Items");
+
+                    b.Navigation("StatusHistory");
                 });
 
             modelBuilder.Entity("BookShopApi.Models.User", b =>

@@ -142,7 +142,7 @@ const BookDetails = () => {
                                     whileTap={{ scale: 0.98 }}
                                     onClick={async () => {
                                         setAdding(true);
-                                        await addToCart(book.id, 1);
+                                        await addToCart(book, 1);
                                         setAdding(false);
                                     }}
                                     disabled={adding || book.stockQuantity === 0}

@@ -1,5 +1,6 @@
 using BookShopApi.Data;
 using BookShopApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,6 +36,7 @@ public class BooksController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<Book>> PostBook(Book book)
     {
         if (!BookCategories.IsValid(book.Category))
@@ -46,6 +48,7 @@ public class BooksController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> PutBook(int id, Book book)
     {
         if (id != book.Id)
@@ -70,12 +73,19 @@ public class BooksController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteBook(int id)
     {
         var book = await _context.Books.FindAsync(id);
         if (book == null)
             return NotFound();
 
+        // Deleting would break order history; set stock to 0 instead to stop selling it.
+        if (await _context.OrderItems.AnyAsync(i => i.BookId == id))
+            return Conflict("This book appears in past orders, so it can't be deleted. Set its stock to 0 to stop selling it.");
+
+        // Remove it from any carts first
+        _context.CartItems.RemoveRange(_context.CartItems.Where(i => i.BookId == id));
         _context.Books.Remove(book);
         await _context.SaveChangesAsync();
 

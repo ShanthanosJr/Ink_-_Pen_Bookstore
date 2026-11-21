@@ -17,6 +17,10 @@ builder.Services.AddDbContext<BookShopContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.Configure<ShopSettings>(builder.Configuration.GetSection("Shop"));
+builder.Services.Configure<PayHereSettings>(builder.Configuration.GetSection("PayHere"));
+builder.Services.AddScoped<IPricingService, PricingService>();
+builder.Services.AddScoped<IPayHereService, PayHereService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -36,7 +40,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173") // Vite default port
+            // The React app's origin (Shop:FrontendBaseUrl), Vite's default port unless configured
+            policy.WithOrigins(builder.Configuration["Shop:FrontendBaseUrl"]?.TrimEnd('/') ?? "http://localhost:5173")
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });

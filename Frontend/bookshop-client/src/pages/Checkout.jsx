@@ -1,21 +1,32 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useToast } from '../context/ToastContext';
 import api from '../api';
 import { motion } from 'framer-motion';
+import { errorMessage, formatMoney, redirectToPayHere } from '../constants/orders';
+
+const inputClass = 'w-full bg-stone-50 border border-border-linen p-3 text-ink font-serif focus:outline-none focus:border-accent-olive transition-colors';
+const labelClass = 'block text-xs font-bold uppercase tracking-widest text-ink-light mb-2';
+
+const PAYMENT_HELP = {
+    COD: 'Pay in cash when your books arrive.',
+    PayHere: 'You will be taken to PayHere to pay securely by Visa, Mastercard, Amex, or mobile wallets. Your card details never reach our servers.',
+    Bank: 'Transfer the total to our account, then upload a photo or scan of the slip. We confirm the order after checking the slip.',
+};
 
 const Checkout = () => {
-    const { cartItems, cartTotal, fetchCart } = useCart();
+    const { cartItems, fetchCart, loading: cartLoading } = useCart();
+    const { showToast } = useToast();
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState('');
-
     const [bankSlip, setBankSlip] = useState(null);
-    const [cardDetails, setCardDetails] = useState({
-        cardNumber: '',
-        expiry: '',
-        cvc: ''
-    });
+    const [options, setOptions] = useState(null);
+    const [quote, setQuote] = useState(null);
+    const [couponInput, setCouponInput] = useState('');
+    const [appliedCoupon, setAppliedCoupon] = useState('');
+    const [couponMessage, setCouponMessage] = useState(null);
 
     const [formData, setFormData] = useState({
         fullName: '',
@@ -26,164 +37,194 @@ const Checkout = () => {
         paymentMethod: 'COD'
     });
 
+    // Payment methods, shipping rules, and the last address used (to save retyping)
+    useEffect(() => {
+        api.get('/orders/checkout-options')
+            .then(res => {
+                setOptions(res.data);
+                if (res.data.lastDelivery) {
+                    setFormData(prev => ({ ...prev, ...res.data.lastDelivery }));
+                }
+            })
+            .catch(err => console.error('Error loading checkout options', err));
+    }, []);
+
+    // Re-price whenever the cart or applied coupon changes
+    useEffect(() => {
+        if (cartItems.length === 0) return;
+        api.post('/orders/quote', { couponCode: appliedCoupon || null })
+            .then(res => setQuote(res.data))
+            .catch(err => console.error('Error loading quote', err));
+    }, [cartItems, appliedCoupon]);
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleFileChange = (e) => {
-        if (e.target.files[0]) {
-            setBankSlip(e.target.files[0]);
+    const applyCoupon = async (e) => {
+        e.preventDefault();
+        const code = couponInput.trim();
+        if (!code) return;
+        try {
+            const res = await api.post('/orders/quote', { couponCode: code });
+            if (res.data.couponError) {
+                setCouponMessage({ type: 'error', text: res.data.couponError });
+            } else {
+                setAppliedCoupon(res.data.couponCode);
+                setQuote(res.data);
+                setCouponMessage({ type: 'success', text: `${res.data.couponCode} applied: you save ${formatMoney(res.data.discountAmount)}.` });
+            }
+        } catch (err) {
+            setCouponMessage({ type: 'error', text: errorMessage(err) });
         }
+    };
+
+    const removeCoupon = () => {
+        setAppliedCoupon('');
+        setCouponInput('');
+        setCouponMessage(null);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
+        setSubmitting(true);
         setError('');
-
         try {
-            let finalFormData = { ...formData };
+            const payload = { ...formData, couponCode: appliedCoupon || null };
 
-            // Handle Bank Transfer Upload
             if (formData.paymentMethod === 'Bank') {
-                if (!bankSlip) {
-                    throw new Error("Please upload the payment slip.");
-                }
+                if (!bankSlip) throw new Error('Please upload the payment slip.');
                 const uploadData = new FormData();
                 uploadData.append('file', bankSlip);
-
                 const uploadRes = await api.post('/orders/upload-slip', uploadData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
-
-                finalFormData.paymentSlipPath = uploadRes.data.path;
+                payload.paymentSlipPath = uploadRes.data.path;
             }
 
-            // Handle Card Logic (Mock)
-            if (formData.paymentMethod === 'Card') {
-                if (!cardDetails.cardNumber || !cardDetails.expiry || !cardDetails.cvc) {
-                    throw new Error("Please complete card details.");
-                }
-                // In a real app, you'd tokenize here. We just save last 4 digits.
-                finalFormData.cardLast4Digits = cardDetails.cardNumber.slice(-4);
-            }
-
-            await api.post('/orders/checkout', finalFormData);
-
-            // Refresh cart (should be empty now)
+            const res = await api.post('/orders/checkout', payload);
             await fetchCart();
-            // Redirect to profile or success page
-            alert("Order placed successfully!");
-            navigate('/profile');
+
+            if (res.data.payHere) {
+                // Hand over to PayHere; it sends the customer back to the order page afterwards
+                showToast('Order created. Taking you to PayHere to pay…', 'info');
+                redirectToPayHere(res.data.payHere);
+                return;
+            }
+
+            navigate(`/orders/${res.data.orderId}?placed=1`, { replace: true });
         } catch (err) {
             console.error(err);
-            const msg = err.response?.data || err.message || "Failed to place order. Please check details.";
-            setError(typeof msg === 'object' ? JSON.stringify(msg) : msg);
-        } finally {
-            setLoading(false);
+            setError(errorMessage(err, 'Failed to place order. Please check your details.'));
+            setSubmitting(false);
         }
     };
 
-    if (cartItems.length === 0) {
+    if (!cartLoading && cartItems.length === 0) {
         return (
-            <div className="min-h-screen bg-paper flex items-center justify-center">
-                <p className="text-xl font-serif text-ink italic">Your satchel is empty. Cannot proceed.</p>
+            <div className="min-h-[60vh] bg-paper flex flex-col items-center justify-center px-4 text-center">
+                <p className="text-xl font-serif text-ink italic mb-6">Your cart is empty, so there's nothing to check out yet.</p>
+                <Link to="/shop" className="px-8 py-3 bg-ink text-paper font-serif font-bold uppercase tracking-widest text-xs">
+                    Browse the collection
+                </Link>
             </div>
         );
     }
 
+    const methods = options?.paymentMethods || [
+        { id: 'COD', label: 'Cash on Delivery', enabled: true },
+        { id: 'Bank', label: 'Bank Transfer', enabled: true },
+    ];
+    const submitLabel = formData.paymentMethod === 'PayHere'
+        ? `Continue to Payment${quote ? ` · ${formatMoney(quote.total)}` : ''}`
+        : `Place Order${quote ? ` · ${formatMoney(quote.total)}` : ''}`;
+
     return (
         <div className="min-h-screen bg-paper py-12">
-            <div className="container mx-auto px-4 max-w-4xl">
-                <h1 className="text-4xl font-serif font-bold text-ink mb-12 border-b border-ink pb-4">Checkout</h1>
+            <div className="container mx-auto px-4 max-w-5xl">
+                <div className="flex items-baseline justify-between mb-10 border-b border-ink pb-4 gap-4">
+                    <h1 className="text-3xl md:text-4xl font-serif font-bold text-ink">Checkout</h1>
+                    <Link to="/cart" className="font-serif italic text-sm text-ink-light hover:text-accent-olive">← Back to cart</Link>
+                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                    {/* Form Section */}
-                    <div>
-                        <h3 className="font-serif font-bold text-xl text-ink mb-6 uppercase tracking-widest">Delivery Details</h3>
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            {error && (
-                                <div className="bg-red-50 border border-red-200 text-red-800 p-4 text-sm font-serif">
-                                    {error}
-                                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
+                    {/* Form */}
+                    <form onSubmit={handleSubmit} className="lg:col-span-3 space-y-10" noValidate={false}>
+                        {error && (
+                            <div className="bg-red-50 border border-red-200 text-red-800 p-4 text-sm font-serif" role="alert">
+                                {error}
+                            </div>
+                        )}
+
+                        <section className="space-y-5">
+                            <h2 className="font-serif font-bold text-xl text-ink uppercase tracking-widest">1. Delivery details</h2>
+                            {options?.lastDelivery && (
+                                <p className="text-xs font-serif italic text-ink-light">Filled in from your last order. Change anything that's different.</p>
                             )}
-
                             <div>
-                                <label className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">Full Name</label>
-                                <input
-                                    type="text"
-                                    name="fullName"
-                                    required
-                                    value={formData.fullName}
-                                    onChange={handleChange}
-                                    className="w-full bg-stone-50 border border-border-linen p-3 text-ink font-serif focus:outline-none focus:border-accent-olive transition-colors"
-                                />
+                                <label htmlFor="fullName" className={labelClass}>Full name</label>
+                                <input id="fullName" type="text" name="fullName" required maxLength={100} autoComplete="name"
+                                    value={formData.fullName} onChange={handleChange} className={inputClass} />
                             </div>
-
                             <div>
-                                <label className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">Phone Number</label>
-                                <input
-                                    type="tel"
-                                    name="phoneNumber"
-                                    required
-                                    value={formData.phoneNumber}
-                                    onChange={handleChange}
-                                    className="w-full bg-stone-50 border border-border-linen p-3 text-ink font-serif focus:outline-none focus:border-accent-olive transition-colors"
-                                />
+                                <label htmlFor="phoneNumber" className={labelClass}>Phone number</label>
+                                <input id="phoneNumber" type="tel" name="phoneNumber" required autoComplete="tel"
+                                    pattern="^\+?[0-9 ()\-]{7,20}$" title="Digits, spaces, + ( ) and - only, 7 to 20 characters"
+                                    placeholder="07X XXX XXXX"
+                                    value={formData.phoneNumber} onChange={handleChange} className={inputClass} />
                             </div>
-
                             <div>
-                                <label className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">Address</label>
-                                <input
-                                    type="text"
-                                    name="addressLine"
-                                    required
-                                    value={formData.addressLine}
-                                    onChange={handleChange}
-                                    className="w-full bg-stone-50 border border-border-linen p-3 text-ink font-serif focus:outline-none focus:border-accent-olive transition-colors"
-                                />
+                                <label htmlFor="addressLine" className={labelClass}>Address</label>
+                                <input id="addressLine" type="text" name="addressLine" required maxLength={200} autoComplete="street-address"
+                                    value={formData.addressLine} onChange={handleChange} className={inputClass} />
                             </div>
-
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">City</label>
-                                    <input
-                                        type="text"
-                                        name="city"
-                                        required
-                                        value={formData.city}
-                                        onChange={handleChange}
-                                        className="w-full bg-stone-50 border border-border-linen p-3 text-ink font-serif focus:outline-none focus:border-accent-olive transition-colors"
-                                    />
+                                    <label htmlFor="city" className={labelClass}>City</label>
+                                    <input id="city" type="text" name="city" required maxLength={100} autoComplete="address-level2"
+                                        value={formData.city} onChange={handleChange} className={inputClass} />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">Postal Code</label>
-                                    <input
-                                        type="text"
-                                        name="postalCode"
-                                        required
-                                        value={formData.postalCode}
-                                        onChange={handleChange}
-                                        className="w-full bg-stone-50 border border-border-linen p-3 text-ink font-serif focus:outline-none focus:border-accent-olive transition-colors"
-                                    />
+                                    <label htmlFor="postalCode" className={labelClass}>Postal code</label>
+                                    <input id="postalCode" type="text" name="postalCode" required autoComplete="postal-code"
+                                        pattern="^[A-Za-z0-9 \-]{3,10}$" title="3 to 10 letters or digits"
+                                        value={formData.postalCode} onChange={handleChange} className={inputClass} />
                                 </div>
                             </div>
+                        </section>
 
-                            <div>
-                                <label className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">Payment Method</label>
-                                <select
-                                    name="paymentMethod"
-                                    value={formData.paymentMethod}
-                                    onChange={handleChange}
-                                    className="w-full bg-stone-50 border border-border-linen p-3 text-ink font-serif focus:outline-none focus:border-accent-olive transition-colors"
-                                >
-                                    <option value="COD">Cash on Delivery</option>
-                                    <option value="Card">Credit Card</option>
-                                    <option value="Bank">Bank Transfer</option>
-                                </select>
+                        <section className="space-y-4">
+                            <h2 className="font-serif font-bold text-xl text-ink uppercase tracking-widest">2. Payment</h2>
+                            <div className="space-y-3" role="radiogroup" aria-label="Payment method">
+                                {methods.map(method => (
+                                    <label
+                                        key={method.id}
+                                        className={`flex items-start gap-3 border p-4 transition-colors ${!method.enabled
+                                            ? 'opacity-50 cursor-not-allowed border-border-linen'
+                                            : formData.paymentMethod === method.id
+                                                ? 'border-ink bg-paper-dark cursor-pointer'
+                                                : 'border-border-linen hover:border-ink/40 cursor-pointer'
+                                            }`}
+                                    >
+                                        <input
+                                            type="radio"
+                                            name="paymentMethod"
+                                            value={method.id}
+                                            checked={formData.paymentMethod === method.id}
+                                            onChange={handleChange}
+                                            disabled={!method.enabled}
+                                            className="mt-1 accent-[#556b2f]"
+                                        />
+                                        <span>
+                                            <span className="block font-serif font-bold text-ink">{method.label}</span>
+                                            <span className="block text-sm font-serif text-ink-light mt-1">
+                                                {method.enabled ? PAYMENT_HELP[method.id] : 'Not available right now.'}
+                                            </span>
+                                        </span>
+                                    </label>
+                                ))}
                             </div>
 
-                            {/* Bank Transfer Details */}
                             {formData.paymentMethod === 'Bank' && (
                                 <motion.div
                                     initial={{ opacity: 0, height: 0 }}
@@ -191,101 +232,101 @@ const Checkout = () => {
                                     className="bg-stone-100 p-4 border border-border-linen space-y-4"
                                 >
                                     <div className="text-sm font-serif text-ink space-y-1">
-                                        <p className="font-bold">Bank Details:</p>
+                                        <p className="font-bold">Bank details</p>
                                         <p>Bank: City Bank</p>
-                                        <p>Account Name: Ink & Pen Bookstore</p>
-                                        <p>Account Number: 1234-5678-9012</p>
+                                        <p>Account name: Ink & Pen Bookstore</p>
+                                        <p>Account number: 1234-5678-9012</p>
                                         <p>Branch: Main Street</p>
+                                        <p className="pt-2">Reference: your name and phone number</p>
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">Upload Payment Slip</label>
+                                        <label htmlFor="slip" className={labelClass}>Upload payment slip</label>
                                         <input
+                                            id="slip"
                                             type="file"
-                                            accept="image/*"
-                                            onChange={handleFileChange}
+                                            accept="image/*,application/pdf"
+                                            onChange={(e) => setBankSlip(e.target.files[0] || null)}
                                             required
-                                            className="w-full bg-white border border-border-linen p-2 text-sm font-serif text-ink file:mr-4 file:py-2 file:px-4 file:border-0 file:text-xs file:font-semibold file:bg-ink file:text-white hover:file:bg-accent-olive transition-colors"
+                                            className="w-full bg-white border border-border-linen p-2 text-sm font-serif text-ink"
                                         />
                                     </div>
                                 </motion.div>
                             )}
+                        </section>
 
-                            {/* Credit Card Details */}
-                            {formData.paymentMethod === 'Card' && (
-                                <motion.div
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: 'auto' }}
-                                    className="bg-stone-100 p-4 border border-border-linen space-y-4"
-                                >
-                                    <div>
-                                        <label className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">Card Number</label>
+                        <motion.button
+                            whileHover={{ scale: 1.01 }}
+                            whileTap={{ scale: 0.99 }}
+                            type="submit"
+                            disabled={submitting || !quote}
+                            className="w-full bg-ink text-paper font-serif font-bold uppercase tracking-widest py-4 hover:bg-accent-olive transition-colors border border-ink shadow-[4px_4px_0_0_rgba(44,44,44,0.2)] disabled:opacity-50"
+                        >
+                            {submitting ? 'Placing your order…' : submitLabel}
+                        </motion.button>
+                        <p className="text-center text-xs font-serif text-ink-light -mt-6">
+                            You can cancel online until we've reviewed your order.
+                        </p>
+                    </form>
+
+                    {/* Summary */}
+                    <aside className="lg:col-span-2 order-first lg:order-none">
+                        <div className="bg-[#e3ddd3] p-6 md:p-8 border border-border-linen shadow-md lg:sticky lg:top-28">
+                            <h2 className="font-serif font-bold text-xl text-ink mb-6 uppercase tracking-widest border-b border-ink/20 pb-4">Order summary</h2>
+                            <ul className="space-y-3 mb-6 text-sm font-serif text-ink/80">
+                                {cartItems.map(item => (
+                                    <li key={item.id} className="flex justify-between gap-4">
+                                        <span>{item.book.title} × {item.quantity}</span>
+                                        <span className="whitespace-nowrap">{formatMoney(item.unitPrice * item.quantity)}</span>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            {/* Coupon */}
+                            <div className="mb-6">
+                                {appliedCoupon ? (
+                                    <div className="flex items-center justify-between bg-paper/60 border border-accent-olive/40 px-3 py-2 text-sm font-serif">
+                                        <span className="text-accent-olive font-bold">{appliedCoupon}</span>
+                                        <button type="button" onClick={removeCoupon} className="text-ink-light underline text-xs">Remove</button>
+                                    </div>
+                                ) : (
+                                    <form onSubmit={applyCoupon} className="flex">
+                                        <label htmlFor="coupon" className="sr-only">Discount code</label>
                                         <input
-                                            type="text"
-                                            maxLength="19"
-                                            placeholder="XXXX XXXX XXXX XXXX"
-                                            value={cardDetails.cardNumber}
-                                            onChange={(e) => setCardDetails({ ...cardDetails, cardNumber: e.target.value })}
-                                            required
-                                            className="w-full bg-white border border-border-linen p-3 text-ink font-serif focus:outline-none focus:border-accent-olive transition-colors"
+                                            id="coupon"
+                                            value={couponInput}
+                                            onChange={(e) => { setCouponInput(e.target.value); setCouponMessage(null); }}
+                                            placeholder="Discount code"
+                                            className="flex-1 min-w-0 bg-paper border border-border-linen px-3 py-2 text-sm font-serif uppercase focus:outline-none focus:border-accent-olive"
                                         />
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">Expiry Date</label>
-                                            <input
-                                                type="text"
-                                                placeholder="MM/YY"
-                                                maxLength="5"
-                                                value={cardDetails.expiry}
-                                                onChange={(e) => setCardDetails({ ...cardDetails, expiry: e.target.value })}
-                                                required
-                                                className="w-full bg-white border border-border-linen p-3 text-ink font-serif focus:outline-none focus:border-accent-olive transition-colors"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">CVC</label>
-                                            <input
-                                                type="text"
-                                                maxLength="3"
-                                                placeholder="123"
-                                                value={cardDetails.cvc}
-                                                onChange={(e) => setCardDetails({ ...cardDetails, cvc: e.target.value })}
-                                                required
-                                                className="w-full bg-white border border-border-linen p-3 text-ink font-serif focus:outline-none focus:border-accent-olive transition-colors"
-                                            />
-                                        </div>
-                                    </div>
-                                </motion.div>
+                                        <button type="submit" className="px-4 bg-ink text-paper text-xs font-bold uppercase tracking-widest">Apply</button>
+                                    </form>
+                                )}
+                                {couponMessage && (
+                                    <p className={`mt-2 text-xs font-serif ${couponMessage.type === 'error' ? 'text-red-700' : 'text-accent-olive'}`}>
+                                        {couponMessage.text}
+                                    </p>
+                                )}
+                            </div>
+
+                            {quote ? (
+                                <dl className="space-y-2 text-sm font-serif text-ink">
+                                    <div className="flex justify-between"><dt>Subtotal</dt><dd>{formatMoney(quote.subtotal)}</dd></div>
+                                    {quote.discountAmount > 0 && (
+                                        <div className="flex justify-between text-accent-olive"><dt>Discount ({quote.couponCode})</dt><dd>−{formatMoney(quote.discountAmount)}</dd></div>
+                                    )}
+                                    <div className="flex justify-between"><dt>Shipping</dt><dd>{quote.shippingFee > 0 ? formatMoney(quote.shippingFee) : 'Free'}</dd></div>
+                                    <div className="pt-3 mt-2 border-t border-ink/20 flex justify-between font-bold text-lg"><dt>Total</dt><dd>{formatMoney(quote.total)}</dd></div>
+                                </dl>
+                            ) : (
+                                <p className="text-sm font-serif italic text-ink-light">Calculating total…</p>
                             )}
-
-                            <motion.button
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                type="submit"
-                                disabled={loading}
-                                className="w-full bg-ink text-paper font-serif font-bold uppercase tracking-widest py-4 hover:bg-accent-olive transition-colors border border-ink shadow-[4px_4px_0_0_rgba(44,44,44,0.2)] disabled:opacity-50"
-                            >
-                                {loading ? 'Processing Order...' : 'Place Order'}
-                            </motion.button>
-                        </form>
-                    </div>
-
-                    {/* Order Summary Stub */}
-                    <div className="bg-[#e3ddd3] p-8 border border-border-linen h-fit shadow-md">
-                        <h3 className="font-serif font-bold text-xl text-ink mb-6 uppercase tracking-widest border-b border-ink/20 pb-4">Order Summary</h3>
-                        <ul className="space-y-4 mb-6 text-sm font-serif text-ink/80">
-                            {cartItems.map(item => (
-                                <li key={item.id} className="flex justify-between">
-                                    <span>{item.book.title} x {item.quantity}</span>
-                                    <span>${(item.unitPrice * item.quantity).toFixed(2)}</span>
-                                </li>
-                            ))}
-                        </ul>
-                        <div className="pt-4 border-t border-ink/20 flex justify-between font-serif font-bold text-xl text-ink">
-                            <span>Total</span>
-                            <span>${cartTotal.toFixed(2)}</span>
+                            {quote?.amountToFreeShipping > 0 && (
+                                <p className="mt-4 text-xs font-serif text-ink-light">
+                                    Add {formatMoney(quote.amountToFreeShipping)} more for free shipping.
+                                </p>
+                            )}
                         </div>
-                    </div>
+                    </aside>
                 </div>
             </div>
         </div>

@@ -123,6 +123,34 @@ BookShop/
    ```
 4. Open your browser to `http://localhost:5173`.
 
+## Payments, Shipping & Coupons
+
+### PayHere (card / mobile wallet payments)
+Card payments go through [PayHere](https://www.payhere.lk) hosted checkout. Card details never touch this app.
+
+1. Create a PayHere **sandbox** merchant account and add your domain/app under *Integrations* to get a **Merchant ID** and **Merchant Secret**.
+2. Put them in `Backend/BookShopApi/appsettings.Development.json` (git-ignored), never in `appsettings.json`:
+   ```json
+   {
+     "PayHere": { "MerchantId": "121XXXX", "MerchantSecret": "your-secret", "Sandbox": true, "Currency": "USD" },
+     "Shop": { "PublicApiBaseUrl": "https://<your-tunnel>.ngrok-free.app" }
+   }
+   ```
+3. PayHere confirms payments by POSTing to `{PublicApiBaseUrl}/api/payments/payhere/notify`. That URL must be reachable from the internet, so for local testing run a tunnel such as `ngrok http 5000` and use its URL.
+4. Prices are in USD, so USD must be enabled on the merchant account (or switch `Currency` to `LKR` and convert prices).
+
+Until PayHere is configured, the option is shown as unavailable at checkout. Orders paid online start as **Awaiting Payment** and move to **Pending Review** only when PayHere's signed notification arrives.
+
+### Shipping
+`Shop:ShippingFlatFee` (default 3.99) is charged below `Shop:FreeShippingThreshold` (default 50; set 0 to disable free shipping).
+
+### Coupons
+Stored in the `Coupons` table. `WELCOME50` (50% off, first order only) is seeded.
+
+### Order lifecycle
+`AwaitingPayment` (PayHere only) → `PendingApproval` → `Approved` → `Processing` → `Shipped` → `OutForDelivery` → `Delivered`, or `Cancelled` / `Rejected`.
+Every change is recorded in `OrderStatusHistory` and shown to the customer on `/orders/:id`. Customers can cancel until the order is approved; stock is returned on cancel/reject and paid orders are flagged **Refund Due**.
+
 ## API Endpoints
 
 ### Authentication
