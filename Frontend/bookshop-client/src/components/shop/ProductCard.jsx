@@ -68,7 +68,7 @@ const ProductCard = ({ book, isAnimated = false }) => {
                         <button
                             onClick={(e) => {
                                 e.preventDefault(); // Prevent Link navigation if wrapped
-                                addToCart(book.id, 1);
+                                addToCart(book, 1);
                             }}
                             className="flex-1 bg-paper text-ink font-serif uppercase tracking-widest text-xs font-bold text-center py-3 border-y border-l border-ink hover:bg-ink hover:text-paper transition-colors"
                         >

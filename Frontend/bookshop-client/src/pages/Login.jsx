@@ -12,7 +12,7 @@ const Login = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from?.pathname || "/";
+    const from = location.state?.from ? `${location.state.from.pathname}${location.state.from.search || ""}` : "/";
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -44,6 +44,12 @@ const Login = () => {
                         Please enter your details to sign in
                     </p>
                 </div>
+
+                {location.state?.message && !error && (
+                    <div className="bg-paper-dark border-l-4 border-accent-olive p-4 text-ink text-sm font-serif">
+                        {location.state.message}
+                    </div>
+                )}
 
                 {error && (
                     <div className="bg-red-50 border-l-4 border-red-400 p-4 text-red-700 text-sm">
@@ -108,7 +114,7 @@ const Login = () => {
                     <div className="text-center">
                         <p className="text-sm text-gray-600">
                             Don't have an account?{' '}
-                            <Link to="/register" className="font-medium text-primary-700 hover:text-primary-800 transition-colors">
+                            <Link to="/register" state={location.state} className="font-medium text-primary-700 hover:text-primary-800 transition-colors">
                                 Create one for free
                             </Link>
                         </p>

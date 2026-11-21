@@ -1,9 +1,21 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../api';
+import { formatMoney } from '../constants/orders';
 import { useCart } from '../context/CartContext';
 import { motion } from 'framer-motion';
 
 const Cart = () => {
     const { cartItems, cartTotal, updateQuantity, removeFromCart, loading } = useCart();
+    const [quote, setQuote] = useState(null);
+
+    // Shipping is worked out by the API so cart, checkout and the order always agree
+    useEffect(() => {
+        if (cartItems.length === 0) return;
+        api.post('/orders/quote', {})
+            .then(res => setQuote(res.data))
+            .catch(err => console.error('Error loading quote', err));
+    }, [cartItems]);
 
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center bg-paper">
@@ -105,14 +117,30 @@ const Cart = () => {
                                 </div>
                                 <div className="flex justify-between text-ink-light font-serif text-sm">
                                     <span>Shipping</span>
-                                    <span>calculated next step</span>
+                                    <span>{quote ? (quote.shippingFee > 0 ? formatMoney(quote.shippingFee) : 'Free') : '…'}</span>
                                 </div>
                                 <div className="pt-4 border-t border-border-linen flex justify-between font-serif font-bold text-xl text-ink">
                                     <span>Total</span>
-                                    <span>${cartTotal.toFixed(2)}</span>
+                                    <span>{formatMoney(quote ? quote.total : cartTotal)}</span>
                                 </div>
+                                {quote?.amountToFreeShipping > 0 && (
+                                    <div>
+                                        <div className="h-1.5 bg-border-linen overflow-hidden" aria-hidden="true">
+                                            <div
+                                                className="h-full bg-accent-olive"
+                                                style={{ width: `${Math.min(100, (quote.subtotal / quote.freeShippingThreshold) * 100)}%` }}
+                                            />
+                                        </div>
+                                        <p className="mt-2 text-xs font-serif text-ink-light">
+                                            Add {formatMoney(quote.amountToFreeShipping)} more for free shipping.
+                                        </p>
+                                    </div>
+                                )}
+                                {quote && quote.amountToFreeShipping === 0 && quote.freeShippingThreshold > 0 && (
+                                    <p className="text-xs font-serif text-accent-olive">Your order ships free.</p>
+                                )}
+                                <p className="text-xs font-serif italic text-ink-light">Discount codes can be added at checkout.</p>
                             </div>
-
                             <Link
                                 to="/checkout"
                                 className="block w-full text-center bg-ink text-white font-serif font-bold uppercase tracking-widest py-4 hover:bg-accent-olive transition-colors border border-ink shadow-[4px_4px_0_0_rgba(85,107,47,0.2)]"
@@ -120,6 +148,9 @@ const Cart = () => {
                                 Proceed to Checkout
                             </Link>
 
+                            <Link to="/shop" className="block text-center mt-4 font-serif italic text-sm text-ink-light hover:text-accent-olive">
+                                Continue shopping
+                            </Link>
                             <div className="mt-6 flex items-center gap-3 text-ink-light/70 text-[10px] uppercase tracking-widest justify-center">
                                 <span>Secure Checkout</span>
                                 <span>•</span>

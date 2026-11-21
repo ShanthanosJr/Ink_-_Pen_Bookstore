@@ -1,7 +1,10 @@
 import axios from 'axios';
 
+// Override with VITE_API_ORIGIN in a .env file (e.g. VITE_API_ORIGIN=http://localhost:5050)
+export const API_ORIGIN = (import.meta.env.VITE_API_ORIGIN || 'http://localhost:5000').replace(/\/$/, '');
+
 const api = axios.create({
-    baseURL: 'http://localhost:5000/api'
+    baseURL: `${API_ORIGIN}/api`
 });
 
 // Interceptor to add JWT token to every request

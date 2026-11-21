@@ -1,5 +1,6 @@
 using BookShopApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookShopApi.Data;
 
@@ -16,10 +17,29 @@ public class BookShopContext : DbContext
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<DeliveryDetails> DeliveryDetails { get; set; }
+    public DbSet<OrderStatusHistory> OrderStatusHistory { get; set; }
+    public DbSet<Coupon> Coupons { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        // SQLite stores DateTime without a time zone. Every DateTime here is written as UTC,
+        // so mark it as UTC when reading; otherwise JSON omits the "Z" and browsers treat it as local time.
+        var utcConverter = new ValueConverter<DateTime, DateTime>(
+            v => v.Kind == DateTimeKind.Utc ? v : v.ToUniversalTime(),
+            v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+        var nullableUtcConverter = new ValueConverter<DateTime?, DateTime?>(
+            v => v == null ? v : (v.Value.Kind == DateTimeKind.Utc ? v : v.Value.ToUniversalTime()),
+            v => v == null ? v : DateTime.SpecifyKind(v.Value, DateTimeKind.Utc));
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            foreach (var property in entityType.GetProperties())
+            {
+                if (property.ClrType == typeof(DateTime)) property.SetValueConverter(utcConverter);
+                else if (property.ClrType == typeof(DateTime?)) property.SetValueConverter(nullableUtcConverter);
+            }
+        }
 
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Email)
@@ -41,6 +61,26 @@ public class BookShopContext : DbContext
             .HasOne(o => o.DeliveryDetails)
             .WithOne(d => d.Order)
             .HasForeignKey<DeliveryDetails>(d => d.OrderId);
+
+        modelBuilder.Entity<OrderStatusHistory>()
+            .HasOne(h => h.Order)
+            .WithMany(o => o.StatusHistory)
+            .HasForeignKey(h => h.OrderId);
+
+        // Keep order history intact: a book that has been ordered cannot be deleted
+        modelBuilder.Entity<OrderItem>()
+            .HasOne(i => i.Book)
+            .WithMany()
+            .HasForeignKey(i => i.BookId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Coupon>()
+            .HasIndex(c => c.Code)
+            .IsUnique();
+
+        modelBuilder.Entity<Coupon>().HasData(
+            new Coupon { Id = 1, Code = "WELCOME50", PercentOff = 50, FirstOrderOnly = true, MinSubtotal = 0, IsActive = true }
+        );
 
         // Seed data (Legacy - relying on SeedData.cs mostly now, but keeping for consistency if valid)
         // If these IDs conflict with SeedData, SeedData will just skip them because it checks Titles.

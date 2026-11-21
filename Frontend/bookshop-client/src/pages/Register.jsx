@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 
@@ -15,6 +15,9 @@ const Register = () => {
 
     const { register } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+    // Return to where the visitor was (e.g. the book they tried to add) after signing up
+    const from = location.state?.from ? `${location.state.from.pathname}${location.state.from.search || ''}` : '/';
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,7 +39,7 @@ const Register = () => {
 
         try {
             await register(formData.fullName, formData.email, formData.password);
-            navigate('/');
+            navigate(from, { replace: true });
         } catch (err) {
             setError(err.response?.data || 'Registration failed. Please try again.');
         } finally {
@@ -141,7 +144,7 @@ const Register = () => {
                     <div className="text-center mt-4">
                         <p className="text-sm text-gray-600">
                             Already have an account?{' '}
-                            <Link to="/login" className="font-medium text-primary-700 hover:text-primary-800 transition-colors">
+                            <Link to="/login" state={location.state} className="font-medium text-primary-700 hover:text-primary-800 transition-colors">
                                 Sign in instead
                             </Link>
                         </p>
