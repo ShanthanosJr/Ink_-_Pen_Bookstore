@@ -175,16 +175,12 @@ const Shop = () => {
                             </div>
                         ) : filteredBooks.length > 0 ? (
                             <>
-                                <motion.div
-                                    initial="hidden"
-                                    animate="visible"
-                                    variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.03 } } }}
-                                    className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
-                                >
+                                {/* Plain grid: books must never depend on an animation to become visible */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                                     {filteredBooks.slice(0, visibleCount).map(book => (
-                                        <ProductCard key={book.id} book={book} isAnimated={true} />
+                                        <ProductCard key={book.id} book={book} />
                                     ))}
-                                </motion.div>
+                                </div>
                                 {visibleCount < filteredBooks.length && (
                                     <div className="mt-12 text-center">
                                         <button
