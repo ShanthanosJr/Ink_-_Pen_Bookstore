@@ -7,7 +7,7 @@ const QuoteOfTheWeek = () => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 1, ease: 'easeOut' }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
                 className="max-w-4xl mx-auto border border-border-linen p-2 relative shadow-[10px_10px_0_0_#f4f1ea]"
             >
                 <div className="border border-border-linen p-12 text-center relative bg-paper">
@@ -22,7 +22,7 @@ const QuoteOfTheWeek = () => {
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: 0.3, duration: 0.6 }}
+                        transition={{ delay: 0.1, duration: 0.6 }}
                         className="font-serif italic text-accent-leather text-sm tracking-widest uppercase mb-8 relative inline-block px-4 bg-paper z-10"
                     >
                         Words of Wisdom
@@ -33,7 +33,7 @@ const QuoteOfTheWeek = () => {
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        transition={{ delay: 0.6, duration: 1 }}
+                        transition={{ delay: 0.2, duration: 0.5 }}
                         className="text-3xl md:text-4xl font-serif text-ink leading-relaxed mb-8 relative"
                     >
                         <span className="text-6xl text-border-linen absolute -top-8 -left-8 font-serif select-none">“</span>
@@ -45,7 +45,7 @@ const QuoteOfTheWeek = () => {
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: 0.9, duration: 0.6 }}
+                        transition={{ delay: 0.3, duration: 0.6 }}
                         className="not-italic text-lg font-body text-ink-light flex items-center justify-center gap-4"
                     >
                         <span className="w-8 h-px bg-accent-olive"></span>

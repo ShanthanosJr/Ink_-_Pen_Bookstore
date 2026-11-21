@@ -11,7 +11,7 @@ const ContactInfo = () => {
         <motion.div
             initial="hidden"
             animate="visible"
-            transition={{ staggerChildren: 0.2, delayChildren: 1 }}
+            transition={{ staggerChildren: 0.08, delayChildren: 0.33 }}
             className="space-y-8"
         >
             {/* Contact Details Card - Visiting Card Style */}

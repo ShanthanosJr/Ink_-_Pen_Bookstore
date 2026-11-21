@@ -19,14 +19,16 @@ public class OrdersController : ControllerBase
     private readonly IPricingService _pricing;
     private readonly IPayHereService _payHere;
     private readonly ShopSettings _shop;
+    private readonly IOrderNotifier _notifier;
 
     public OrdersController(BookShopContext context, IPricingService pricing, IPayHereService payHere,
-        IOptions<ShopSettings> shop)
+        IOptions<ShopSettings> shop, IOrderNotifier notifier)
     {
         _context = context;
         _pricing = pricing;
         _payHere = payHere;
         _shop = shop.Value;
+        _notifier = notifier;
     }
 
     private int GetUserId()
@@ -81,8 +83,9 @@ public class OrdersController : ControllerBase
             {
                 new { id = PaymentMethods.CashOnDelivery, label = "Cash on Delivery", enabled = true },
                 new { id = PaymentMethods.PayHere, label = "Card / Mobile Wallet (PayHere)", enabled = _payHere.IsConfigured },
-                new { id = PaymentMethods.BankTransfer, label = "Bank Transfer", enabled = true },
+                new { id = PaymentMethods.BankTransfer, label = "Bank Transfer", enabled = _shop.BankTransfer.IsConfigured },
             },
+            bankTransfer = _shop.BankTransfer.IsConfigured ? _shop.BankTransfer : null,
             lastDelivery
         });
     }
@@ -106,7 +109,10 @@ public class OrdersController : ControllerBase
             return BadRequest("Please choose a valid payment method.");
         if (request.PaymentMethod == PaymentMethods.PayHere && !_payHere.IsConfigured)
             return BadRequest("Online card payments are not available right now. Please choose another payment method.");
-        if (request.PaymentMethod == PaymentMethods.BankTransfer && string.IsNullOrWhiteSpace(request.PaymentSlipPath))
+        if (request.PaymentMethod == PaymentMethods.BankTransfer && !_shop.BankTransfer.IsConfigured)
+            return BadRequest("Bank transfer is not available right now. Please choose another payment method.");
+        if (request.PaymentMethod == PaymentMethods.BankTransfer &&
+            (string.IsNullOrWhiteSpace(request.PaymentSlipPath) || !request.PaymentSlipPath.StartsWith("/uploads/slips/")))
             return BadRequest("Please upload your bank transfer slip.");
 
         using var transaction = await _context.Database.BeginTransactionAsync();
@@ -176,6 +182,8 @@ public class OrdersController : ControllerBase
         await _context.SaveChangesAsync();
         await transaction.CommitAsync();
 
+        await _notifier.NotifyAsync(order.Id);
+
         var response = new CheckoutResponse { OrderId = order.Id, OrderStatus = order.OrderStatus, Total = order.TotalAmount };
         if (isOnlinePayment)
         {
@@ -235,40 +243,18 @@ public class OrdersController : ControllerBase
         order.SetStatus(OrderStatuses.Cancelled, "Customer", note);
 
         await _context.SaveChangesAsync();
+        await _notifier.NotifyAsync(order.Id);
         return NoContent();
     }
 
     // POST: api/orders/upload-slip
     [HttpPost("upload-slip")]
+    [RequestSizeLimit(6 * 1024 * 1024)]
     public async Task<IActionResult> UploadSlip(IFormFile file)
     {
-        if (file == null || file.Length == 0)
-            return BadRequest("No file uploaded.");
-
-        try
-        {
-            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "slips");
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
-            var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            // Return relative path
-            var relativePath = $"/uploads/slips/{uniqueFileName}";
-            return Ok(new { path = relativePath });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
+        var (path, error) = await UploadStorage.SaveAsync(file, "slips", UploadStorage.SlipTypes, 5 * 1024 * 1024);
+        if (error != null) return BadRequest(error);
+        return Ok(new { path });
     }
 }
 

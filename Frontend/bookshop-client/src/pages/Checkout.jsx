@@ -231,24 +231,43 @@ const Checkout = () => {
                                     animate={{ opacity: 1, height: 'auto' }}
                                     className="bg-stone-100 p-4 border border-border-linen space-y-4"
                                 >
-                                    <div className="text-sm font-serif text-ink space-y-1">
-                                        <p className="font-bold">Bank details</p>
-                                        <p>Bank: City Bank</p>
-                                        <p>Account name: Ink & Pen Bookstore</p>
-                                        <p>Account number: 1234-5678-9012</p>
-                                        <p>Branch: Main Street</p>
-                                        <p className="pt-2">Reference: your name and phone number</p>
-                                    </div>
+                                    {options?.bankTransfer && (
+                                        <dl className="text-sm font-serif text-ink grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
+                                            <dt className="text-ink-light">Bank</dt><dd>{options.bankTransfer.bankName}</dd>
+                                            <dt className="text-ink-light">Account name</dt><dd>{options.bankTransfer.accountName}</dd>
+                                            <dt className="text-ink-light">Account number</dt><dd className="font-mono font-bold">{options.bankTransfer.accountNumber}</dd>
+                                            {options.bankTransfer.branch && <><dt className="text-ink-light">Branch</dt><dd>{options.bankTransfer.branch}</dd></>}
+                                            <dt className="text-ink-light">Amount</dt><dd className="font-bold">{quote ? formatMoney(quote.total) : '…'}</dd>
+                                            <dt className="text-ink-light">Reference</dt><dd>Your name and phone number</dd>
+                                        </dl>
+                                    )}
                                     <div>
                                         <label htmlFor="slip" className={labelClass}>Upload payment slip</label>
                                         <input
                                             id="slip"
                                             type="file"
-                                            accept="image/*,application/pdf"
-                                            onChange={(e) => setBankSlip(e.target.files[0] || null)}
+                                            accept="image/jpeg,image/png,image/webp,application/pdf"
+                                            onChange={(e) => {
+                                                const file = e.target.files[0] || null;
+                                                if (file && file.size > 5 * 1024 * 1024) {
+                                                    setError('The slip must be smaller than 5 MB.');
+                                                    e.target.value = '';
+                                                    setBankSlip(null);
+                                                    return;
+                                                }
+                                                setError('');
+                                                setBankSlip(file);
+                                            }}
                                             required
                                             className="w-full bg-white border border-border-linen p-2 text-sm font-serif text-ink"
                                         />
+                                        <p className="text-xs font-serif text-ink-light mt-1">JPG, PNG, WebP or PDF, up to 5 MB.</p>
+                                        {bankSlip && bankSlip.type.startsWith('image/') && (
+                                            <img src={URL.createObjectURL(bankSlip)} alt="Preview of your payment slip" className="mt-3 max-h-40 border border-border-linen" />
+                                        )}
+                                        {bankSlip && !bankSlip.type.startsWith('image/') && (
+                                            <p className="mt-2 text-xs font-serif text-ink">Selected: {bankSlip.name}</p>
+                                        )}
                                     </div>
                                 </motion.div>
                             )}

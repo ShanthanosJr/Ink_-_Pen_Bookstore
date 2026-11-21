@@ -36,8 +36,8 @@ const BookList = ({ limit, showAdminControls = false, title }) => {
         visible: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.1,
-                delayChildren: 0.3
+                staggerChildren: 0.08,
+                delayChildren: 0.1
             }
         }
     };
@@ -47,7 +47,7 @@ const BookList = ({ limit, showAdminControls = false, title }) => {
         visible: {
             opacity: 1,
             x: 0,
-            transition: { duration: 0.8, ease: 'easeOut' }
+            transition: { duration: 0.5, ease: 'easeOut' }
         }
     };
 

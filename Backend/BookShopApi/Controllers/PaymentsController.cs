@@ -17,10 +17,12 @@ public class PaymentsController : ControllerBase
     private readonly IPayHereService _payHere;
     private readonly PayHereSettings _payHereSettings;
     private readonly ILogger<PaymentsController> _logger;
+    private readonly IOrderNotifier _notifier;
 
     public PaymentsController(BookShopContext context, IPayHereService payHere,
-        IOptions<PayHereSettings> payHereSettings, ILogger<PaymentsController> logger)
+        IOptions<PayHereSettings> payHereSettings, ILogger<PaymentsController> logger, IOrderNotifier notifier)
     {
+        _notifier = notifier;
         _context = context;
         _payHere = payHere;
         _payHereSettings = payHereSettings.Value;
@@ -73,6 +75,7 @@ public class PaymentsController : ControllerBase
         }
 
         var method = string.IsNullOrEmpty(notification.Method) ? "" : $" ({notification.Method})";
+        var movedToReview = false;
         switch (notification.StatusCode)
         {
             case 2: // success
@@ -90,7 +93,10 @@ public class PaymentsController : ControllerBase
                 {
                     order.PaymentStatus = PaymentStatuses.Paid;
                     if (order.OrderStatus == OrderStatuses.AwaitingPayment)
+                    {
                         order.SetStatus(OrderStatuses.PendingApproval, "PayHere", $"Payment received{method}. Ref {notification.PaymentId}.");
+                        movedToReview = true;
+                    }
                     else
                         order.AddNote("PayHere", $"Payment received{method}. Ref {notification.PaymentId}.");
                 }
@@ -128,6 +134,9 @@ public class PaymentsController : ControllerBase
         }
 
         await _context.SaveChangesAsync();
+        // Tell the customer once, when the payment moved the order forward (not on duplicate notifications)
+        if (movedToReview)
+            await _notifier.NotifyAsync(order.Id);
         return Ok();
     }
 }

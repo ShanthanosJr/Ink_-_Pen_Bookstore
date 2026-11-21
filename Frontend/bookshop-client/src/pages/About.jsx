@@ -8,7 +8,7 @@ const About = () => {
         visible: {
             opacity: 1,
             y: 0,
-            transition: { duration: 0.8, ease: 'easeOut' }
+            transition: { duration: 0.5, ease: 'easeOut' }
         }
     };
 
@@ -16,7 +16,7 @@ const About = () => {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
-            transition: { staggerChildren: 0.3 }
+            transition: { staggerChildren: 0.08 }
         }
     };
 
@@ -47,7 +47,7 @@ const About = () => {
                     <motion.div
                         initial={{ width: 0, opacity: 0 }}
                         animate={{ width: 96, opacity: 0.4 }}
-                        transition={{ delay: 0.8, duration: 1 }}
+                        transition={{ delay: 0.27, duration: 0.5 }}
                         className="h-px bg-accent-olive mx-auto"
                     ></motion.div>
                 </div>
@@ -95,7 +95,7 @@ const About = () => {
                                 initial={{ width: 0 }}
                                 whileInView={{ width: 48 }}
                                 viewport={{ once: true }}
-                                transition={{ delay: 0.5, duration: 0.8 }}
+                                transition={{ delay: 0.17, duration: 0.5 }}
                                 className="h-px bg-accent-olive mt-3"
                             ></motion.span>
                             <p className="text-sm font-serif font-bold text-accent-olive uppercase tracking-widest">A Dedication to Literature</p>
@@ -110,7 +110,7 @@ const About = () => {
                         initial={{ opacity: 0, rotate: -10 }}
                         whileInView={{ opacity: 0.05, rotate: 0 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 1.5 }}
+                        transition={{ duration: 0.5 }}
                         className="absolute bottom-0 right-0 p-4 pointer-events-none font-serif text-[200px] leading-none select-none"
                     >📜</motion.div>
 

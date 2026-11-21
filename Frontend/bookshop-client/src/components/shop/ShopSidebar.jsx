@@ -8,7 +8,8 @@ const ShopSidebar = ({
     priceRange,
     setPriceRange,
     inStockOnly,
-    setInStockOnly
+    setInStockOnly,
+    maxPrice = 200
 }) => {
     const sidebarVariants = {
         hidden: { opacity: 0, x: -30 },
@@ -65,7 +66,7 @@ const ShopSidebar = ({
                 <div className="flex justify-between items-center mb-4 border-b border-border-linen pb-2">
                     <h3 className="text-sm font-serif font-bold text-ink uppercase tracking-widest">Price Filter</h3>
                     <button
-                        onClick={() => setPriceRange([0, 200])}
+                        onClick={() => setPriceRange([0, maxPrice])}
                         className="text-[10px] font-serif italic text-accent-leather hover:text-ink transition-colors uppercase tracking-widest"
                     >
                         Reset
@@ -75,7 +76,7 @@ const ShopSidebar = ({
                     <input
                         type="range"
                         min="0"
-                        max="200"
+                        max={maxPrice}
                         step="10"
                         value={priceRange[1]}
                         onChange={(e) => setPriceRange([0, Number(e.target.value)])}
@@ -104,20 +105,14 @@ const ShopSidebar = ({
                 </label>
             </div>
 
-            {/* Promo Card - Vintage Style */}
-            <motion.div
-                whileHover={{ scale: 1.02 }}
-                className="bg-ink text-paper p-6 text-center relative overflow-hidden border-4 border-double border-accent-olive/30 shadow-lg"
-            >
-                <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/black-paper.png")' }}></div>
-                <div className="relative z-10">
-                    <p className="font-serif italic text-accent-olive opacity-80 mb-2 text-xs">Limited Offer</p>
-                    <h4 className="text-xl font-serif font-bold mb-4 leading-tight">Classics Collection <br /> 20% Off</h4>
-                    <div className="inline-block border border-paper px-4 py-2 font-serif text-xs uppercase tracking-widest hover:bg-paper hover:text-ink transition-colors cursor-pointer">
-                        Code: CLASSIC20
-                    </div>
-                </div>
-            </motion.div>
+            {/* The only real offer: WELCOME50 (validated at checkout) */}
+            <div className="bg-ink text-paper p-6 text-center border-4 border-double border-accent-olive/30 shadow-lg">
+                <p className="font-serif italic text-accent-olive mb-2 text-xs">New here?</p>
+                <h4 className="text-xl font-serif font-bold mb-3 leading-tight">50% off your first order</h4>
+                <p className="inline-block border border-paper px-4 py-2 font-serif text-xs uppercase tracking-widest">
+                    Code: WELCOME50
+                </p>
+            </div>
         </motion.div>
     );
 };

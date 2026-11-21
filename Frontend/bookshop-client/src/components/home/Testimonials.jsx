@@ -32,7 +32,7 @@ const Testimonials = () => {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
-            transition: { staggerChildren: 0.2 }
+            transition: { staggerChildren: 0.08 }
         }
     };
 

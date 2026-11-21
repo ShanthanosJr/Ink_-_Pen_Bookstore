@@ -16,23 +16,16 @@ const Footer = () => {
                         <p className="text-sm font-body leading-relaxed mb-6 opacity-80">
                             A sanctuary for stories. We believe in the power of the written word and the beauty of a well-crafted book.
                         </p>
-                        <div className="flex gap-4">
-                            {/* Social Icons - Styled minimal */}
-                            {['𝕏', '📘', '📸'].map((icon, i) => (
-                                <a key={i} href="#" className="w-8 h-8 flex items-center justify-center border border-paper/20 hover:border-accent-olive hover:text-accent-olive transition-colors font-serif">
-                                    {icon}
-                                </a>
-                            ))}
-                        </div>
                     </div>
 
                     <div>
                         <h4 className="text-accent-olive font-serif font-bold tracking-widest uppercase text-xs mb-6 border-b border-paper/10 pb-2 inline-block">Collection</h4>
                         <ul className="space-y-3 text-sm font-body opacity-80">
-                            <li><a href="#" className="hover:text-accent-olive transition-colors">Fiction</a></li>
-                            <li><a href="#" className="hover:text-accent-olive transition-colors">Non-Fiction</a></li>
-                            <li><a href="#" className="hover:text-accent-olive transition-colors">Children's Books</a></li>
-                            <li><a href="#" className="hover:text-accent-olive transition-colors">Textbooks</a></li>
+                            <li><Link to="/shop?category=Fiction" className="hover:text-accent-olive transition-colors">Fiction</Link></li>
+                            <li><Link to="/shop?category=Non-Fiction" className="hover:text-accent-olive transition-colors">Non-Fiction</Link></li>
+                            <li><Link to="/shop?category=Technology" className="hover:text-accent-olive transition-colors">Technology</Link></li>
+                            <li><Link to="/shop?category=History" className="hover:text-accent-olive transition-colors">History</Link></li>
+                            <li><Link to="/shop?category=Art%20%26%20Design" className="hover:text-accent-olive transition-colors">Art &amp; Design</Link></li>
                         </ul>
                     </div>
 
@@ -41,8 +34,7 @@ const Footer = () => {
                         <ul className="space-y-3 text-sm font-body opacity-80">
                             <li><Link to="/about" className="hover:text-accent-olive transition-colors">Our Story</Link></li>
                             <li><Link to="/profile" className="hover:text-accent-olive transition-colors">Order Status</Link></li>
-                            <li><a href="#" className="hover:text-accent-olive transition-colors">Shipping Policy</a></li>
-                            <li><a href="#" className="hover:text-accent-olive transition-colors">Returns</a></li>
+                            <li><Link to="/support" className="hover:text-accent-olive transition-colors">Shipping &amp; Returns</Link></li>
                             <li><Link to="/contact" className="hover:text-accent-olive transition-colors">Contact Us</Link></li>
                         </ul>
                     </div>
@@ -51,7 +43,7 @@ const Footer = () => {
                         <h4 className="text-accent-olive font-serif font-bold tracking-widest uppercase text-xs mb-6 border-b border-paper/10 pb-2 inline-block">Contact</h4>
                         <ul className="space-y-3 text-sm font-body opacity-80">
                             <li>123 Book Lane, Sri Lanka</li>
-                            <li>support@inkandpens.com</li>
+                            <li><a href="mailto:support@inkandpens.com" className="hover:text-accent-olive transition-colors">support@inkandpens.com</a></li>
                             <li>+94 74 123-4567</li>
                         </ul>
                     </div>

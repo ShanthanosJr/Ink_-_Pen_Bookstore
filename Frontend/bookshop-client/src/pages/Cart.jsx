@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import api from '../api';
+import api, { assetUrl } from '../api';
 import { formatMoney } from '../constants/orders';
 import { useCart } from '../context/CartContext';
 import { motion } from 'framer-motion';
@@ -56,7 +56,7 @@ const Cart = () => {
                             >
                                 <div className="w-24 h-32 bg-[#e3ddd3] flex-shrink-0 border border-border-linen shadow-sm relative overflow-hidden">
                                     {item.book.imageUrl ? (
-                                        <img src={item.book.imageUrl} alt={item.book.title} className="w-full h-full object-cover" />
+                                        <img src={assetUrl(item.book.imageUrl)} alt={item.book.title} className="w-full h-full object-cover" />
                                     ) : (
                                         <span className="flex items-center justify-center h-full text-2xl text-ink/20">❦</span>
                                     )}

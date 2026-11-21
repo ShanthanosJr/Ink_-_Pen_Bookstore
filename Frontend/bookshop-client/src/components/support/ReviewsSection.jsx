@@ -111,7 +111,7 @@ const ReviewsSection = () => {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                transition={{ staggerChildren: 0.2 }}
+                transition={{ staggerChildren: 0.08 }}
                 className="grid md:grid-cols-3 gap-8"
             >
                 {reviews.map(review => (
@@ -120,13 +120,7 @@ const ReviewsSection = () => {
             </motion.div>
 
             <div className="text-center mt-12">
-                <motion.button
-                    whileHover={{ x: 5 }}
-                    className="text-ink font-serif font-bold hover:text-accent-olive transition flex items-center justify-center gap-2 mx-auto border-b border-ink/30 hover:border-accent-olive pb-1"
-                >
-                    Read all 1,240 testimonials
-                    <span>→</span>
-                </motion.button>
+
             </div>
         </div>
     );
