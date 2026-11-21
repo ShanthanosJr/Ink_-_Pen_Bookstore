@@ -1,11 +1,12 @@
 import { usePageTitle } from '../hooks/usePageTitle';
 import { useCallback, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import api, { assetUrl } from '../api';
+import api from '../api';
 import { useCart } from '../context/CartContext';
 import { BookBadges, RatingSummary, WishlistButton } from '../components/shop/BookBits';
 import ProductCard from '../components/shop/ProductCard';
 import Reviews from '../components/shop/Reviews';
+import BookCover from '../components/shop/BookCover';
 
 const RECENT_KEY = 'recentlyViewedBooks';
 const RECENT_MAX = 8;
@@ -96,9 +97,7 @@ const BookDetails = () => {
                     <div className="md:w-5/12 bg-[#e3ddd3] p-8 md:p-12 flex items-center justify-center relative">
                         <div className="absolute top-4 left-4 flex flex-col items-start gap-2"><BookBadges book={book} /></div>
                         <div className="aspect-[2/3] w-56 md:w-64 bg-paper shadow-2xl overflow-hidden">
-                            {book.imageUrl
-                                ? <img src={assetUrl(book.imageUrl)} alt={`Cover of ${book.title}`} className="w-full h-full object-cover" />
-                                : <span className="flex items-center justify-center h-full text-8xl text-ink/30 font-serif">❦</span>}
+                            <BookCover book={book} alt={`Cover of ${book.title}`} loading="eager" />
                         </div>
                     </div>
 
@@ -159,7 +158,7 @@ const BookDetails = () => {
                 {related.length > 0 && (
                     <section aria-labelledby="related-heading">
                         <h2 id="related-heading" className="font-serif font-bold text-2xl text-ink mb-6">You might also like</h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
                             {related.map(b => <ProductCard key={b.id} book={b} />)}
                         </div>
                     </section>
@@ -173,7 +172,7 @@ const BookDetails = () => {
                                 <li key={b.id} className="w-28 flex-shrink-0">
                                     <Link to={`/product/${b.id}`} className="block group">
                                         <div className="aspect-[2/3] bg-[#e3ddd3] border border-border-linen overflow-hidden mb-2">
-                                            {b.imageUrl && <img src={assetUrl(b.imageUrl)} alt="" loading="lazy" className="w-full h-full object-cover" />}
+                                            <BookCover book={b} />
                                         </div>
                                         <p className="text-xs font-serif text-ink leading-tight group-hover:text-accent-olive line-clamp-2">{b.title}</p>
                                     </Link>

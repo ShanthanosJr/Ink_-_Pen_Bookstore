@@ -4,7 +4,7 @@ const Footer = () => {
     return (
         <footer className="bg-ink text-paper-dark py-16 border-t-8 border-accent-olive relative overflow-hidden">
             {/* Background Texture */}
-            <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/black-paper.png")' }}></div>
+            <div className="absolute inset-0 opacity-5 paper-grain"></div>
 
             <div className="container mx-auto px-6 relative z-10">
                 <div className="grid md:grid-cols-4 gap-12 mb-12">

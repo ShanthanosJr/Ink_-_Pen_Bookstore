@@ -3,15 +3,11 @@ import { Link } from 'react-router-dom';
 
 const Promotions = () => {
     return (
-        <motion.section
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
+        <section
             className="py-16 bg-ink text-paper my-16 px-8 relative overflow-hidden border-4 border-double border-accent-olive/40 mx-4 md:mx-0"
         >
             {/* Background Texture */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/black-paper.png")' }}></div>
+            <div className="absolute inset-0 opacity-10 pointer-events-none paper-grain"></div>
 
             {/* Decorative Corner Ornaments */}
             <div className="absolute top-4 left-4 w-12 h-12 border-t-2 border-l-2 border-accent-olive/40"></div>
@@ -19,34 +15,22 @@ const Promotions = () => {
 
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
                 <div className="md:w-1/2">
-                    <motion.span
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
+                    <span
                         className="inline-block py-1 px-4 border border-accent-olive text-accent-olive font-serif italic text-xs mb-6 tracking-widest uppercase bg-ink/50"
                     >
                         Limited Time Proclamation
-                    </motion.span>
-                    <motion.h2
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.17 }}
+                    </span>
+                    <h2
                         className="text-4xl md:text-5xl font-serif font-bold mb-6 leading-tight"
                     >
                         Get 50% Off Your <br /><span className="italic font-normal text-accent-olive">First Purchase</span>
-                    </motion.h2>
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.23 }}
+                    </h2>
+                    <p
                         className="text-paper/80 text-lg mb-8 font-body leading-relaxed"
                     >
                         Join the <span className="text-paper font-bold">Ink & Pens</span> community today and discover a world of stories awaiting you.
                         Use code <span className="bg-paper text-ink px-3 py-1 font-serif font-bold mx-1 border border-ink shadow-[2px_2px_0_0_rgba(85,107,47,0.5)]">WELCOME50</span> at checkout on your first order.
-                    </motion.p>
+                    </p>
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="inline-block">
                         <Link to="/shop" className="bg-paper text-ink px-10 py-4 font-serif font-bold uppercase tracking-widest text-sm hover:bg-accent-olive hover:text-paper transition-all border border-ink shadow-[4px_4px_0_0_rgba(85,107,47,0.3)] inline-block">
                             Claim Offer
@@ -68,7 +52,7 @@ const Promotions = () => {
                     </div>
                 </div>
             </div>
-        </motion.section>
+        </section>
     );
 };
 

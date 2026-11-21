@@ -31,7 +31,7 @@ const Hero = () => {
         >
             <div className="absolute inset-0">
                 {/* Vintage Paper Texture */}
-                <div className="absolute inset-0 opacity-40 mix-blend-multiply" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }}></div>
+                <div className="absolute inset-0 opacity-40 mix-blend-multiply paper-grain"></div>
                 {/* Subtle Ink Stains/Texture */}
                 <div className="absolute top-0 right-0 w-96 h-96 bg-accent-olive opacity-5 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
             </div>

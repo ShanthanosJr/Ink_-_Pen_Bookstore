@@ -13,7 +13,7 @@ const Support = () => {
                 animate={{ opacity: 1 }}
                 className="bg-paper border-b border-border-linen relative overflow-hidden"
             >
-                <div className="absolute inset-0 opacity-40 mix-blend-multiply" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }}></div>
+                <div className="absolute inset-0 opacity-40 mix-blend-multiply paper-grain"></div>
 
                 <div className="container mx-auto px-4 py-20 text-center relative z-10">
                     <motion.span
@@ -55,10 +55,7 @@ const Support = () => {
 
             {/* Still need help banner */}
             <div className="container mx-auto px-4 mt-20">
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
+                <div
                     className="bg-paper rounded-sm p-12 text-center shadow-lg border border-border-linen relative"
                 >
                     <div className="absolute inset-0 border-4 border-double border-border-linen m-2 pointer-events-none"></div>
@@ -67,7 +64,7 @@ const Support = () => {
                     <Link to="/contact" className="bg-ink text-paper px-10 py-4 font-serif font-bold uppercase tracking-widest hover:bg-accent-olive transition-colors border border-ink shadow-[4px_4px_0_0_rgba(44,44,44,0.2)] inline-block">
                         Correspond With Us
                     </Link>
-                </motion.div>
+                </div>
             </div>
         </div>
     );

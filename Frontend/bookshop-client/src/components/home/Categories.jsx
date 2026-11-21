@@ -77,7 +77,7 @@ const Categories = () => (
                     <li key={category} className="min-w-0">
                         <Link
                             to={`/shop?category=${encodeURIComponent(category)}`}
-                            className="group flex h-full flex-col overflow-hidden rounded-md border border-border-linen bg-paper text-ink shadow-xs transition-colors hover:border-accent-olive/55 hover:bg-paper-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-olive"
+                            className="group flex h-full flex-col overflow-hidden rounded-sm border border-border-linen bg-paper text-ink shadow-xs transition-colors hover:border-accent-olive/55 hover:bg-paper-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-olive"
                         >
                             <BookPair style={style} />
                             <div className="px-2.5 py-2.5 sm:px-3.5 sm:py-3">

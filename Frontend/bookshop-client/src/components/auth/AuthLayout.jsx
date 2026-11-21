@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import api, { assetUrl } from '../../api';
+import api from '../../api';
 import logo from '../../assets/inkandpens.png';
+import BookCover from '../shop/BookCover';
 
 const PERKS = [
     ['Track every order', 'From review to your doorstep, step by step.'],
@@ -36,9 +37,7 @@ const CoverFan = () => {
                         }}
                     >
                         <div className="w-full h-full rounded-[3px] overflow-hidden bg-[#3a3a36] border border-white/10 shadow-[0_18px_40px_-12px_rgba(0,0,0,0.7)]">
-                            {book.imageUrl
-                                ? <img src={assetUrl(book.imageUrl)} alt="" className="w-full h-full object-cover" />
-                                : <div className="w-full h-full bg-gradient-to-br from-[#556b2f] to-[#2c2c2c]" />}
+                            <BookCover book={book} loading="eager" />
                         </div>
                     </div>
                 );
@@ -107,14 +106,14 @@ const AuthLayout = ({ mode, eyebrow, title, subtitle, children }) => (
                 </Link>
 
                 {/* Switch between the two pages */}
-                <nav className="grid grid-cols-2 p-1 mb-10 bg-paper-dark border border-border-linen rounded-full" aria-label="Account">
+                <nav className="grid grid-cols-2 p-1 mb-10 bg-paper-dark border border-border-linen rounded-sm" aria-label="Account">
                     {[['login', 'Log in', '/login'], ['register', 'Create account', '/register']].map(([id, label, to]) => (
                         <Link
                             key={id}
                             to={to}
                             replace
                             aria-current={mode === id ? 'page' : undefined}
-                            className={`text-center py-2.5 rounded-full font-serif text-sm transition-colors ${mode === id ? 'bg-ink text-paper shadow-sm' : 'text-ink-light hover:text-ink'}`}
+                            className={`text-center py-2.5 rounded-sm font-serif text-sm transition-colors ${mode === id ? 'bg-ink text-paper shadow-sm' : 'text-ink-light hover:text-ink'}`}
                         >
                             {label}
                         </Link>

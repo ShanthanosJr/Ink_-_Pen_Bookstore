@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import api from '../../api';
 import { errorMessage } from '../../constants/orders';
 
@@ -27,39 +26,26 @@ const Newsletter = () => {
             {/* Decorative Top Border as Envelope Flap */}
             <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-accent-olive via-ink to-accent-leather opacity-20"></div>
 
-            <motion.div
-                initial={{ opacity: 0, y: 50, rotate: 0 }}
-                whileInView={{ opacity: 1, y: 0, rotate: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, type: 'spring', bounce: 0.4 }}
+            <div
                 className="max-w-3xl mx-auto px-8 py-12 border border-border-linen bg-paper-dark shadow-[8px_8px_0_0_#e5e0d8]"
             >
                 <div className="text-center">
-                    <motion.span
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        transition={{ delay: 0.17 }}
+                    <span
                         className="font-serif italic text-accent-olive text-sm mb-4 block"
                     >
                         Correspondence
-                    </motion.span>
-                    <motion.h2
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.23 }}
+                    </span>
+                    <h2
                         className="text-4xl font-serif font-bold text-ink mb-4"
                     >
                         Letters from the Editor
-                    </motion.h2>
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        transition={{ delay: 0.3 }}
+                    </h2>
+                    <p
                         className="text-ink-light mb-10 text-lg font-body leading-relaxed max-w-xl mx-auto"
                     >
                         Join our circle of readers. Receive news on rare acquisitions,
                         author discourses, and literary gatherings.
-                    </motion.p>
+                    </p>
 
                     <form onSubmit={subscribe} className="flex flex-col sm:flex-row gap-0 max-w-lg mx-auto border-b-2 border-ink">
                         <label htmlFor="newsletter-email" className="sr-only">Email address</label>
@@ -79,16 +65,13 @@ const Newsletter = () => {
                     {status.text && (
                         <p className={`mt-4 text-sm font-serif ${status.type === 'error' ? 'text-red-800' : 'text-accent-olive'}`} role="status">{status.text}</p>
                     )}
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        transition={{ delay: 0.5 }}
+                    <p
                         className="text-[11px] uppercase tracking-widest text-ink-light mt-6"
                     >
                         We honor the privacy of your study.
-                    </motion.p>
+                    </p>
                 </div>
-            </motion.div>
+            </div>
         </section>
     );
 };

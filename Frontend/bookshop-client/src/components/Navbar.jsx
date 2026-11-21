@@ -40,23 +40,20 @@ const Navbar = () => {
     };
 
     return (
-        <motion.nav
-            initial={{ y: -50 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
+        <nav
             className="bg-paper/95 backdrop-blur-sm border-b border-border-linen sticky top-0 z-50 transition-colors duration-300"
         >
             <div className="container mx-auto px-4 sm:px-6 py-3 md:py-5 flex justify-between items-center gap-3">
 
                 {/* Logo Section */}
                 <Link to="/" className="group flex items-center gap-3 min-w-0">
-                    <motion.div whileHover={{ rotate: 5 }} className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center gap-2 shrink-0">
                         <img
                             src={logo}
                             alt="Ink & Pens logo"
                             className="w-9 h-9 md:w-10 md:h-10 bg-ink rounded-sm border border-ink shadow-[2px_2px_0_0_rgba(44,44,44,0.3)] transition-all group-hover:-translate-y-0.5 group-hover:shadow-[3px_3px_0_0_rgba(44,44,44,0.3)]"
                         />
-                    </motion.div>
+                    </div>
                     <div className="flex flex-col min-w-0">
                         <span className="font-serif text-lg md:text-xl font-bold text-ink tracking-tight leading-none whitespace-nowrap group-hover:text-accent-olive transition-colors">Ink & Pens</span>
                         <span className="font-body text-[11px] text-ink-light tracking-[0.2em] uppercase mt-0.5 hidden sm:block">Est. 2026</span>
@@ -65,17 +62,10 @@ const Navbar = () => {
 
                 {/* Desktop navigation */}
                 <div className="hidden lg:flex items-center gap-8">
-                    {NAV_ITEMS.map((item, idx) => (
-                        <motion.div
-                            key={item.label}
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 + idx * 0.1 }}
-                        >
-                            <NavLink to={item.to} end={item.to === '/'} className={desktopLinkClass}>
-                                {item.label}
-                            </NavLink>
-                        </motion.div>
+                    {NAV_ITEMS.map(item => (
+                        <NavLink key={item.label} to={item.to} end={item.to === '/'} className={desktopLinkClass}>
+                            {item.label}
+                        </NavLink>
                     ))}
                     {isAdmin && (
                         <NavLink to="/admin" className={desktopLinkClass}>Admin</NavLink>
@@ -148,7 +138,7 @@ const Navbar = () => {
                     ) : (
                         <div className="hidden lg:flex items-center gap-4 border-l border-border-linen pl-6">
                             <Link to="/login" className="font-serif text-ink-light hover:text-accent-olive transition-colors">Login</Link>
-                            <Link to="/register" className="bg-primary-800 text-white px-4 py-2 rounded shadow-sm hover:bg-primary-900 transition-all font-serif text-sm">
+                            <Link to="/register" className="bg-ink text-paper px-5 py-2.5 rounded-sm font-serif uppercase tracking-widest text-xs font-bold hover:bg-accent-olive transition-colors">
                                 Join
                             </Link>
                         </div>
@@ -203,15 +193,15 @@ const Navbar = () => {
                                 </>
                             ) : (
                                 <div className="flex gap-3 p-4">
-                                    <Link to="/login" className="flex-1 text-center border border-ink text-ink py-3 font-serif">Login</Link>
-                                    <Link to="/register" className="flex-1 text-center bg-primary-800 text-white py-3 font-serif">Join</Link>
+                                    <Link to="/login" className="flex-1 text-center border border-ink text-ink py-3 font-serif rounded-sm">Login</Link>
+                                    <Link to="/register" className="flex-1 text-center bg-ink text-paper py-3 font-serif rounded-sm">Join</Link>
                                 </div>
                             )}
                         </nav>
                     </motion.div>
                 )}
             </AnimatePresence>
-        </motion.nav>
+        </nav>
     );
 };
 
