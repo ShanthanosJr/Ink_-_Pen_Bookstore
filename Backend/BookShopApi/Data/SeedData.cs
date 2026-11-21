@@ -219,7 +219,36 @@ public static class SeedData
                 Price = 16.50M,
                 StockQuantity = 18,
                 ImageUrl = "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=800"
-            }
+            },
+
+            // Education
+            EducationBook("Make It Stick: The Science of Successful Learning", "Peter C. Brown, Henry L. Roediger III & Mark A. McDaniel",
+                "Cognitive scientists explain why rereading and cramming fail, and how retrieval practice, spacing and interleaving make learning last.",
+                2014, "Belknap Press of Harvard University Press", 336, "9780674729018", 19.95M, 35),
+            EducationBook("How to Read a Book", "Mortimer J. Adler & Charles Van Doren",
+                "The classic guide to active reading, from inspectional skimming to analytical and comparative reading across many books on one subject.",
+                1972, "Simon & Schuster", 426, "9780671212094", 17.00M, 30),
+            EducationBook("Mindset: The New Psychology of Success", "Carol S. Dweck",
+                "Stanford psychologist Carol Dweck shows how believing abilities can grow, rather than being fixed, changes how we learn, teach and lead.",
+                2006, "Ballantine Books", 276, "9780345472328", 18.00M, 45),
+            EducationBook("A Mind for Numbers", "Barbara Oakley",
+                "An engineering professor who once failed maths shares practical techniques for learning science and maths, from chunking to beating procrastination.",
+                2014, "TarcherPerigee", 336, "9780399165245", 17.50M, 25),
+            EducationBook("Ultralearning", "Scott H. Young",
+                "Nine principles for teaching yourself hard skills quickly and deliberately, drawn from self-directed learners who mastered languages, art and code.",
+                2019, "Harper Business", 304, "9780062852687", 22.99M, 20),
+            EducationBook("The Elements of Style", "William Strunk Jr. & E. B. White",
+                "The concise handbook of English usage and composition that has taught generations of students to write clearly and omit needless words.",
+                1959, "Longman", 105, "9780205309023", 9.95M, 60),
+            EducationBook("A Brief History of Time", "Stephen Hawking",
+                "From the Big Bang to black holes, Stephen Hawking explains the nature of space and time for readers with no background in physics.",
+                1988, "Bantam", 212, "9780553380163", 18.00M, 40),
+            EducationBook("Cosmos", "Carl Sagan",
+                "Carl Sagan's companion to the landmark television series traces fifteen billion years of cosmic evolution and the story of science itself.",
+                1980, "Ballantine Books", 432, "9780345539434", 19.00M, 30),
+            EducationBook("Pedagogy of the Oppressed", "Paulo Freire",
+                "Paulo Freire's founding text of critical pedagogy argues for education as a dialogue between teachers and learners rather than the deposit of facts.",
+                1968, "Continuum", 183, "9780826412768", 16.95M, 15)
         };
 
         foreach (var book in seedBooks)
@@ -241,4 +270,25 @@ public static class SeedData
 
         context.SaveChanges();
     }
+
+    // Education titles were added later, so they show up as new arrivals
+    private static readonly DateTime EducationAddedDate = new(2026, 11, 22, 0, 0, 0, DateTimeKind.Utc);
+
+    // Covers come from Open Library by ISBN; default=false makes a missing cover a 404 so the shop shows its stand-in cover
+    private static Book EducationBook(string title, string author, string description, int year, string publisher,
+        int pages, string isbn, decimal price, int stock) => new()
+    {
+        Title = title,
+        Author = author,
+        Description = description,
+        PublishedYear = year,
+        Publisher = publisher,
+        PageCount = pages,
+        Isbn = isbn,
+        Category = "Education",
+        Price = price,
+        StockQuantity = stock,
+        CreatedAt = EducationAddedDate,
+        ImageUrl = $"https://covers.openlibrary.org/b/isbn/{isbn}-L.jpg?default=false"
+    };
 }

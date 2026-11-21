@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import api from '../api';
 import { useToast } from '../context/ToastContext';
+import { useCart } from '../context/CartContext';
 import { errorMessage, formatDateTime, redirectToPayHere } from '../constants/orders';
 import {
     DeliveryAndPayment, ItemsList, Panel, PaymentBadge, ProgressTracker, StatusBadge, Timeline, Totals, TrackingInfo
@@ -27,6 +28,7 @@ const OrderDetails = () => {
     const { id } = useParams();
     const [searchParams] = useSearchParams();
     const { showToast } = useToast();
+    const { fetchCart } = useCart();
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
     const [notFound, setNotFound] = useState(false);
@@ -67,10 +69,12 @@ const OrderDetails = () => {
             if (!latest || latest.orderStatus !== 'AwaitingPayment' || attempts >= 10) {
                 clearInterval(pollRef.current);
                 setConfirmingPayment(false);
+                // The cart is kept until PayHere confirms payment; once it has, the server has emptied it
+                if (latest?.paymentStatus === 'Paid') fetchCart();
             }
         }, 3000);
         return () => clearInterval(pollRef.current);
-    }, [paymentReturn, load]);
+    }, [paymentReturn, load, fetchCart]);
 
     const payNow = async () => {
         setBusy(true);
@@ -157,7 +161,7 @@ const OrderDetails = () => {
                 )}
                 {awaitingPayment && !confirmingPayment && (
                     <Banner tone="warning" title={paymentReturn === 'cancelled' ? 'Payment was cancelled' : order.paymentStatus === 'Failed' ? 'Payment failed' : 'Waiting for payment'}>
-                        Your books are reserved. Complete the payment to send the order for review, or cancel it.
+                        Your books are reserved and still in your <Link to="/cart" className="underline">cart</Link>. Complete the payment to send the order for review, or cancel it.
                         {paymentReturn === 'return' && ' If you already paid, the confirmation may still be on its way. Refresh in a minute.'}
                     </Banner>
                 )}
