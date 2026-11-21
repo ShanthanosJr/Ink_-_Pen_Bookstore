@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../api';
-import { useAuth } from './AuthContext';
+import { useAuth } from './authContextValue';
 import { useToast } from './ToastContext';
 import { errorMessage } from '../constants/orders';
 

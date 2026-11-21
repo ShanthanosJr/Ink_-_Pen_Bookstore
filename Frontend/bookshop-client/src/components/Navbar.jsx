@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../assets/inkandpens.png';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/authContextValue';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 
@@ -59,7 +59,7 @@ const Navbar = () => {
                     </motion.div>
                     <div className="flex flex-col min-w-0">
                         <span className="font-serif text-lg md:text-xl font-bold text-ink tracking-tight leading-none whitespace-nowrap group-hover:text-accent-olive transition-colors">Ink & Pens</span>
-                        <span className="font-body text-[10px] text-ink-light tracking-[0.2em] uppercase mt-0.5 hidden sm:block">Est. 2026</span>
+                        <span className="font-body text-[11px] text-ink-light tracking-[0.2em] uppercase mt-0.5 hidden sm:block">Est. 2026</span>
                     </div>
                 </Link>
 
@@ -94,7 +94,7 @@ const Navbar = () => {
                                 <path strokeLinejoin="round" d="M12 20s-7-4.35-7-10a4 4 0 017-2.65A4 4 0 0119 10c0 5.65-7 10-7 10z" />
                             </svg>
                             {wishlistCount > 0 && (
-                                <span className="absolute -top-2 -right-2 bg-ink text-paper text-[10px] font-bold h-4 min-w-4 px-1 rounded-full flex items-center justify-center border border-paper">
+                                <span className="absolute -top-2 -right-2 bg-ink text-paper text-[11px] font-bold h-4 min-w-4 px-1 rounded-full flex items-center justify-center border border-paper">
                                     {wishlistCount}
                                 </span>
                             )}
@@ -112,7 +112,7 @@ const Navbar = () => {
                             <motion.span
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
-                                className="absolute -top-2 -right-2 bg-accent-leather text-white text-[10px] font-bold h-4 min-w-4 px-1 rounded-full flex items-center justify-center border border-paper"
+                                className="absolute -top-2 -right-2 bg-accent-leather text-white text-[11px] font-bold h-4 min-w-4 px-1 rounded-full flex items-center justify-center border border-paper"
                             >
                                 {cartCount}
                             </motion.span>
@@ -122,10 +122,13 @@ const Navbar = () => {
                     {/* Desktop account area */}
                     {user ? (
                         <div className="hidden lg:flex items-center gap-4 border-l border-border-linen pl-6">
-                            <Link to="/profile" className="flex items-center gap-3 group">
+                            <NavLink to="/orders" className={({ isActive }) => `font-serif text-sm ${isActive ? 'text-accent-olive font-bold' : 'text-ink-light hover:text-accent-olive'}`}>
+                                My orders
+                            </NavLink>
+                            <Link to="/profile" className="flex items-center gap-3 group" aria-label="My account">
                                 <div className="text-right hidden xl:block">
                                     <p className="font-serif font-bold text-ink text-sm leading-none group-hover:text-primary-700 transition-colors">{user.fullName}</p>
-                                    <p className="font-body text-[10px] text-accent-olive uppercase tracking-wider mt-0.5">My account & orders</p>
+                                    <p className="font-body text-[11px] text-accent-olive uppercase tracking-wider mt-0.5">My account</p>
                                 </div>
                                 <div className="w-9 h-9 border border-border-linen bg-white rounded-full flex items-center justify-center text-ink-light font-serif text-sm italic group-hover:border-accent-olive transition-colors">
                                     {user.fullName?.charAt(0)}
@@ -187,7 +190,8 @@ const Navbar = () => {
                             ))}
                             {user ? (
                                 <>
-                                    <NavLink to="/profile" className={mobileLinkClass}>My Account & Orders</NavLink>
+                                    <NavLink to="/orders" className={mobileLinkClass}>My Orders</NavLink>
+                                    <NavLink to="/profile" className={mobileLinkClass}>My Account</NavLink>
                                     <NavLink to="/wishlist" className={mobileLinkClass}>Wishlist{wishlistCount > 0 ? ` (${wishlistCount})` : ''}</NavLink>
                                     {isAdmin && <NavLink to="/admin" className={mobileLinkClass}>Admin Dashboard</NavLink>}
                                     <button

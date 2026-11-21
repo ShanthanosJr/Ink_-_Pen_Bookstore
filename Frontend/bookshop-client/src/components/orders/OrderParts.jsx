@@ -40,7 +40,7 @@ export const ProgressTracker = ({ order }) => {
                 const current = index === currentIndex;
                 return (
                     <li key={step} className={`border-t-4 pt-2 ${done ? 'border-accent-olive' : 'border-border-linen'}`} aria-current={current ? 'step' : undefined}>
-                        <p className={`text-[11px] uppercase tracking-widest font-bold ${done ? 'text-ink' : 'text-ink-light/60'}`}>
+                        <p className={`text-[11px] uppercase tracking-widest font-bold ${done ? 'text-ink' : 'text-ink-light'}`}>
                             {statusLabel(step)}
                         </p>
                         <p className="text-[11px] font-serif text-ink-light mt-1">

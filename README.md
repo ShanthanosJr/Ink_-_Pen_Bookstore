@@ -210,6 +210,9 @@ Every change is recorded in `OrderStatusHistory` and shown to the customer on `/
 
 ## Troubleshooting
 
+### Port 5000 on macOS
+macOS's AirPlay Receiver also listens on port 5000, which can make API calls fail with confusing 403/404 responses. Either turn off AirPlay Receiver (System Settings > General > AirDrop & Handoff) or run the API on another port, for example `dotnet run --urls http://localhost:5050`, and start the frontend with `VITE_API_ORIGIN=http://localhost:5050 npm run dev` (and set `Shop:FrontendBaseUrl` if the frontend port changes).
+
 ### Common Backend Issues
 - **CORS Errors**: Ensure backend is running and configured to allow `http://localhost:5173`
 - **Database Errors**: Verify you've run `dotnet ef database update`

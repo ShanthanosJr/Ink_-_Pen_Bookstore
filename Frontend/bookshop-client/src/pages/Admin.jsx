@@ -7,6 +7,7 @@ import Dashboard from '../components/admin/Dashboard';
 import OrdersTable from '../components/admin/OrdersTable';
 import Customers from '../components/admin/Customers';
 import Messages from '../components/admin/Messages';
+import Coupons from '../components/admin/Coupons';
 
 const LOW_STOCK = 5;
 
@@ -15,6 +16,7 @@ const TABS = [
     { id: 'orders', label: 'Orders' },
     { id: 'inventory', label: 'Inventory' },
     { id: 'customers', label: 'Customers' },
+    { id: 'coupons', label: 'Coupons' },
     { id: 'messages', label: 'Messages' },
 ];
 
@@ -147,6 +149,7 @@ const Admin = () => {
                 {activeTab === 'inventory' && <Inventory />}
                 {activeTab === 'customers' && <Customers />}
                 {activeTab === 'messages' && <Messages />}
+                {activeTab === 'coupons' && <Coupons />}
             </div>
         </div>
     );

@@ -43,7 +43,7 @@ const ContactInfo = () => {
                         <div>
                             <h4 className="font-serif font-bold text-ink mb-1">Telephone</h4>
                             <p className="text-ink-light font-body">+94 74 123 4567</p>
-                            <p className="text-[10px] uppercase tracking-widest text-accent-olive mt-1">Weekdays, 9am - 6pm</p>
+                            <p className="text-[11px] uppercase tracking-widest text-accent-olive mt-1">Weekdays, 9am - 6pm</p>
                         </div>
                     </div>
 

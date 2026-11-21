@@ -1,3 +1,4 @@
+import { usePageTitle } from '../hooks/usePageTitle';
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import api from '../api';
@@ -30,6 +31,7 @@ const AdminOrderDetails = () => {
     const [rejecting, setRejecting] = useState(false);
     const [rejectReason, setRejectReason] = useState('');
     const [statusForm, setStatusForm] = useState({ status: '', courier: '', trackingNumber: '', note: '' });
+    usePageTitle(`Admin · Order #${id}`);
 
     const load = useCallback(async () => {
         try {

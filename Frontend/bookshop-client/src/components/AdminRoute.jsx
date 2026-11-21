@@ -1,5 +1,5 @@
 import { Link, Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/authContextValue';
 
 // Only lets admins through. The API enforces this too; this just keeps others out of admin screens.
 const AdminRoute = ({ children }) => {

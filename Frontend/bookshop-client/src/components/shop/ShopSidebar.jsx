@@ -67,7 +67,7 @@ const ShopSidebar = ({
                     <h3 className="text-sm font-serif font-bold text-ink uppercase tracking-widest">Price Filter</h3>
                     <button
                         onClick={() => setPriceRange([0, maxPrice])}
-                        className="text-[10px] font-serif italic text-accent-leather hover:text-ink transition-colors uppercase tracking-widest"
+                        className="text-[11px] font-serif italic text-accent-leather hover:text-ink transition-colors uppercase tracking-widest"
                     >
                         Reset
                     </button>

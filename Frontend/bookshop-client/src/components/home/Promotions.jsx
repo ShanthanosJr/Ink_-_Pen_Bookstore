@@ -55,37 +55,17 @@ const Promotions = () => {
                 </div>
 
                 <div className="md:w-1/2 flex justify-center">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-                        whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.2, type: 'spring', stiffness: 100 }}
-                        className="relative group"
-                    >
-                        {/* Stacked Paper Effect */}
-                        <div className="absolute inset-0 bg-paper/5 border border-paper/10 transform rotate-3 translate-x-2 translate-y-2 transition-transform group-hover:rotate-6"></div>
-                        <div className="absolute inset-0 bg-paper/5 border border-paper/10 transform -rotate-2 -translate-x-1 -translate-y-1 transition-transform group-hover:-rotate-4"></div>
-
-                        <div className="bg-paper-dark text-ink p-8 border border-border-linen relative shadow-xl w-full max-w-sm">
-                            <div className="flex items-center gap-4 mb-6 border-b border-border-linen pb-4">
-                                <div className="w-12 h-12 border-2 border-accent-olive flex items-center justify-center font-serif text-2xl text-accent-olive italic">❦</div>
-                                <div>
-                                    <div className="font-serif font-bold text-lg leading-tight uppercase tracking-widest text-ink">Bundle Deal</div>
-                                    <div className="text-[10px] text-accent-olive font-bold uppercase tracking-widest mt-1">Foundational Archives</div>
-                                </div>
-                            </div>
-                            <div className="text-4xl font-serif font-bold mb-4 text-ink flex items-baseline gap-3">
-                                $49.99
-                                <span className="text-lg text-ink-light/40 line-through font-normal">$99.99</span>
-                            </div>
-                            <p className="text-sm text-ink-light font-body italic border-l-2 border-accent-olive/30 pl-4 mb-6 leading-relaxed">
-                                "Includes three essential volumes on modern architecture and aesthetic philosophy. A library staple."
-                            </p>
-                            <div className="text-[9px] uppercase tracking-[0.2em] font-bold text-ink-light/60 text-center border-t border-dotted border-border-linen pt-4">
-                                Limited Availability Entry No. 492
-                            </div>
-                        </div>
-                    </motion.div>
+                    <div className="bg-paper-dark text-ink p-8 border border-border-linen shadow-xl max-w-sm w-full">
+                        <p className="font-serif font-bold text-lg uppercase tracking-widest border-b border-border-linen pb-4 mb-4">How it works</p>
+                        <ol className="space-y-3 font-serif text-sm list-decimal list-inside">
+                            <li>Create a free account.</li>
+                            <li>Fill your cart with any books you like.</li>
+                            <li>Enter <strong>WELCOME50</strong> at checkout for 50% off your first order.</li>
+                        </ol>
+                        <p className="mt-6 pt-4 border-t border-border-linen text-xs font-serif text-ink-light">
+                            Shipping is free on orders over $50.
+                        </p>
+                    </div>
                 </div>
             </div>
         </motion.section>

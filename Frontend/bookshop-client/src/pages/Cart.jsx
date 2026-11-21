@@ -98,7 +98,7 @@ const Cart = () => {
                                         </button>
                                     </div>
                                     {item.quantity >= item.book.stockQuantity && (
-                                        <span className="text-[10px] text-red-600 mt-2 font-bold uppercase tracking-widest">Max Stock Reached</span>
+                                        <span className="text-[11px] text-red-600 mt-2 font-bold uppercase tracking-widest">Max Stock Reached</span>
                                     )}
                                 </div>
                             </motion.div>
@@ -151,7 +151,7 @@ const Cart = () => {
                             <Link to="/shop" className="block text-center mt-4 font-serif italic text-sm text-ink-light hover:text-accent-olive">
                                 Continue shopping
                             </Link>
-                            <div className="mt-6 flex items-center gap-3 text-ink-light/70 text-[10px] uppercase tracking-widest justify-center">
+                            <div className="mt-6 flex items-center gap-3 text-ink-light text-[11px] uppercase tracking-widest justify-center">
                                 <span>Secure Checkout</span>
                                 <span>•</span>
                                 <span>Fast Delivery</span>

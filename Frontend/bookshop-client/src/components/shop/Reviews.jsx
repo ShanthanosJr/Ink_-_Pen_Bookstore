@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import api from '../../api';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/authContextValue';
 import { useToast } from '../../context/ToastContext';
 import { errorMessage, formatDate } from '../../constants/orders';
 import { Stars } from './BookBits';
@@ -142,7 +142,7 @@ const Reviews = ({ bookId, onChanged }) => {
                             <p className="font-serif text-ink leading-relaxed whitespace-pre-line">{r.body}</p>
                             <p className="text-xs font-serif text-ink-light mt-2">
                                 {r.author}{r.isMine && ' (you)'} · {formatDate(r.createdAt)}
-                                {r.verifiedPurchase && <span className="ml-2 text-accent-olive font-bold uppercase tracking-widest text-[10px]">Verified purchase</span>}
+                                {r.verifiedPurchase && <span className="ml-2 text-accent-olive font-bold uppercase tracking-widest text-[11px]">Verified purchase</span>}
                             </p>
                         </li>
                     ))}

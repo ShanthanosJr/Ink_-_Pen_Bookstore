@@ -33,7 +33,7 @@ const Footer = () => {
                         <h4 className="text-accent-olive font-serif font-bold tracking-widest uppercase text-xs mb-6 border-b border-paper/10 pb-2 inline-block">Assistance</h4>
                         <ul className="space-y-3 text-sm font-body opacity-80">
                             <li><Link to="/about" className="hover:text-accent-olive transition-colors">Our Story</Link></li>
-                            <li><Link to="/profile" className="hover:text-accent-olive transition-colors">Order Status</Link></li>
+                            <li><Link to="/orders" className="hover:text-accent-olive transition-colors">Order Status</Link></li>
                             <li><Link to="/support" className="hover:text-accent-olive transition-colors">Shipping &amp; Returns</Link></li>
                             <li><Link to="/contact" className="hover:text-accent-olive transition-colors">Contact Us</Link></li>
                         </ul>

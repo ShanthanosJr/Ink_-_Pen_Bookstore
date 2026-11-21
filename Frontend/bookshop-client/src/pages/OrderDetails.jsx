@@ -1,3 +1,4 @@
+import { usePageTitle } from '../hooks/usePageTitle';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import api from '../api';
@@ -32,6 +33,7 @@ const OrderDetails = () => {
     const [busy, setBusy] = useState(false);
     const [confirmingPayment, setConfirmingPayment] = useState(false);
     const pollRef = useRef(null);
+    usePageTitle(`Order #${id}`);
 
     const justPlaced = searchParams.get('placed') === '1';
     const paymentReturn = searchParams.get('payment');
@@ -108,7 +110,7 @@ const OrderDetails = () => {
             <div className="min-h-[60vh] bg-paper flex flex-col items-center justify-center px-4 text-center">
                 <h1 className="text-2xl font-serif font-bold text-ink mb-2">Order not found</h1>
                 <p className="font-serif italic text-ink-light mb-6">We couldn't find this order on your account.</p>
-                <Link to="/profile" className="px-6 py-3 bg-ink text-paper font-serif uppercase tracking-widest text-xs font-bold">My orders</Link>
+                <Link to="/orders" className="px-6 py-3 bg-ink text-paper font-serif uppercase tracking-widest text-xs font-bold">My orders</Link>
             </div>
         );
     }
@@ -121,7 +123,7 @@ const OrderDetails = () => {
     return (
         <div className="bg-paper-dark min-h-screen py-10">
             <div className="container mx-auto px-4 max-w-5xl space-y-6">
-                <Link to="/profile" className="inline-block font-serif text-sm text-ink-light hover:text-accent-olive">← All my orders</Link>
+                <Link to="/orders" className="inline-block font-serif text-sm text-ink-light hover:text-accent-olive">← All my orders</Link>
 
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b-4 border-double border-ink pb-4">

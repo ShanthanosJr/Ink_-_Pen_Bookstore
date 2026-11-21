@@ -1,3 +1,4 @@
+import { usePageTitle } from '../hooks/usePageTitle';
 import { useCallback, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api, { assetUrl } from '../api';
@@ -30,6 +31,7 @@ const BookDetails = () => {
     const [quantity, setQuantity] = useState(1);
     const { addToCart } = useCart();
     const [adding, setAdding] = useState(false);
+    usePageTitle(book ? `${book.title} by ${book.author}` : 'Book');
 
     const loadBook = useCallback(async () => {
         try {
