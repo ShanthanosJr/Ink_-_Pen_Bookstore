@@ -16,14 +16,14 @@ const Promotions = () => {
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
                 <div className="md:w-1/2">
                     <span
-                        className="inline-block py-1 px-4 border border-accent-olive text-accent-olive font-serif italic text-xs mb-6 tracking-widest uppercase bg-ink/50"
+                        className="inline-block py-1 px-4 border border-accent-olive-light/60 text-accent-olive-light font-serif italic text-xs mb-6 tracking-widest uppercase bg-ink/50"
                     >
                         Limited Time Proclamation
                     </span>
                     <h2
                         className="text-4xl md:text-5xl font-serif font-bold mb-6 leading-tight"
                     >
-                        Get 50% Off Your <br /><span className="italic font-normal text-accent-olive">First Purchase</span>
+                        Get 50% Off Your <br /><span className="italic font-normal text-accent-olive-light">First Purchase</span>
                     </h2>
                     <p
                         className="text-paper/80 text-lg mb-8 font-body leading-relaxed"

@@ -6,6 +6,8 @@
     --color-ink: #2c2c2c;
     --color-ink-light: #4a4a4a;
     --color-accent-olive: #556b2f;
+    /* Olive for use on dark (ink) backgrounds, where the regular olive is too dim to read */
+    --color-accent-olive-light: #b5c48f;
     --color-accent-leather: #8b4513;
     --color-border-linen: #e5e0d8;
 

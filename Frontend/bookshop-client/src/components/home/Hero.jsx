@@ -72,7 +72,7 @@ const Hero = () => {
                     </Link>
                     <a
                         href="#featured"
-                        className="px-10 py-4 border border-ink text-ink font-serif uppercase tracking-widest text-sm font-bold hover:bg-paper-dark transition-colors"
+                        className="px-10 py-4 border border-ink text-ink font-serif uppercase tracking-widest text-sm font-bold hover:bg-ink hover:text-paper transition-colors"
                     >
                         Our Selections
                     </a>
