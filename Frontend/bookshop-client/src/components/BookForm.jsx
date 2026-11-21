@@ -1,3 +1,4 @@
+import { usePageTitle } from '../hooks/usePageTitle';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api, { assetUrl } from '../api';
@@ -22,6 +23,7 @@ const BookForm = () => {
     const [saving, setSaving] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState('');
+    usePageTitle(isEditing ? 'Edit book' : 'Add a book');
 
     useEffect(() => {
         if (!isEditing) return;

@@ -26,13 +26,13 @@ export const RatingSummary = ({ book, className = '' }) => {
 export const BookBadges = ({ book }) => (
     <>
         {book.isBestseller && (
-            <div className="bg-ink text-paper text-[10px] tracking-widest uppercase font-bold px-2 py-1 shadow-sm border border-ink -rotate-2">Bestseller</div>
+            <div className="bg-ink text-paper text-[11px] tracking-widest uppercase font-bold px-2 py-1 shadow-sm border border-ink -rotate-2">Bestseller</div>
         )}
         {book.isNewArrival && (
-            <div className="bg-accent-leather text-white text-[10px] tracking-widest uppercase font-bold px-2 py-1 shadow-sm border border-accent-leather rotate-1">New arrival</div>
+            <div className="bg-accent-leather text-white text-[11px] tracking-widest uppercase font-bold px-2 py-1 shadow-sm border border-accent-leather rotate-1">New arrival</div>
         )}
         {book.stockQuantity > 0 && book.stockQuantity <= 5 && (
-            <div className="bg-paper text-accent-leather border border-accent-leather text-[10px] tracking-widest uppercase font-bold px-2 py-1 -rotate-1">Only {book.stockQuantity} left</div>
+            <div className="bg-paper text-accent-leather border border-accent-leather text-[11px] tracking-widest uppercase font-bold px-2 py-1 -rotate-1">Only {book.stockQuantity} left</div>
         )}
     </>
 );

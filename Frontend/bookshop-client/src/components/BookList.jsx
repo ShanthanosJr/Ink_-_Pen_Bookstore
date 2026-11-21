@@ -1,88 +1,55 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../api';
 import ProductCard from './shop/ProductCard';
-import { motion } from 'framer-motion';
 
-const BookList = ({ limit, showAdminControls = false, title }) => {
-    const [books, setBooks] = useState([]);
-    const [loading, setLoading] = useState(true);
+// Different lists for the home page, all from real data
+const SORTS = {
+    bestsellers: (a, b) => b.soldCount - a.soldCount || (b.averageRating || 0) - (a.averageRating || 0),
+    newest: (a, b) => new Date(b.createdAt) - new Date(a.createdAt) || b.id - a.id,
+    rated: (a, b) => (b.averageRating || 0) - (a.averageRating || 0) || b.reviewCount - a.reviewCount,
+};
 
-    const fetchBooks = async () => {
-        try {
-            const response = await api.get('/books');
-            setBooks(response.data);
-        } catch (error) {
-            console.error("Error fetching books:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+const BookList = ({ limit = 4, title, sort = 'newest', exclude = [], link, subtitle }) => {
+    const [books, setBooks] = useState(null);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
-        fetchBooks();
+        api.get('/books')
+            .then(res => setBooks(res.data))
+            .catch(() => setError(true));
     }, []);
 
-    if (loading) return (
-        <div className="text-center py-20 font-serif italic text-ink-light animate-pulse">
-            Retrieving volumes from archive...
-        </div>
-    );
+    if (error) return null;
 
-    const displayedBooks = limit ? books.slice(0, limit) : books;
+    const list = (books || [])
+        .filter(b => b.stockQuantity > 0 && !exclude.includes(b.id))
+        .filter(b => sort !== 'bestsellers' || b.soldCount > 0)
+        .filter(b => sort !== 'rated' || b.reviewCount > 0)
+        .sort(SORTS[sort])
+        .slice(0, limit);
 
-    // Animation Variants
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.08,
-                delayChildren: 0.1
-            }
-        }
-    };
-
-    const titleVariants = {
-        hidden: { opacity: 0, x: -30 },
-        visible: {
-            opacity: 1,
-            x: 0,
-            transition: { duration: 0.5, ease: 'easeOut' }
-        }
-    };
+    if (books && list.length === 0) return null;
 
     return (
-        <section className={limit ? "py-10" : "py-6"}>
-            {title && (
-                <motion.div
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-100px" }}
-                    variants={titleVariants}
-                    className="flex items-center justify-between mb-8 border-b border-border-linen pb-2"
-                >
-                    <h2 className="text-3xl font-serif font-bold text-ink">{title}</h2>
-                    <div className="h-px flex-grow bg-accent-olive/20 ml-6 hidden sm:block"></div>
-                </motion.div>
-            )}
-
-            <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-50px" }}
-                variants={containerVariants}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
-            >
-                {displayedBooks.map(book => (
-                    <ProductCard key={book.id} book={book} isAnimated={true} />
-                ))}
-            </motion.div>
-
-            {books.length === 0 && (
-                <div className="text-center py-20 bg-paper-dark rounded-sm border border-border-linen">
-                    <p className="font-serif text-ink-light text-lg mb-4">The shelves are currently bare.</p>
+        <section className="py-8" aria-labelledby={`list-${sort}`}>
+            <div className="flex flex-wrap items-end justify-between gap-4 mb-8 border-b border-border-linen pb-4">
+                <div>
+                    <h2 id={`list-${sort}`} className="text-3xl font-serif font-bold text-ink">{title}</h2>
+                    {subtitle && <p className="font-serif italic text-ink-light mt-1">{subtitle}</p>}
                 </div>
-            )}
+                {link && <Link to={link} className="font-serif text-sm underline text-ink-light hover:text-ink">See all</Link>}
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {books === null
+                    ? Array.from({ length: limit }).map((_, i) => (
+                        <div key={i} className="bg-paper border border-border-linen p-5 animate-pulse" aria-hidden="true">
+                            <div className="aspect-[2/3] bg-border-linen/60 mb-4" />
+                            <div className="h-4 bg-border-linen/60 w-3/4 mx-auto" />
+                        </div>
+                    ))
+                    : list.map(book => <ProductCard key={book.id} book={book} />)}
+            </div>
         </section>
     );
 };

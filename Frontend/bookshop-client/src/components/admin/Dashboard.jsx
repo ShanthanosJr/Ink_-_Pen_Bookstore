@@ -66,7 +66,7 @@ const RevenueChart = ({ data }) => {
                     <div className="relative h-44 border-b border-ink/30" onMouseLeave={() => setActive(null)}>
                         {/* Recessive gridline at the max value */}
                         <div className="absolute inset-x-0 top-0 border-t border-dashed border-border-linen" aria-hidden="true" />
-                        <span className="absolute -top-2 left-0 bg-paper pr-1 text-[10px] text-ink-light" aria-hidden="true">{formatMoney(max)}</span>
+                        <span className="absolute -top-2 left-0 bg-paper pr-1 text-[11px] text-ink-light" aria-hidden="true">{formatMoney(max)}</span>
                         <div className="absolute inset-0 flex items-end gap-[2px]" role="list" aria-label="Revenue per day">
                             {data.map((d, i) => (
                                 <button
@@ -87,7 +87,7 @@ const RevenueChart = ({ data }) => {
                             ))}
                         </div>
                     </div>
-                    <div className="flex justify-between text-[10px] text-ink-light mt-1" aria-hidden="true">
+                    <div className="flex justify-between text-[11px] text-ink-light mt-1" aria-hidden="true">
                         <span>{shortDate(data[0].date)}</span>
                         <span>{shortDate(data[data.length - 1].date)}</span>
                     </div>

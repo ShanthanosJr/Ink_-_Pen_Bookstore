@@ -9,6 +9,7 @@ import { CartProvider } from './context/CartContext'
 import { ToastProvider } from './context/ToastContext'
 import { WishlistProvider } from './context/WishlistContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import { usePageTitle } from './hooks/usePageTitle'
 import AdminRoute from './components/AdminRoute'
 
 // Pages are loaded on demand so the first visit downloads less JavaScript
@@ -24,6 +25,7 @@ const Cart = lazy(() => import('./pages/Cart'))
 const Checkout = lazy(() => import('./pages/Checkout'))
 const OrderDetails = lazy(() => import('./pages/OrderDetails'))
 const Wishlist = lazy(() => import('./pages/Wishlist'))
+const MyOrders = lazy(() => import('./pages/MyOrders'))
 const ForgotPassword = lazy(() => import('./pages/PasswordReset').then(m => ({ default: m.ForgotPassword })))
 const ResetPassword = lazy(() => import('./pages/PasswordReset').then(m => ({ default: m.ResetPassword })))
 const Admin = lazy(() => import('./pages/Admin'))
@@ -36,6 +38,21 @@ const ScrollToTop = () => {
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
+  return null
+}
+
+// Tab titles for fixed pages; book and order pages set their own (with the book title / order number)
+const ROUTE_TITLES = {
+  '/': null, '/shop': 'Shop', '/support': 'Help & FAQ', '/contact': 'Contact us', '/about': 'Our story',
+  '/login': 'Log in', '/register': 'Create an account', '/forgot-password': 'Forgot password',
+  '/reset-password': 'Reset password', '/profile': 'My account', '/orders': 'My orders', '/wishlist': 'Wishlist',
+  '/cart': 'Your cart', '/checkout': 'Checkout', '/admin': 'Admin', '/add': 'Add a book',
+}
+const RouteTitle = () => {
+  const { pathname } = useLocation()
+  const known = pathname in ROUTE_TITLES
+  const dynamic = /^\/(product|orders|admin\/orders|edit)\/./.test(pathname)
+  usePageTitle(dynamic ? undefined : known ? ROUTE_TITLES[pathname] : 'Page not found', !dynamic)
   return null
 }
 
@@ -66,6 +83,7 @@ function App() {
     // Router is outermost so the providers can navigate (e.g. send guests to login)
     <Router>
       <ScrollToTop />
+      <RouteTitle />
       {/* Respect the visitor's "reduce motion" system setting for every animation */}
       <MotionConfig reducedMotion="user">
         <ToastProvider>
@@ -93,6 +111,7 @@ function App() {
                         <Route path="/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
                         <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
                         <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+                        <Route path="/orders" element={<ProtectedRoute><MyOrders /></ProtectedRoute>} />
                         <Route path="/orders/:id" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
 
                         <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />

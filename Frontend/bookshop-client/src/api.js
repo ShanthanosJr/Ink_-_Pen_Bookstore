@@ -19,4 +19,18 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
+// When the API rejects a token we sent (expired, blocked account, changed role), drop it and tell the app.
+export const AUTH_EXPIRED_EVENT = 'auth:expired';
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        const sentToken = !!error.config?.headers?.Authorization;
+        if (error.response?.status === 401 && sentToken) {
+            localStorage.removeItem('token');
+            window.dispatchEvent(new Event(AUTH_EXPIRED_EVENT));
+        }
+        return Promise.reject(error);
+    }
+);
+
 export default api;

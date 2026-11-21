@@ -173,6 +173,28 @@ public class BooksController : ControllerBase
 
     // ---------- Reviews ----------
 
+    // GET: /api/reviews/highlights  - real numbers and recent good reviews for the home and help pages
+    [HttpGet("/api/reviews/highlights")]
+    public async Task<IActionResult> GetReviewHighlights([FromQuery] int limit = 6)
+    {
+        var count = await _context.Reviews.CountAsync();
+        var average = count == 0 ? (double?)null : Math.Round(await _context.Reviews.AverageAsync(r => r.Rating), 1);
+
+        var recent = await _context.Reviews.AsNoTracking()
+            .Where(r => r.Rating >= 4)
+            .OrderByDescending(r => r.CreatedAt)
+            .Take(Math.Clamp(limit, 1, 12))
+            .Select(r => new { r.Id, r.Rating, r.Title, r.Body, r.CreatedAt, r.BookId, BookTitle = r.Book.Title, Author = r.User.FullName })
+            .ToListAsync();
+
+        return Ok(new
+        {
+            ReviewCount = count,
+            AverageRating = average,
+            Reviews = recent.Select(r => new { r.Id, r.Rating, r.Title, r.Body, r.CreatedAt, r.BookId, r.BookTitle, Author = ShortName(r.Author) })
+        });
+    }
+
     // GET: api/books/5/reviews
     [HttpGet("{id:int}/reviews")]
     public async Task<IActionResult> GetReviews(int id)

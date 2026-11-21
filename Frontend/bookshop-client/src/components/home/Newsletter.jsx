@@ -83,7 +83,7 @@ const Newsletter = () => {
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         transition={{ delay: 0.5 }}
-                        className="text-[10px] uppercase tracking-widest text-ink-light mt-6"
+                        className="text-[11px] uppercase tracking-widest text-ink-light mt-6"
                     >
                         We honor the privacy of your study.
                     </motion.p>

@@ -6,6 +6,31 @@ import { PaymentBadge, StatusBadge } from '../orders/OrderParts';
 
 const PAGE_SIZE = 15;
 
+// Download the currently filtered orders as a spreadsheet-friendly CSV file
+const exportCsv = (orders) => {
+    const header = ['Order', 'Placed', 'Status', 'Payment status', 'Payment method', 'Customer', 'Email', 'Phone',
+        'City', 'Items', 'Subtotal', 'Discount', 'Coupon', 'Shipping', 'Total', 'Courier', 'Tracking'];
+    const cell = (v) => {
+        const s = v === null || v === undefined ? '' : String(v);
+        return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const rows = orders.map(o => [
+        o.id, new Date(o.createdAt).toISOString(), o.orderStatus, o.paymentStatus, o.deliveryDetails?.paymentMethod,
+        o.deliveryDetails?.fullName || o.customer?.fullName, o.customer?.email, o.deliveryDetails?.phoneNumber,
+        o.deliveryDetails?.city, o.items.map(i => `${i.book?.title || i.bookId} x${i.quantity}`).join('; '),
+        o.subtotal, o.discountAmount, o.couponCode, o.shippingFee, o.totalAmount, o.courier, o.trackingNumber
+    ]);
+    const csv = [header, ...rows].map(r => r.map(cell).join(',')).join('\r\n');
+    // BOM so Excel opens UTF-8 names correctly
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `orders-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+};
+
 // Status filter options; "ToShip" groups the two states that still need shipping
 const STATUS_FILTERS = [
     { value: '', label: 'All statuses' },
@@ -94,7 +119,16 @@ const OrdersTable = () => {
                 )}
             </div>
 
-            <p className="font-serif text-sm text-ink-light">{filtered.length} {filtered.length === 1 ? 'order' : 'orders'}</p>
+            <div className="flex items-center justify-between gap-3">
+                <p className="font-serif text-sm text-ink-light">{filtered.length} {filtered.length === 1 ? 'order' : 'orders'}</p>
+                <button
+                    onClick={() => exportCsv(filtered)}
+                    disabled={filtered.length === 0}
+                    className="px-4 py-2 border border-ink font-serif text-xs uppercase tracking-widest font-bold hover:bg-ink hover:text-paper disabled:opacity-40"
+                >
+                    Export CSV
+                </button>
+            </div>
 
             <div className="bg-paper border border-ink overflow-x-auto shadow-[8px_8px_0_0_rgba(0,0,0,0.1)]">
                 <table className="min-w-full divide-y divide-ink/20">

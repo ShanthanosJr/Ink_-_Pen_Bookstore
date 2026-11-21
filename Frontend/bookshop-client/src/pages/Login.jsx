@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/authContextValue';
 import { motion } from 'framer-motion';
 
 const Login = () => {
@@ -12,6 +12,14 @@ const Login = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    // A note left by the app when a session ended (shown once)
+    const [notice] = useState(() => {
+        try { return sessionStorage.getItem('authNotice'); } catch { return null; }
+    });
+    useEffect(() => {
+        try { sessionStorage.removeItem('authNotice'); } catch { /* ignore */ }
+    }, []);
+    const message = location.state?.message || notice;
     const from = location.state?.from ? `${location.state.from.pathname}${location.state.from.search || ""}` : "/";
 
     const handleSubmit = async (e) => {
@@ -30,24 +38,24 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-[80vh] flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-[80vh] flex items-center justify-center bg-paper py-12 px-4 sm:px-6 lg:px-8">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg border border-gray-100"
+                className="max-w-md w-full space-y-8 bg-paper-dark p-8 md:p-10 border border-border-linen shadow-[8px_8px_0_0_#e5e0d8]"
             >
                 <div>
-                    <h2 className="mt-6 text-center text-3xl font-serif font-bold text-gray-900">
+                    <h2 className="mt-6 text-center text-3xl font-serif font-bold text-ink">
                         Welcome Back
                     </h2>
-                    <p className="mt-2 text-center text-sm text-gray-600">
+                    <p className="mt-2 text-center text-sm text-ink-light">
                         Please enter your details to sign in
                     </p>
                 </div>
 
-                {location.state?.message && !error && (
+                {message && !error && (
                     <div className="bg-paper-dark border-l-4 border-accent-olive p-4 text-ink text-sm font-serif">
-                        {location.state.message}
+                        {message}
                     </div>
                 )}
 
@@ -58,9 +66,9 @@ const Login = () => {
                 )}
 
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                    <div className="rounded-md shadow-sm space-y-4">
+                    <div className="space-y-4">
                         <div>
-                            <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="email-address" className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">
                                 Email Address
                             </label>
                             <input
@@ -69,14 +77,14 @@ const Login = () => {
                                 type="email"
                                 autoComplete="email"
                                 required
-                                className="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                                className="w-full px-3 py-3 bg-paper border border-border-linen font-serif text-ink placeholder-ink-light/50 focus:outline-none focus:border-accent-olive"
                                 placeholder="email@example.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
                         <div>
-                            <label htmlFor="password" name="password" className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="password" name="password" className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">
                                 Password
                             </label>
                             <input
@@ -85,7 +93,7 @@ const Login = () => {
                                 type="password"
                                 autoComplete="current-password"
                                 required
-                                className="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                                className="w-full px-3 py-3 bg-paper border border-border-linen font-serif text-ink placeholder-ink-light/50 focus:outline-none focus:border-accent-olive"
                                 placeholder="••••••••"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -100,7 +108,7 @@ const Login = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-lg text-white bg-primary-800 hover:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                            className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold text-paper bg-ink hover:bg-accent-olive uppercase tracking-widest font-serif focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                         >
                             {loading ? (
                                 <span className="flex items-center">
@@ -115,7 +123,7 @@ const Login = () => {
                     </div>
 
                     <div className="text-center">
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-ink-light">
                             Don't have an account?{' '}
                             <Link to="/register" state={location.state} className="font-medium text-primary-700 hover:text-primary-800 transition-colors">
                                 Create one for free

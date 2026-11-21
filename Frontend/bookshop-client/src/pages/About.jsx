@@ -72,11 +72,11 @@ const About = () => {
                                 alt="Ink & Pens Logo"
                                 className="w-full max-w-[280px] grayscale hover:grayscale-0 transition-all duration-700"
                             />
-                            <div className="absolute -bottom-4 -right-4 bg-ink text-paper text-[10px] px-3 py-1 font-serif uppercase tracking-widest border border-ink">
+                            <div className="absolute -bottom-4 -right-4 bg-ink text-paper text-[11px] px-3 py-1 font-serif uppercase tracking-widest border border-ink">
                                 Reg. Mark 2026
                             </div>
                         </div>
-                        <p className="mt-8 text-[10px] text-ink-light uppercase tracking-[0.3em] font-bold text-center">The Official Insignia</p>
+                        <p className="mt-8 text-[11px] text-ink-light uppercase tracking-[0.3em] font-bold text-center">The Official Insignia</p>
                     </motion.div>
 
                     <motion.div
