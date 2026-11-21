@@ -48,6 +48,13 @@ const ROUTE_TITLES = {
   '/reset-password': 'Reset password', '/profile': 'My account', '/orders': 'My orders', '/wishlist': 'Wishlist',
   '/cart': 'Your cart', '/checkout': 'Checkout', '/admin': 'Admin', '/add': 'Add a book',
 }
+// Full-screen pages that bring their own branding (no site navbar/footer)
+const BARE_ROUTES = ['/login', '/register']
+const SiteChrome = ({ children }) => {
+  const { pathname } = useLocation()
+  return BARE_ROUTES.includes(pathname) ? null : children
+}
+
 const RouteTitle = () => {
   const { pathname } = useLocation()
   const known = pathname in ROUTE_TITLES
@@ -91,7 +98,7 @@ function App() {
             <CartProvider>
               <WishlistProvider>
                 <div className="min-h-screen font-sans bg-gray-50 flex flex-col">
-                  <Navbar />
+                  <SiteChrome><Navbar /></SiteChrome>
 
                   <main className="flex-grow">
                     <Suspense fallback={<PageLoading />}>
@@ -124,7 +131,7 @@ function App() {
                     </Suspense>
                   </main>
 
-                  <Footer />
+                  <SiteChrome><Footer /></SiteChrome>
                 </div>
               </WishlistProvider>
             </CartProvider>

@@ -1,15 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/authContextValue';
-import { motion } from 'framer-motion';
+import { errorMessage } from '../constants/orders';
+import AuthLayout from '../components/auth/AuthLayout';
+import { AuthField, Banner, PasswordStrength, SubmitButton } from '../components/auth/AuthFields';
 
 const Register = () => {
-    const [formData, setFormData] = useState({
-        fullName: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-    });
+    const [formData, setFormData] = useState({ fullName: '', email: '', password: '', confirmPassword: '' });
+    const [touched, setTouched] = useState({});
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -19,143 +17,118 @@ const Register = () => {
     // Return to where the visitor was (e.g. the book they tried to add) after signing up
     const from = location.state?.from ? `${location.state.from.pathname}${location.state.from.search || ''}` : '/';
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+    const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+    const touch = (e) => setTouched(t => ({ ...t, [e.target.name]: true }));
+
+    const emailInvalid = touched.email && formData.email && !/^\S+@\S+\.\S+$/.test(formData.email);
+    const mismatch = formData.confirmPassword && formData.password !== formData.confirmPassword;
+    const confirmMatches = formData.confirmPassword && !mismatch;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-
-        if (formData.password !== formData.confirmPassword) {
-            return setError('Passwords do not match');
-        }
-
-        if (formData.password.length < 6) {
-            return setError('Password must be at least 6 characters long');
-        }
+        if (formData.password.length < 6) return setError('Your password needs at least 6 characters.');
+        if (mismatch) return setError("The two passwords don't match.");
 
         setLoading(true);
-
         try {
-            await register(formData.fullName, formData.email, formData.password);
+            await register(formData.fullName.trim(), formData.email.trim(), formData.password);
             navigate(from, { replace: true });
         } catch (err) {
-            setError(err.response?.data || 'Registration failed. Please try again.');
-        } finally {
+            setError(errorMessage(err, 'We couldn\'t create your account. Please try again.'));
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-[80vh] flex items-center justify-center bg-paper py-12 px-4 sm:px-6 lg:px-8">
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="max-w-md w-full space-y-8 bg-paper-dark p-8 md:p-10 border border-border-linen shadow-[8px_8px_0_0_#e5e0d8]"
-            >
-                <div>
-                    <h2 className="mt-6 text-center text-3xl font-serif font-bold text-ink">
-                        Join our Bookstore
-                    </h2>
-                    <p className="mt-2 text-center text-sm text-ink-light">
-                        Create an account to start your collection
-                    </p>
+        <AuthLayout
+            mode="register"
+            eyebrow="Join the reading room"
+            title="Create account"
+            subtitle="It takes a minute. Then enjoy 50% off your first order."
+        >
+            <form onSubmit={handleSubmit} className="space-y-5">
+                {location.state?.message && !error && <Banner>{location.state.message}</Banner>}
+                {error && <Banner tone="error">{error}</Banner>}
+
+                <AuthField
+                    id="register-fullName"
+                    label="Full name"
+                    icon="user"
+                    name="fullName"
+                    autoComplete="name"
+                    required
+                    maxLength={100}
+                    autoFocus
+                    placeholder="e.g. Amaya Fernando"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                />
+
+                <AuthField
+                    id="register-email"
+                    label="Email address"
+                    icon="mail"
+                    type="email"
+                    name="email"
+                    autoComplete="email"
+                    required
+                    maxLength={100}
+                    placeholder="you@example.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                    onBlur={touch}
+                    invalid={emailInvalid}
+                    hint={emailInvalid ? <p className="text-xs font-body text-red-700">That doesn't look like an email address.</p> : null}
+                />
+
+                <AuthField
+                    id="register-password"
+                    label="Password"
+                    icon="lock"
+                    type="password"
+                    name="password"
+                    autoComplete="new-password"
+                    required
+                    minLength={6}
+                    placeholder="Choose a password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    hint={<PasswordStrength password={formData.password} />}
+                />
+
+                <AuthField
+                    id="register-confirmPassword"
+                    label="Confirm password"
+                    icon="lock"
+                    type="password"
+                    name="confirmPassword"
+                    autoComplete="new-password"
+                    required
+                    placeholder="Type it again"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    invalid={!!mismatch}
+                    hint={mismatch
+                        ? <p className="text-xs font-body text-red-700">The passwords don't match yet.</p>
+                        : confirmMatches ? <p className="text-xs font-body text-accent-olive">✓ Passwords match</p> : null}
+                />
+
+                <div className="pt-2">
+                    <SubmitButton loading={loading} loadingText="Creating your account…">Create account</SubmitButton>
                 </div>
+                <p className="text-xs font-body text-ink-light text-center">
+                    We only use your email for your orders and account. No spam.
+                </p>
+            </form>
 
-                {error && (
-                    <div className="bg-red-50 border-l-4 border-red-400 p-4 text-red-700 text-sm">
-                        {error}
-                    </div>
-                )}
-
-                <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
-                    <div className="space-y-4">
-                        <div>
-                            <label htmlFor="register-fullName" className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">
-                                Full Name
-                            </label>
-                            <input
-                                id="register-fullName"
-                                name="fullName"
-                                type="text"
-                                required
-                                className="w-full px-3 py-3 bg-paper border border-border-linen font-serif text-ink placeholder-ink-light/50 focus:outline-none focus:border-accent-olive"
-                                placeholder="John Doe"
-                                value={formData.fullName}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="register-email" className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">
-                                Email Address
-                            </label>
-                            <input
-                                id="register-email"
-                                name="email"
-                                type="email"
-                                required
-                                className="w-full px-3 py-3 bg-paper border border-border-linen font-serif text-ink placeholder-ink-light/50 focus:outline-none focus:border-accent-olive"
-                                placeholder="email@example.com"
-                                value={formData.email}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <label htmlFor="register-password" className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">
-                                    Password
-                                </label>
-                                <input
-                                    id="register-password"
-                                name="password"
-                                    type="password"
-                                    required
-                                    className="w-full px-3 py-3 bg-paper border border-border-linen font-serif text-ink placeholder-ink-light/50 focus:outline-none focus:border-accent-olive"
-                                    placeholder="••••••••"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="register-confirmPassword" className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">
-                                    Confirm
-                                </label>
-                                <input
-                                    id="register-confirmPassword"
-                                name="confirmPassword"
-                                    type="password"
-                                    required
-                                    className="w-full px-3 py-3 bg-paper border border-border-linen font-serif text-ink placeholder-ink-light/50 focus:outline-none focus:border-accent-olive"
-                                    placeholder="••••••••"
-                                    value={formData.confirmPassword}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold text-paper bg-ink hover:bg-accent-olive uppercase tracking-widest font-serif focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
-                        >
-                            {loading ? 'Creating account...' : 'Create Account'}
-                        </button>
-                    </div>
-
-                    <div className="text-center mt-4">
-                        <p className="text-sm text-ink-light">
-                            Already have an account?{' '}
-                            <Link to="/login" state={location.state} className="font-medium text-primary-700 hover:text-primary-800 transition-colors">
-                                Sign in instead
-                            </Link>
-                        </p>
-                    </div>
-                </form>
-            </motion.div>
-        </div>
+            <p className="mt-8 pt-8 border-t border-border-linen text-center font-body text-ink-light">
+                Already a member?{' '}
+                <Link to="/login" state={location.state} replace className="font-serif font-bold text-ink underline decoration-accent-olive decoration-2 underline-offset-4 hover:text-accent-olive">
+                    Log in
+                </Link>
+            </p>
+        </AuthLayout>
     );
 };
 
