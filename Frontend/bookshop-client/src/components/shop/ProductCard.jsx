@@ -1,22 +1,14 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { useCart } from '../../context/CartContext';
 import { BookBadges, RatingSummary, WishlistButton } from './BookBits';
 import { assetUrl } from '../../api';
 
-const cardVariants = {
-    hidden: { opacity: 0, y: 12 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } }
-};
-
-const ProductCard = ({ book, isAnimated = false }) => {
+const ProductCard = ({ book }) => {
     const { addToCart } = useCart();
-    const Wrapper = isAnimated ? motion.div : 'div';
     const soldOut = book.stockQuantity <= 0;
 
     return (
-        <Wrapper
-            variants={isAnimated ? cardVariants : undefined}
+        <div
             className="group bg-paper-dark border border-border-linen rounded-sm p-5 flex flex-col h-full relative hover:border-accent-olive/30 transition-colors duration-300"
         >
             {/* Badges */}
@@ -54,7 +46,7 @@ const ProductCard = ({ book, isAnimated = false }) => {
                     </button>
                 </div>
             </div>
-        </Wrapper>
+        </div>
     );
 };
 
