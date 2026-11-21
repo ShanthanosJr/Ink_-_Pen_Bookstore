@@ -26,8 +26,9 @@ const ProductCard = ({ book }) => {
                 <h3 className="text-base sm:text-lg font-serif font-bold text-ink leading-tight line-clamp-2">
                     <Link to={`/product/${book.id}`} className="hover:text-accent-olive transition-colors">{book.title}</Link>
                 </h3>
-                <span className="text-xs font-body italic text-ink-light mt-1 truncate">by {book.author}</span>
-                <div className="mt-2"><RatingSummary book={book} /></div>
+                <span className="text-xs font-body italic text-ink-light mt-1 mb-3 truncate">by {book.author}</span>
+                {/* Only show a rating once there is one; "No reviews yet" on every card is noise */}
+                {book.reviewCount > 0 && <div className="mt-2"><RatingSummary book={book} /></div>}
 
                 <div className="mt-auto pt-3 border-t border-dotted border-border-linen flex flex-col items-stretch gap-2 @[15rem]:flex-row @[15rem]:items-center @[15rem]:justify-between">
                     <span className="text-lg sm:text-xl font-serif font-bold text-ink">${book.price.toFixed(2)}</span>
