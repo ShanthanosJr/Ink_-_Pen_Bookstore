@@ -17,7 +17,17 @@ public class User
     public string Email { get; set; } = string.Empty;
 
     [Required]
+    [JsonIgnore]
     public string PasswordHash { get; set; } = string.Empty;
+
+    // Blocked accounts can't log in or use their existing token
+    public bool IsActive { get; set; } = true;
+
+    // Password reset: only a hash of the emailed token is stored
+    [JsonIgnore]
+    public string? PasswordResetTokenHash { get; set; }
+    [JsonIgnore]
+    public DateTime? PasswordResetExpiresAt { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

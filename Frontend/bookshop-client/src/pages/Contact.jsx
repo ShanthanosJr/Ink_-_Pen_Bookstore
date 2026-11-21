@@ -9,7 +9,7 @@ const Contact = () => {
         visible: {
             opacity: 1,
             y: 0,
-            transition: { duration: 0.8, ease: 'easeOut' }
+            transition: { duration: 0.5, ease: 'easeOut' }
         }
     };
 
@@ -51,7 +51,7 @@ const Contact = () => {
                     <motion.div
                         initial={{ opacity: 0, x: -30 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.8, duration: 0.8 }}
+                        transition={{ delay: 0.27, duration: 0.5 }}
                         className="order-2 lg:order-1"
                     >
                         <ContactForm />
@@ -61,7 +61,7 @@ const Contact = () => {
                     <motion.div
                         initial={{ opacity: 0, x: 30 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.8, duration: 0.8 }}
+                        transition={{ delay: 0.27, duration: 0.5 }}
                         className="order-1 lg:order-2"
                     >
                         <ContactInfo />

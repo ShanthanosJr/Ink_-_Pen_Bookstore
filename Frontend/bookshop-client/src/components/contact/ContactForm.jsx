@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import api from '../../api';
+import { errorMessage } from '../../constants/orders';
 
 const ContactForm = () => {
     const [formData, setFormData] = useState({
@@ -11,6 +13,8 @@ const ContactForm = () => {
 
     const [errors, setErrors] = useState({});
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [sending, setSending] = useState(false);
+    const [sendError, setSendError] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,13 +39,19 @@ const ContactForm = () => {
         return Object.keys(tempErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (validate()) {
-            setTimeout(() => {
-                setIsSubmitted(true);
-                setFormData({ name: '', email: '', subject: '', message: '' });
-            }, 1000);
+        if (!validate()) return;
+        setSending(true);
+        setSendError('');
+        try {
+            await api.post('/contact', formData);
+            setIsSubmitted(true);
+            setFormData({ name: '', email: '', subject: '', message: '' });
+        } catch (err) {
+            setSendError(errorMessage(err, 'Your message could not be sent. Please try again.'));
+        } finally {
+            setSending(false);
         }
     };
 
@@ -58,7 +68,7 @@ const ContactForm = () => {
                     <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        transition={{ delay: 0.3, type: 'spring' }}
+                        transition={{ delay: 0.1, type: 'spring' }}
                         className="w-16 h-16 border-2 border-accent-olive text-accent-olive rounded-full flex items-center justify-center mb-6"
                     >
                         <span className="text-3xl font-serif">✓</span>
@@ -86,6 +96,7 @@ const ContactForm = () => {
 
                     <h3 className="text-2xl font-serif font-bold text-ink mb-8">Draft a Message</h3>
                     <form onSubmit={handleSubmit} className="space-y-8">
+                        {sendError && <p className="text-sm font-serif text-red-800" role="alert">{sendError}</p>}
                         <div>
                             <label className="block text-xs font-serif font-bold text-ink uppercase tracking-widest mb-2">Your Name</label>
                             <input
@@ -147,9 +158,10 @@ const ContactForm = () => {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             type="submit"
-                            className="w-full bg-ink text-paper font-serif font-bold uppercase tracking-widest py-4 border border-ink shadow-[4px_4px_0_0_rgba(85,107,47,0.2)] hover:bg-accent-olive transition-colors"
+                            disabled={sending}
+                            className="w-full bg-ink text-paper font-serif font-bold uppercase tracking-widest py-4 border border-ink shadow-[4px_4px_0_0_rgba(85,107,47,0.2)] hover:bg-accent-olive transition-colors disabled:opacity-50"
                         >
-                            Post Letter
+                            {sending ? 'Sending…' : 'Send message'}
                         </motion.button>
                     </form>
                 </motion.div>

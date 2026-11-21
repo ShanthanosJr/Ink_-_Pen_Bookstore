@@ -10,6 +10,16 @@ public class Book
     public string? ImageUrl { get; set; }
     // One of BookCategories.All (kept in sync with the frontend's src/constants/categories.js)
     public string Category { get; set; } = string.Empty;
+
+    // Catalogue details (all optional)
+    public string? Description { get; set; }
+    public string? Publisher { get; set; }
+    public int? PublishedYear { get; set; }
+    public int? PageCount { get; set; }
+    public string? Isbn { get; set; }
+
+    // When the book was added to the shop; drives "New arrival"
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
 
 public static class BookCategories

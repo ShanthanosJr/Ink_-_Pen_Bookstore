@@ -7,7 +7,7 @@ const Promotions = () => {
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
             className="py-16 bg-ink text-paper my-16 px-8 relative overflow-hidden border-4 border-double border-accent-olive/40 mx-4 md:mx-0"
         >
             {/* Background Texture */}
@@ -23,7 +23,7 @@ const Promotions = () => {
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: 0.3 }}
+                        transition={{ delay: 0.1 }}
                         className="inline-block py-1 px-4 border border-accent-olive text-accent-olive font-serif italic text-xs mb-6 tracking-widest uppercase bg-ink/50"
                     >
                         Limited Time Proclamation
@@ -32,7 +32,7 @@ const Promotions = () => {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: 0.5 }}
+                        transition={{ delay: 0.17 }}
                         className="text-4xl md:text-5xl font-serif font-bold mb-6 leading-tight"
                     >
                         Get 50% Off Your <br /><span className="italic font-normal text-accent-olive">First Purchase</span>
@@ -41,7 +41,7 @@ const Promotions = () => {
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        transition={{ delay: 0.7 }}
+                        transition={{ delay: 0.23 }}
                         className="text-paper/80 text-lg mb-8 font-body leading-relaxed"
                     >
                         Join the <span className="text-paper font-bold">Ink & Pens</span> community today and discover a world of stories awaiting you.
@@ -59,7 +59,7 @@ const Promotions = () => {
                         initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
                         whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: 0.6, type: 'spring', stiffness: 100 }}
+                        transition={{ delay: 0.2, type: 'spring', stiffness: 100 }}
                         className="relative group"
                     >
                         {/* Stacked Paper Effect */}

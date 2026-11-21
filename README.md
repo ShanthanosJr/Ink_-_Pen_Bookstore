@@ -147,6 +147,15 @@ Until PayHere is configured, the option is shown as unavailable at checkout. Ord
 ### Coupons
 Stored in the `Coupons` table. `WELCOME50` (50% off, first order only) is seeded.
 
+### Bank transfer
+Bank transfer is offered only once `Shop:BankTransfer:AccountNumber` is set (with `BankName`, `AccountName`, `Branch`). Customers see these details and the exact amount at checkout, then upload a slip (JPG/PNG/WebP/PDF, max 5 MB).
+
+### Admin accounts
+Signing up never grants admin rights. To create the first admin, list the email in `Admin:BootstrapEmails` (e.g. in `appsettings.Development.json`) and register or restart the API. After that, admins can promote, demote, and block people under **Admin > Customers**. Blocked or demoted users lose access on their next request.
+
+### Email
+Order updates, password-reset links and contact-form copies are sent through SMTP when `Email:SmtpHost` is set (plus `SmtpPort`, `Username`, `Password`, `FromAddress`; `Email:ShopInbox` receives contact messages). Without SMTP, emails are written to the API console, which is handy in development: the password-reset link appears there.
+
 ### Order lifecycle
 `AwaitingPayment` (PayHere only) → `PendingApproval` → `Approved` → `Processing` → `Shipped` → `OutForDelivery` → `Delivered`, or `Cancelled` / `Rejected`.
 Every change is recorded in `OrderStatusHistory` and shown to the customer on `/orders/:id`. Customers can cancel until the order is approved; stock is returned on cancel/reject and paid orders are flagged **Refund Due**.

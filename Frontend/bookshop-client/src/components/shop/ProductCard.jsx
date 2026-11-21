@@ -1,116 +1,57 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useCart } from '../../context/CartContext';
+import { BookBadges, RatingSummary, WishlistButton } from './BookBits';
+import { assetUrl } from '../../api';
+
+const cardVariants = {
+    hidden: { opacity: 0, y: 12 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } }
+};
 
 const ProductCard = ({ book, isAnimated = false }) => {
-    // Deterministic "Staff Pick", "Reading Time", and "First Edition" for variety
-    const isStaffPick = book.id % 5 === 0;
-    const isFirstEdition = book.id % 7 === 0;
-    const readingTime = (book.id % 8) + 3;
     const { addToCart } = useCart();
-    // No local loading state to keep cards snappy/lightweight, global spinner or toast handled in Context usually (or we skip for now)
-
-    const cardVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.5, ease: 'easeOut' }
-        }
-    };
-
     const Wrapper = isAnimated ? motion.div : 'div';
+    const soldOut = book.stockQuantity <= 0;
 
     return (
         <Wrapper
-            variants={cardVariants}
-            initial={isAnimated ? "hidden" : undefined}
-            animate={isAnimated ? "visible" : undefined}
-            className="group bg-paper-dark border border-border-linen rounded-sm p-5 flex flex-col h-full relative hover:border-accent-olive/30 transition-all duration-500"
+            variants={isAnimated ? cardVariants : undefined}
+            className="group bg-paper-dark border border-border-linen rounded-sm p-5 flex flex-col h-full relative hover:border-accent-olive/30 transition-colors duration-300"
         >
-
-            {/* Decorative Corner Flaps */}
-            <div className="absolute top-0 right-0 w-8 h-8 bg-paper border-b border-l border-border-linen group-hover:border-accent-olive/30 transition-colors z-10"></div>
-
-            {/* Badges - Styled like Stamps/Seals */}
-            <div className="absolute top-3 left-3 z-20 flex flex-col gap-2 pointer-events-none">
-                {book.id % 3 === 0 && (
-                    <div className="bg-ink text-paper text-[9px] tracking-widest uppercase font-bold px-2 py-1 shadow-sm border border-ink transform -rotate-2">
-                        Bestseller
-                    </div>
-                )}
-                {book.id % 4 === 0 && (
-                    <div className="bg-accent-leather text-white text-[9px] tracking-widest uppercase font-bold px-2 py-1 shadow-sm border border-accent-leather transform rotate-1">
-                        New Arrival
-                    </div>
-                )}
-                {isStaffPick && (
-                    <div className="bg-transparent text-accent-olive border border-accent-olive text-[9px] tracking-widest uppercase font-bold px-2 py-1 flex items-center gap-1 transform -rotate-1">
-                        <span>★</span> Curator Pick
-                    </div>
-                )}
+            {/* Badges */}
+            <div className="absolute top-3 left-3 z-20 flex flex-col items-start gap-2 pointer-events-none">
+                <BookBadges book={book} />
             </div>
+            <WishlistButton book={book} className="absolute top-3 right-3 z-20 w-9 h-9 bg-paper/90 border border-border-linen rounded-full" />
 
-            {/* Image Area */}
-            <div className="relative aspect-[2/3] bg-[#e3ddd3] mb-5 border border-border-linen/50 flex items-center justify-center overflow-hidden group-hover:shadow-[4px_4px_0_0_rgba(85,107,47,0.1)] transition-all duration-500">
-                {/* Rustic Paper Texture Overlay */}
-                <div className="absolute inset-0 opacity-10 z-10 pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }}></div>
-
+            {/* Cover */}
+            <Link to={`/product/${book.id}`} className="relative block aspect-[2/3] bg-[#e3ddd3] mb-4 border border-border-linen/50 overflow-hidden" tabIndex={-1} aria-hidden="true">
                 {book.imageUrl ? (
-                    <img src={book.imageUrl} alt={book.title} className="w-full h-full object-cover transition duration-700 transform group-hover:scale-110" />
+                    <img src={assetUrl(book.imageUrl)} alt="" loading="lazy" className="w-full h-full object-cover transition duration-700 group-hover:scale-105" />
                 ) : (
-                    <span className="text-6xl text-ink/20 group-hover:text-ink/60 transition duration-700 transform group-hover:scale-110 font-serif">❦</span>
+                    <span className="flex items-center justify-center h-full text-6xl text-ink/20 font-serif">❦</span>
                 )}
+            </Link>
 
-                {/* Quick Action - Styled as a bookmark/label */}
-                <div className="absolute inset-x-4 bottom-4 translate-y-[120%] group-hover:translate-y-0 transition duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] z-20">
-                    <div className="flex w-full">
-                        <button
-                            onClick={(e) => {
-                                e.preventDefault(); // Prevent Link navigation if wrapped
-                                addToCart(book, 1);
-                            }}
-                            className="flex-1 bg-paper text-ink font-serif uppercase tracking-widest text-xs font-bold text-center py-3 border-y border-l border-ink hover:bg-ink hover:text-paper transition-colors"
-                        >
-                            Add
-                        </button>
-                        <Link to={`/product/${book.id}`} className="flex-[2] bg-paper text-ink font-serif uppercase tracking-widest text-xs font-bold text-center py-3 border border-ink hover:bg-ink hover:text-paper transition-colors shadow-lg">
-                            Examine
-                        </Link>
-                    </div>
-                </div>
-            </div>
+            <div className="flex flex-col flex-grow text-center px-1">
+                <h3 className="text-lg font-serif font-bold text-ink leading-tight">
+                    <Link to={`/product/${book.id}`} className="hover:text-accent-olive transition-colors">{book.title}</Link>
+                </h3>
+                <span className="text-xs font-body italic text-ink-light mt-1">by {book.author}</span>
+                <div className="mt-2"><RatingSummary book={book} /></div>
 
-            <div className="flex flex-col flex-grow text-center px-2">
-                <div className="mb-3">
-                    <h3 className="text-lg font-serif font-bold text-ink leading-tight group-hover:text-accent-olive transition-colors mb-1">{book.title}</h3>
-                    <div className="h-px w-8 bg-accent-olive/30 mx-auto my-2 group-hover:w-16 transition-all duration-500"></div>
-                    <span className="text-xs font-body italic text-ink-light">by {book.author}</span>
-                </div>
-
-                {/* Metadata Grid */}
-                <div className="mt-auto grid grid-cols-2 gap-2 text-[10px] text-ink-light uppercase tracking-wider border-t border-border-linen pt-3">
-                    <div className="text-left border-r border-border-linen">
-                        Est. Time
-                        <span className="block font-bold text-ink normal-case mt-0.5">{readingTime} hrs</span>
-                    </div>
-                    <div className="text-right">
-                        Edition
-                        <span className="block font-bold text-ink normal-case mt-0.5">{isFirstEdition ? 'First' : 'Standard'}</span>
-                    </div>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-dotted border-border-linen flex items-center justify-between">
+                <div className="mt-auto pt-3 border-t border-dotted border-border-linen flex items-center justify-between gap-2">
                     <span className="text-xl font-serif font-bold text-ink">${book.price.toFixed(2)}</span>
-                    {book.stockQuantity > 0 ? (
-                        <span className="text-[10px] text-accent-olive font-bold uppercase tracking-widest flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-accent-olive"></span> In Library
-                        </span>
-                    ) : (
-                        <span className="text-[10px] text-accent-leather font-bold uppercase tracking-widest line-through decoration-1">
-                            Checked Out
-                        </span>
-                    )}
+                    {/* Always visible: hover-only buttons don't work on touch screens */}
+                    <button
+                        onClick={() => addToCart(book, 1)}
+                        disabled={soldOut}
+                        className="px-3 py-2 bg-ink text-paper font-serif uppercase tracking-widest text-[11px] font-bold hover:bg-accent-olive transition-colors disabled:bg-transparent disabled:text-accent-leather disabled:border disabled:border-accent-leather/40"
+                        aria-label={soldOut ? `${book.title} is sold out` : `Add ${book.title} to cart`}
+                    >
+                        {soldOut ? 'Sold out' : 'Add to cart'}
+                    </button>
                 </div>
             </div>
         </Wrapper>

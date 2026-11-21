@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import api from '../api';
-import { formatDate, formatMoney } from '../constants/orders';
+import { errorMessage, formatDate, formatMoney } from '../constants/orders';
 import { PaymentBadge, StatusBadge } from '../components/orders/OrderParts';
 
 const Profile = () => {
@@ -34,6 +34,29 @@ const Profile = () => {
         }
     };
 
+    const [pw, setPw] = useState({ current: '', next: '', confirm: '' });
+    const [pwMessage, setPwMessage] = useState({ text: '', type: '' });
+    const [pwBusy, setPwBusy] = useState(false);
+
+    const changePassword = async (e) => {
+        e.preventDefault();
+        if (pw.next !== pw.confirm) {
+            setPwMessage({ text: "The new passwords don't match.", type: 'error' });
+            return;
+        }
+        setPwBusy(true);
+        setPwMessage({ text: '', type: '' });
+        try {
+            await api.post('/auth/change-password', { currentPassword: pw.current, newPassword: pw.next });
+            setPw({ current: '', next: '', confirm: '' });
+            setPwMessage({ text: 'Password changed.', type: 'success' });
+        } catch (err) {
+            setPwMessage({ text: errorMessage(err), type: 'error' });
+        } finally {
+            setPwBusy(false);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -42,7 +65,7 @@ const Profile = () => {
         try {
             await updateProfile({ fullName, email });
             setMessage({ text: 'Profile updated successfully!', type: 'success' });
-        } catch (error) {
+        } catch {
             setMessage({ text: 'Failed to update profile.', type: 'error' });
         } finally {
             setLoading(false);
@@ -108,6 +131,37 @@ const Profile = () => {
                                 {loading ? 'Saving...' : 'Update Profile'}
                             </button>
                         </div>
+                    </form>
+
+                    <div className="mt-6 pt-6 border-t border-gray-100 flex flex-wrap gap-x-6 gap-y-2 font-serif text-sm">
+                        <Link to="/wishlist" className="underline text-ink hover:text-accent-olive">My wishlist</Link>
+                    </div>
+
+                    <form onSubmit={changePassword} className="mt-6 pt-6 border-t border-gray-100 space-y-4">
+                        <h2 className="font-serif font-bold text-lg text-ink">Change password</h2>
+                        {pwMessage.text && (
+                            <div className={`p-3 text-sm ${pwMessage.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`} role="status">
+                                {pwMessage.text}
+                            </div>
+                        )}
+                        {[['current', 'Current password', 'current-password'], ['next', 'New password', 'new-password'], ['confirm', 'Confirm new password', 'new-password']].map(([key, label, auto]) => (
+                            <div key={key}>
+                                <label htmlFor={`pw-${key}`} className="block text-xs font-bold uppercase tracking-widest text-ink-light mb-2">{label}</label>
+                                <input
+                                    id={`pw-${key}`}
+                                    type="password"
+                                    required
+                                    minLength={key === 'current' ? undefined : 6}
+                                    autoComplete={auto}
+                                    value={pw[key]}
+                                    onChange={(e) => setPw(p => ({ ...p, [key]: e.target.value }))}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm block w-full p-3 focus:outline-none focus:border-accent-olive"
+                                />
+                            </div>
+                        ))}
+                        <button type="submit" disabled={pwBusy} className="w-full border border-ink text-ink font-serif font-bold uppercase tracking-widest py-3 hover:bg-ink hover:text-paper transition-colors disabled:opacity-50">
+                            {pwBusy ? 'Saving…' : 'Change password'}
+                        </button>
                     </form>
                 </motion.div>
 

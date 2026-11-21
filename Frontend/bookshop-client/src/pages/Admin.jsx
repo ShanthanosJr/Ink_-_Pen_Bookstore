@@ -5,6 +5,8 @@ import { useToast } from '../context/ToastContext';
 import { errorMessage, formatMoney } from '../constants/orders';
 import Dashboard from '../components/admin/Dashboard';
 import OrdersTable from '../components/admin/OrdersTable';
+import Customers from '../components/admin/Customers';
+import Messages from '../components/admin/Messages';
 
 const LOW_STOCK = 5;
 
@@ -12,6 +14,8 @@ const TABS = [
     { id: 'dashboard', label: 'Dashboard' },
     { id: 'orders', label: 'Orders' },
     { id: 'inventory', label: 'Inventory' },
+    { id: 'customers', label: 'Customers' },
+    { id: 'messages', label: 'Messages' },
 ];
 
 const Inventory = () => {
@@ -124,7 +128,7 @@ const Admin = () => {
             <div className="container mx-auto px-4 py-10">
                 <div className="flex flex-wrap justify-between items-end gap-4 mb-8 border-b-4 border-double border-ink pb-4">
                     <h1 className="text-3xl md:text-4xl font-serif font-bold text-ink">Shop Admin</h1>
-                    <nav className="flex gap-1" aria-label="Admin sections">
+                    <nav className="flex flex-wrap gap-1" aria-label="Admin sections">
                         {TABS.map(tab => (
                             <button
                                 key={tab.id}
@@ -141,6 +145,8 @@ const Admin = () => {
                 {activeTab === 'dashboard' && <Dashboard />}
                 {activeTab === 'orders' && <OrdersTable />}
                 {activeTab === 'inventory' && <Inventory />}
+                {activeTab === 'customers' && <Customers />}
+                {activeTab === 'messages' && <Messages />}
             </div>
         </div>
     );

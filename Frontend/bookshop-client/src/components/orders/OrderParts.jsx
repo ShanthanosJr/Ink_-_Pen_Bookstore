@@ -1,6 +1,6 @@
 // Building blocks shared by the customer and admin order pages
 import { Link } from 'react-router-dom';
-import { API_ORIGIN } from '../../api';
+import { API_ORIGIN, assetUrl } from '../../api';
 import {
     FULFILMENT_STEPS, ORDER_STATUS, PAYMENT_METHOD, PAYMENT_STATUS,
     formatDateTime, formatMoney, paymentLabel, statusLabel
@@ -79,7 +79,7 @@ export const ItemsList = ({ items = [] }) => (
         {items.map(item => (
             <li key={item.id} className="flex gap-4 py-3">
                 <div className="w-12 h-16 bg-[#e3ddd3] border border-border-linen flex-shrink-0 overflow-hidden">
-                    {item.book?.imageUrl && <img src={item.book.imageUrl} alt="" className="w-full h-full object-cover" />}
+                    {item.book?.imageUrl && <img src={assetUrl(item.book.imageUrl)} alt="" className="w-full h-full object-cover" />}
                 </div>
                 <div className="flex-1 min-w-0">
                     {item.book

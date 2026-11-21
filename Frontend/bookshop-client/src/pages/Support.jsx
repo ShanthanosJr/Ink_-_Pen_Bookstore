@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import FAQSection from '../components/support/FAQSection';
 import ReviewsSection from '../components/support/ReviewsSection';
 
@@ -26,7 +27,7 @@ const Support = () => {
                     <motion.h1
                         initial={{ scale: 0.95, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.4 }}
+                        transition={{ delay: 0.13 }}
                         className="text-4xl md:text-6xl font-serif font-bold text-ink mb-6 tracking-tight"
                     >
                         How may we assist you?
@@ -34,7 +35,7 @@ const Support = () => {
                     <motion.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ delay: 0.6 }}
+                        transition={{ delay: 0.2 }}
                         className="text-xl text-ink-light max-w-2xl mx-auto font-body italic"
                     >
                         Guidance on acquisitions, shipping, and our community.
@@ -45,7 +46,7 @@ const Support = () => {
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 }}
+                transition={{ delay: 0.27 }}
                 className="container mx-auto px-4 -mt-8 relative z-20"
             >
                 <FAQSection />
@@ -63,13 +64,9 @@ const Support = () => {
                     <div className="absolute inset-0 border-4 border-double border-border-linen m-2 pointer-events-none"></div>
                     <h3 className="text-2xl font-serif font-bold text-ink mb-4">Further Inquiries?</h3>
                     <p className="text-ink-light mb-8 font-body italic">Our librarians are at your disposal for specific requests.</p>
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="bg-ink text-paper px-10 py-4 font-serif font-bold uppercase tracking-widest hover:bg-accent-olive transition-colors border border-ink shadow-[4px_4px_0_0_rgba(44,44,44,0.2)]"
-                    >
+                    <Link to="/contact" className="bg-ink text-paper px-10 py-4 font-serif font-bold uppercase tracking-widest hover:bg-accent-olive transition-colors border border-ink shadow-[4px_4px_0_0_rgba(44,44,44,0.2)] inline-block">
                         Correspond With Us
-                    </motion.button>
+                    </Link>
                 </motion.div>
             </div>
         </div>

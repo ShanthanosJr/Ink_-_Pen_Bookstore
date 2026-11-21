@@ -4,6 +4,7 @@ import logo from '../assets/inkandpens.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 
 const NAV_ITEMS = [
     { label: 'Home', to: '/' },
@@ -25,6 +26,7 @@ const mobileLinkClass = ({ isActive }) =>
 const Navbar = () => {
     const { user, logout } = useAuth();
     const { cartCount } = useCart();
+    const { count: wishlistCount } = useWishlist();
     const navigate = useNavigate();
     const location = useLocation();
     // The menu remembers which page it was opened on, so it closes by itself after navigating
@@ -82,6 +84,22 @@ const Navbar = () => {
 
                 {/* User Actions */}
                 <div className="flex items-center gap-4 lg:gap-6">
+                    {user && (
+                        <Link
+                            to="/wishlist"
+                            className="relative text-ink hover:text-accent-leather transition-colors"
+                            aria-label={wishlistCount > 0 ? `Wishlist, ${wishlistCount} saved` : 'Wishlist'}
+                        >
+                            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                                <path strokeLinejoin="round" d="M12 20s-7-4.35-7-10a4 4 0 017-2.65A4 4 0 0119 10c0 5.65-7 10-7 10z" />
+                            </svg>
+                            {wishlistCount > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-ink text-paper text-[10px] font-bold h-4 min-w-4 px-1 rounded-full flex items-center justify-center border border-paper">
+                                    {wishlistCount}
+                                </span>
+                            )}
+                        </Link>
+                    )}
                     <Link
                         to="/cart"
                         className="relative group text-ink hover:text-accent-olive transition-colors"
@@ -170,6 +188,7 @@ const Navbar = () => {
                             {user ? (
                                 <>
                                     <NavLink to="/profile" className={mobileLinkClass}>My Account & Orders</NavLink>
+                                    <NavLink to="/wishlist" className={mobileLinkClass}>Wishlist{wishlistCount > 0 ? ` (${wishlistCount})` : ''}</NavLink>
                                     {isAdmin && <NavLink to="/admin" className={mobileLinkClass}>Admin Dashboard</NavLink>}
                                     <button
                                         onClick={handleLogout}

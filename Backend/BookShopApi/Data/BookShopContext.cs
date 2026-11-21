@@ -6,6 +6,9 @@ namespace BookShopApi.Data;
 
 public class BookShopContext : DbContext
 {
+    // Fixed timestamp for seeded rows (HasData needs deterministic values)
+    private static readonly DateTime SeedDate = new(2026, 2, 5, 0, 0, 0, DateTimeKind.Utc);
+
     public BookShopContext(DbContextOptions<BookShopContext> options) : base(options)
     {
     }
@@ -19,6 +22,10 @@ public class BookShopContext : DbContext
     public DbSet<DeliveryDetails> DeliveryDetails { get; set; }
     public DbSet<OrderStatusHistory> OrderStatusHistory { get; set; }
     public DbSet<Coupon> Coupons { get; set; }
+    public DbSet<Review> Reviews { get; set; }
+    public DbSet<WishlistItem> WishlistItems { get; set; }
+    public DbSet<ContactMessage> ContactMessages { get; set; }
+    public DbSet<NewsletterSubscriber> NewsletterSubscribers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -74,6 +81,11 @@ public class BookShopContext : DbContext
             .HasForeignKey(i => i.BookId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        // One review and one wishlist entry per customer per book
+        modelBuilder.Entity<Review>().HasIndex(r => new { r.BookId, r.UserId }).IsUnique();
+        modelBuilder.Entity<WishlistItem>().HasIndex(w => new { w.UserId, w.BookId }).IsUnique();
+        modelBuilder.Entity<NewsletterSubscriber>().HasIndex(n => n.Email).IsUnique();
+
         modelBuilder.Entity<Coupon>()
             .HasIndex(c => c.Code)
             .IsUnique();
@@ -85,9 +97,9 @@ public class BookShopContext : DbContext
         // Seed data (Legacy - relying on SeedData.cs mostly now, but keeping for consistency if valid)
         // If these IDs conflict with SeedData, SeedData will just skip them because it checks Titles.
         modelBuilder.Entity<Book>().HasData(
-            new Book { Id = 1, Title = "The Great Gatsby", Category = "Fiction", Author = "F. Scott Fitzgerald", Price = 12.99m, StockQuantity = 100, ImageUrl = "https://images.unsplash.com/photo-1543004286-64645f5f6775?auto=format&fit=crop&q=80&w=800" },
-            new Book { Id = 2, Title = "1984", Category = "Fiction", Author = "George Orwell", Price = 10.99m, StockQuantity = 50, ImageUrl = "https://images.unsplash.com/photo-1541963463532-d68292c34b19?auto=format&fit=crop&q=80&w=800" },
-            new Book { Id = 3, Title = "Clean Code", Category = "Technology", Author = "Robert C. Martin", Price = 35.50m, StockQuantity = 20, ImageUrl = "https://images.unsplash.com/photo-1516116216624-53e697fedbea?auto=format&fit=crop&q=80&w=800" }
+            new Book { Id = 1, CreatedAt = SeedDate, Title = "The Great Gatsby", Category = "Fiction", Author = "F. Scott Fitzgerald", Price = 12.99m, StockQuantity = 100, ImageUrl = "https://images.unsplash.com/photo-1543004286-64645f5f6775?auto=format&fit=crop&q=80&w=800" },
+            new Book { Id = 2, CreatedAt = SeedDate, Title = "1984", Category = "Fiction", Author = "George Orwell", Price = 10.99m, StockQuantity = 50, ImageUrl = "https://images.unsplash.com/photo-1541963463532-d68292c34b19?auto=format&fit=crop&q=80&w=800" },
+            new Book { Id = 3, CreatedAt = SeedDate, Title = "Clean Code", Category = "Technology", Author = "Robert C. Martin", Price = 35.50m, StockQuantity = 20, ImageUrl = "https://images.unsplash.com/photo-1516116216624-53e697fedbea?auto=format&fit=crop&q=80&w=800" }
         );
     }
 }

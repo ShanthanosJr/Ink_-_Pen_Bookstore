@@ -1,5 +1,6 @@
 using BookShopApi.Data;
 using BookShopApi.Models;
+using BookShopApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +14,12 @@ public class AdminOrdersController : ControllerBase
 {
     private readonly BookShopContext _context;
 
-    public AdminOrdersController(BookShopContext context)
+    private readonly IOrderNotifier _notifier;
+
+    public AdminOrdersController(BookShopContext context, IOrderNotifier notifier)
     {
         _context = context;
+        _notifier = notifier;
     }
 
     private IQueryable<Order> OrdersWithDetails() => _context.Orders
@@ -96,6 +100,7 @@ public class AdminOrdersController : ControllerBase
 
         order.SetStatus(OrderStatuses.Approved, "Admin", note);
         await _context.SaveChangesAsync();
+        await _notifier.NotifyAsync(order.Id);
         return NoContent();
     }
 
@@ -122,6 +127,7 @@ public class AdminOrdersController : ControllerBase
         order.RejectionReason = request.Reason.Trim();
         order.SetStatus(OrderStatuses.Rejected, "Admin", order.RejectionReason);
         await _context.SaveChangesAsync();
+        await _notifier.NotifyAsync(order.Id);
         return NoContent();
     }
 
@@ -171,6 +177,7 @@ public class AdminOrdersController : ControllerBase
 
         order.SetStatus(request.Status, "Admin", note);
         await _context.SaveChangesAsync();
+        await _notifier.NotifyAsync(order.Id);
         return NoContent();
     }
 

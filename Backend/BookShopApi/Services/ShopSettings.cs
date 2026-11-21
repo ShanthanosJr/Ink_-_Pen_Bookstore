@@ -14,6 +14,19 @@ public class ShopSettings
     // Publicly reachable base URL of this API; PayHere posts payment notifications here.
     // localhost will NOT work for PayHere - use a tunnel (e.g. ngrok) when testing locally.
     public string PublicApiBaseUrl { get; set; } = "http://localhost:5000";
+
+    // Shown at checkout for bank-transfer orders. Bank transfer is hidden until AccountNumber is set.
+    public BankTransferSettings BankTransfer { get; set; } = new();
+}
+
+public class BankTransferSettings
+{
+    public string BankName { get; set; } = string.Empty;
+    public string AccountName { get; set; } = string.Empty;
+    public string AccountNumber { get; set; } = string.Empty;
+    public string Branch { get; set; } = string.Empty;
+
+    public bool IsConfigured => !string.IsNullOrWhiteSpace(AccountNumber);
 }
 
 /// <summary>Bound from the "PayHere" section. Put real values in appsettings.Development.json or user-secrets, never in git.</summary>
