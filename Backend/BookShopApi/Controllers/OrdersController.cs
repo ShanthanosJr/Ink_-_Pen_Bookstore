@@ -125,6 +125,11 @@ public class OrdersController : ControllerBase
         if (cart == null || !cart.Items.Any())
             return BadRequest("Your cart is empty.");
 
+        // A PayHere order keeps the cart until payment is confirmed, so an earlier attempt the customer abandoned
+        // (closed the page, came back, payment failed) holds the same books. Cancel it and release its stock
+        // before placing this one, so there are no duplicate orders. Runs before the stock check below.
+        await SupersedeUnpaidOrdersAsync(userId);
+
         foreach (var item in cart.Items)
         {
             if (item.Book.StockQuantity < item.Quantity)
@@ -177,7 +182,10 @@ public class OrdersController : ControllerBase
         }
 
         _context.Orders.Add(order);
-        _context.CartItems.RemoveRange(cart.Items);
+        // Online payments keep the cart until PayHere confirms the payment (PaymentsController clears it then),
+        // so a cancelled or failed payment doesn't lose the customer's cart.
+        if (!isOnlinePayment)
+            _context.CartItems.RemoveRange(cart.Items);
 
         await _context.SaveChangesAsync();
         await transaction.CommitAsync();
@@ -192,6 +200,26 @@ public class OrdersController : ControllerBase
         }
 
         return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, response);
+    }
+
+    private async Task SupersedeUnpaidOrdersAsync(int userId)
+    {
+        var abandoned = await _context.Orders
+            .Include(o => o.Items).ThenInclude(i => i.Book)
+            .Include(o => o.StatusHistory)
+            .Where(o => o.UserId == userId
+                        && o.OrderStatus == OrderStatuses.AwaitingPayment
+                        && o.PaymentStatus != PaymentStatuses.Paid)
+            .ToListAsync();
+
+        foreach (var old in abandoned)
+        {
+            foreach (var item in old.Items)
+                item.Book.StockQuantity += item.Quantity;
+            // If PayHere still reports a payment for it later, PaymentsController marks it RefundDue.
+            old.SetStatus(OrderStatuses.Cancelled, "System", "Online payment was not completed; the customer checked out again.");
+        }
+        // No customer email: from their side this is the same purchase, retried.
     }
 
     // POST: api/orders/5/pay

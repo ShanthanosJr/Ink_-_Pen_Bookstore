@@ -62,6 +62,7 @@ public class PaymentsController : ControllerBase
         var order = await _context.Orders
             .Include(o => o.DeliveryDetails)
             .Include(o => o.StatusHistory)
+            .Include(o => o.Items)
             .FirstOrDefaultAsync(o => o.Id == orderId);
         if (order == null) return NotFound();
 
@@ -92,6 +93,7 @@ public class PaymentsController : ControllerBase
                 else
                 {
                     order.PaymentStatus = PaymentStatuses.Paid;
+                    await RemovePaidItemsFromCartAsync(order);
                     if (order.OrderStatus == OrderStatuses.AwaitingPayment)
                     {
                         order.SetStatus(OrderStatuses.PendingApproval, "PayHere", $"Payment received{method}. Ref {notification.PaymentId}.");
@@ -138,5 +140,21 @@ public class PaymentsController : ControllerBase
         if (movedToReview)
             await _notifier.NotifyAsync(order.Id);
         return Ok();
+    }
+
+    // PayHere orders leave the cart alone at checkout; once paid, take the bought books out of the cart
+    // (only the quantities that were ordered, in case the customer added more since).
+    private async Task RemovePaidItemsFromCartAsync(Order order)
+    {
+        var cart = await _context.Carts.Include(c => c.Items).FirstOrDefaultAsync(c => c.UserId == order.UserId);
+        if (cart == null) return;
+
+        foreach (var ordered in order.Items)
+        {
+            var inCart = cart.Items.FirstOrDefault(i => i.BookId == ordered.BookId);
+            if (inCart == null) continue;
+            inCart.Quantity -= ordered.Quantity;
+            if (inCart.Quantity <= 0) _context.CartItems.Remove(inCart);
+        }
     }
 }
